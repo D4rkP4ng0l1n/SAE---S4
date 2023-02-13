@@ -23,8 +23,7 @@ public class ApplicationEsporter {
 	public static void main(String[] args) {
 
 		// musique.playMusic("src/musiques/Lil-Nas-X-STAR-WALKIN-_League-of-Legends-Worlds-Anthem_.wav");
-		// musique.playMusic("src/musiques/Bury-The-Light-_Final-Boss-Ver._-Dante-Battle-Theme-_HQ-CLEAN-Rip_-Devil-May-Cry-5-Special-Edition.wav");
-
+		
 
 		f = new JFrame();
 		f.setLayout(new GridLayout(1, 1));
@@ -35,5 +34,7 @@ public class ApplicationEsporter {
 		f.setSize(800, 500);
 		f.setResizable(false);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		// C'est la fin du code
 	}
 }
