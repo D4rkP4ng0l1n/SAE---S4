@@ -10,7 +10,6 @@ import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JTable;
@@ -23,6 +22,7 @@ import Modele.MyRendererAndEditor;
 
 import javax.swing.JScrollPane;
 
+@SuppressWarnings("serial")
 public class Arbitre_Tournoi extends JPanel{
 
 	private static DefaultTableModel model;

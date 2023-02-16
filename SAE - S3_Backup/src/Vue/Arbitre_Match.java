@@ -27,13 +27,16 @@ import Modele.FonctionsSQL;
 import Modele.MyRendererAndEditor;
 
 
+@SuppressWarnings("serial")
 public class Arbitre_Match extends JPanel{
 	private static JTable table;
 	private DefaultTableModel model;
 	private ControleurArbitre controleur = new ControleurArbitre(this, EtatArbitre.MATCHS);
 	private JScrollPane scrollPane;
+	@SuppressWarnings("rawtypes")
 	private JComboBox comboBox;
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Arbitre_Match() {
 		setLayout(new BorderLayout(0,0));
 
@@ -109,6 +112,7 @@ public class Arbitre_Match extends JPanel{
 		panel.add(panel_4, BorderLayout.NORTH);
 
 		JPanel Bandeau_1 = new JPanel();
+		@SuppressWarnings("unused")
 		FlowLayout flowLayout = (FlowLayout) Bandeau_1.getLayout();
 		Bandeau_1.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel_4.add(Bandeau_1);
@@ -122,6 +126,7 @@ public class Arbitre_Match extends JPanel{
 		}
 
 		JPanel Bandeau_2 = new JPanel();
+		@SuppressWarnings("unused")
 		FlowLayout flowLayout_3 = (FlowLayout) Bandeau_2.getLayout();
 		Bandeau_2.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel_4.add(Bandeau_2);
@@ -135,6 +140,7 @@ public class Arbitre_Match extends JPanel{
 		}
 
 		JPanel Bandeau_3 = new JPanel();
+		@SuppressWarnings("unused")
 		FlowLayout flowLayout_2 = (FlowLayout) Bandeau_3.getLayout();
 		Bandeau_3.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel_4.add(Bandeau_3);
