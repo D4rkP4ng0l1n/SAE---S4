@@ -17,6 +17,7 @@ import Controleur.ControleurEsporter.EtatEsporter;
 import java.awt.Color;
 import javax.swing.JTextField;
 
+@SuppressWarnings("serial")
 public class Esporter_AjouterJeu extends JPanel {
 
 	private static JTextField textField, textField_1;

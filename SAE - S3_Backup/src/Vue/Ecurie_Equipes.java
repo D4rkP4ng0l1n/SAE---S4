@@ -23,6 +23,7 @@ import Modele.MyRendererAndEditor;
 
 import javax.swing.JScrollPane;
 
+@SuppressWarnings("serial")
 public class Ecurie_Equipes extends JPanel {
 	
 	private ControleurEcurie controleur = new ControleurEcurie(this, EtatEcurie.EQUIPES);
@@ -121,6 +122,7 @@ public class Ecurie_Equipes extends JPanel {
 		panel_10.setLayout(new BorderLayout(0, 0));
 		
 		JPanel panel_11 = new JPanel();
+		@SuppressWarnings("unused")
 		FlowLayout flowLayout = (FlowLayout) panel_11.getLayout();
 		panel_11.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel_10.add(panel_11, BorderLayout.SOUTH);

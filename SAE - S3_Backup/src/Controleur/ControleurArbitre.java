@@ -15,16 +15,12 @@ import Vue.Arbitre_Accueil;
 import Vue.Arbitre_InfoTournoi;
 import Vue.Arbitre_Match;
 import Vue.Arbitre_Tournoi;
-import Vue.Ecurie_Tournoi;
-import Vue.Esporter_Accueil;
-import Vue.Esporter_Tournois;
 import Vue.PageAccueil;
 
 public class ControleurArbitre implements ActionListener {
 
 	public enum EtatArbitre {TOURNOI, INFOTOURNOI, MATCHS}
 
-	private JPanel vue;
 	private EtatArbitre etat;
 	private Arbitre_Match vueMatch;
 
@@ -36,19 +32,19 @@ public class ControleurArbitre implements ActionListener {
 
 	// Constructeur du controleur arbitre
 	public ControleurArbitre(JPanel vue, EtatArbitre etat) {
-		this.vue = vue;
 		this.etat = etat;
 	}
 
 	// Methode pour faciliter la navigation depuis n'importe où en tant qu'Arbitre
+
 	private Boolean changerDePageHeader(JButton b) {
-		if (b.getText() == "Déconnexion") {
+		if (b.getText().equals("Déconnexion")) {
 			goDeconnexion();
 		}
-		if(b.getText() == "Accueil") {
+		if(b.getText().equals("Accueil")) {
 			goAccueil();
 		}
-		if(b.getText() == "Tournois") {
+		if(b.getText().equals("Tournois")) {
 			goTournois();
 		}
 		return false;
@@ -88,22 +84,7 @@ public class ControleurArbitre implements ActionListener {
 				nbPouleFinis++;
 			}
 		}
-		if(nbPouleFinis >= 4) {
-			return true;
-		}
-		return false;
-	}
-
-	// Supprime tous les matchs des poules
-	private void delPoules() throws SQLException { 
-		ResultSet idsPoules = getIdsPoules();
-		while(idsPoules.next()) {
-			ResultSet idsPartiePoule = FonctionsSQL.select("SAEPartiePoule","ID_PartiePoule", "IDPoule = " + idsPoules.getInt(1));
-			while(idsPartiePoule.next()) {
-				FonctionsSQL.delete("SAECompetiter", "Id_PartiePoule = " + idsPartiePoule.getInt(1));
-			}
-			FonctionsSQL.delete("SAEPartiePoule", "IDPoule = " + idsPoules.getInt(1));
-		}
+		return(nbPouleFinis >= 4);
 	}
 
 	// Retourne un result set contenant les ids des phases finales
@@ -125,28 +106,7 @@ public class ControleurArbitre implements ActionListener {
 
 			}
 		}
-		if(nbDemisFinalesTerminees >= 2) {
-			return true;
-		}
-		return false;
-	}
-
-	// Retourne le nom des équipes finalistes
-	private ResultSet nomFinalistes() throws SQLException {
-		ResultSet idsPhasesFinales = getIdsPhasesFinales();
-		idsPhasesFinales.next();
-		return FonctionsSQL.select("SAESeQualifier", "nom", "IDPhaseFinale = " + idsPhasesFinales.getInt(1));
-	}
-
-	// Supprime les 2 demis finales
-	private void delDemisFinales() throws SQLException {
-		ResultSet idsPhasesFinales = getIdsPhasesFinales();
-		idsPhasesFinales.next();
-		ResultSet selectIdPartiePhaseFinale = FonctionsSQL.select("SAEPartiePhaseFinale", "Id_PartiePhaseFinale", "IDPhaseFinale = " + idsPhasesFinales.getInt(1) + " AND resultat != 'aucune'");
-		while(selectIdPartiePhaseFinale.next()) {	
-			FonctionsSQL.delete("SAECompetiterPhaseFinale", "Id_PartiePhaseFinale = " + selectIdPartiePhaseFinale.getInt(1));
-			FonctionsSQL.delete("SAEPartiePhaseFinale", "Id_PartiePhaseFinale = " + selectIdPartiePhaseFinale.getInt(1));
-		}
+		return(nbDemisFinalesTerminees >= 2);
 	}
 
 	// Génère les phases finales
@@ -198,20 +158,6 @@ public class ControleurArbitre implements ActionListener {
 			FonctionsSQL.insert("SAECompetiterPhaseFinale", DemiFinale_2);
 		}
 	}
-
-	/**
-	public void setPointsPermanents() throws Exception { // Attribution des points à la fin d'un tournoi 
-		rs.next();
-		FonctionsSQL.update("saeequipe", "nbpoints", "nbpoints + 100", "nom = '" + rs.getString(1) + "'");
-		rs.next();
-		FonctionsSQL.update("saeequipe", "nbpoints", "nbpoints + 60", "nom = '" + rs.getString(1) + "'");
-		rs.next();
-		FonctionsSQL.update("saeequipe", "nbpoints", "nbpoints + 30", "nom = '" + rs.getString(1) + "'");
-		rs.next();
-		FonctionsSQL.update("saeequipe", "nbpoints", "nbpoints + 10", "nom = '" + rs.getString(1) + "'");
-	}
-	**/
-
 	// Défini les actions a effectuer selon le bouton et selon la page sur laquelle on se trouve
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -219,50 +165,57 @@ public class ControleurArbitre implements ActionListener {
 		if(!changerDePageHeader(b)) {
 			switch(this.etat) {
 			case TOURNOI:
-				if (b.getText() == "Voir le(s) jeu(x)") {
+
+				if (b.getText().equals("Voir le(s) jeu(x)")) {
 					afficherJeux();
 				}
-				if(b.getText() == "Accéder") {
+
+				if(b.getText().equals("Accéder")) {
 					stockageIdTournoi();
 					ApplicationEsporter.changerDePage(new Arbitre_InfoTournoi());
+
 				}
 				break;
 			case INFOTOURNOI:
-				if(b.getText() == "Voir les matchs") {
+
+				if(b.getText().equals("Voir les matchs")) {
 					ApplicationEsporter.changerDePage(new Arbitre_Match());
+
 					this.etat = EtatArbitre.MATCHS;
 				}
 				break;
 			case MATCHS:
-				if(b.getText() == "Victoire équipe 1") {
+
+				if(b.getText().equals("Victoire équipe 1")) {
 					victoireMatchPouleEquipe(1);
+
 					try {
 						if(poulesTermines() && !demisFinalesTerminees()) {
 							JOptionPane.showMessageDialog(null, "La phase de poule est terminée !");
 							JOptionPane.showMessageDialog(null, "Création des demis finales en cours");
 							genererFinale();
-							//delPoules();
 						}
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}
 					vueMatch.updateTable();
 				}
-				if(b.getText() == "Victoire équipe 2") {
+
+				if(b.getText().equals("Victoire équipe 2")) {
 					victoireMatchPouleEquipe(2);
 					try {
 						if(poulesTermines() && !demisFinalesTerminees()) {
 							JOptionPane.showMessageDialog(null, "La phase de poule est terminée !");
 							JOptionPane.showMessageDialog(null, "Création des demis finales en cours");
 							genererFinale();
-							//delPoules();
 						}
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}
 					vueMatch.updateTable();
 				}
-				if(b.getText() == "Victoire équipe 1 ") {
+
+				if(b.getText().equals("Victoire équipe 1 ")) {
 					victoireMatchPhaseFinaleEquipe(1);
 					try {
 						if(demisFinalesTerminees()) {
@@ -270,11 +223,13 @@ public class ControleurArbitre implements ActionListener {
 						}
 						vueMatch.updateTableFinale();
 					} catch (SQLException e1) {
+
 						e1.printStackTrace();
 					}
 					vueMatch.updateTableFinale();
 				}
-				if(b.getText() == "Victoire équipe 2 ") {
+
+				if(b.getText().equals("Victoire équipe 2 ")) {
 					victoireMatchPhaseFinaleEquipe(2);
 					try {
 						if(demisFinalesTerminees()) {
@@ -282,6 +237,7 @@ public class ControleurArbitre implements ActionListener {
 						}
 						vueMatch.updateTableFinale();
 					} catch (SQLException e1) {
+
 						e1.printStackTrace();
 					}
 				}

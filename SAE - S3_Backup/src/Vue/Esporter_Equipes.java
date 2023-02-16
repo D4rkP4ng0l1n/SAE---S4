@@ -2,23 +2,18 @@ package Vue;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
@@ -26,6 +21,7 @@ import Controleur.ControleurEsporter;
 import Modele.FonctionsSQL;
 import Modele.MyRendererAndEditor;
 
+@SuppressWarnings("serial")
 public class Esporter_Equipes extends JPanel {
 	
 	private ControleurEsporter controleur = new ControleurEsporter(this, ControleurEsporter.EtatEsporter.EQUIPE);

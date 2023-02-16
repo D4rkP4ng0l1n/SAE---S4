@@ -8,7 +8,7 @@ public class FonctionsSQL {
 		Connexion.seConnecter();
 		Statement statement = Connexion.seConnecter().createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
 		ResultSet resultSet;
-		if (conditions != "") {
+		if (!conditions.equals("")) {
 			resultSet = statement.executeQuery("SELECT " + select + 
 					" FROM CRJ3957A." + nomTable + 
 					" WHERE " + conditions );

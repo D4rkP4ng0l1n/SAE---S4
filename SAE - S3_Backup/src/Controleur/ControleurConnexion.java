@@ -34,9 +34,7 @@ public class ControleurConnexion implements ActionListener {
 		try {
 			verifEcurie = FonctionsSQL.select("saecompte, CRJ3957A.saeecurie", "count(nom)" , ApplicationEsporter.idCompte + " = saeecurie.idcompte");
 			verifEcurie.next();
-			if (verifEcurie.getInt(1) > 0) {
-				return true;
-			}
+			return(verifEcurie.getInt(1) > 0);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -47,16 +45,17 @@ public class ControleurConnexion implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JButton b = (JButton) e.getSource();
-		if (b.getText() == "Pas de compte?") {
+		if (b.getText().equals("Pas de compte?")) {
 			ApplicationEsporter.changerDePage(new PageInscription());
 		} 
-		if (b.getText()=="Retour") {
+
+		if (b.getText().equals("Retour")) {
 			ApplicationEsporter.changerDePage(new PageAccueil());
 		}
-		if (b.getText() == "Changer de mot de passe ?") {
+		if (b.getText().equals("Changer de mot de passe ?")) {
 			ApplicationEsporter.changerDePage(new PageChangerMdp());
 		} else {
-			if (b.getText() == "Se connecter") {
+			if (b.getText().equals("Se connecter")) {
 				try {
 					if(Compte.compteExiste(this.vue.getNomUtilisateur())) {
 						Compte.chargerCompte(this.vue.getNomUtilisateur(), this.vue.getMdp());

@@ -34,6 +34,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+@SuppressWarnings("serial")
 public class Ecurie_AddJoueur extends JPanel {
 
 	private static JTable tableJoueurs;
