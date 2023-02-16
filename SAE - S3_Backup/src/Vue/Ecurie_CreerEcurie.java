@@ -19,12 +19,10 @@ import javax.swing.border.LineBorder;
 import Controleur.ControleurEcurie;
 import Controleur.ControleurEcurie.EtatEcurie;
 
+@SuppressWarnings("serial")
 public class Ecurie_CreerEcurie extends JPanel{
 
 	private ControleurEcurie controleur = new ControleurEcurie(this, EtatEcurie.CREATION);
-
-	private JTextField textField;
-	private JTextField textField_1;
 
 	private static JLabel previsualisationImage;
 	private static JTextField nomEcurie;
