@@ -25,6 +25,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+@SuppressWarnings("serial")
 public class Arbitre_InfoTournoi extends JPanel{
 
 	private JTable table;
@@ -32,6 +33,7 @@ public class Arbitre_InfoTournoi extends JPanel{
 	private ControleurArbitre controleur = new ControleurArbitre(this, EtatArbitre.INFOTOURNOI);
 
 	//constructeur de la page arbitre info tournoi
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Arbitre_InfoTournoi() {
 		setLayout(new BorderLayout(0,0));
 		
@@ -107,6 +109,7 @@ public class Arbitre_InfoTournoi extends JPanel{
 		panel.add(panel_4, BorderLayout.NORTH);
 		
 		JPanel Bandeau_1 = new JPanel();
+		@SuppressWarnings("unused")
 		FlowLayout flowLayout = (FlowLayout) Bandeau_1.getLayout();
 		Bandeau_1.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel_4.add(Bandeau_1);
@@ -120,6 +123,7 @@ public class Arbitre_InfoTournoi extends JPanel{
 		}
 		
 		JPanel Bandeau_2 = new JPanel();
+		@SuppressWarnings("unused")
 		FlowLayout flowLayout_3 = (FlowLayout) Bandeau_2.getLayout();
 		Bandeau_2.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel_4.add(Bandeau_2);
@@ -133,6 +137,7 @@ public class Arbitre_InfoTournoi extends JPanel{
 		}
 		
 		JPanel Bandeau_3 = new JPanel();
+		@SuppressWarnings("unused")
 		FlowLayout flowLayout_2 = (FlowLayout) Bandeau_3.getLayout();
 		Bandeau_3.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel_4.add(Bandeau_3);

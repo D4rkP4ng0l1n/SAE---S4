@@ -25,6 +25,7 @@ import Modele.Jeu;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 
+@SuppressWarnings("serial")
 public class Ecurie_CreationEquipe extends JPanel{
 
 	private static JTextField NomEquipe;

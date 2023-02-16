@@ -20,7 +20,6 @@ import Modele.Equipe;
 import Modele.FonctionsSQL;
 import Modele.Joueur;
 import Vue.ApplicationEsporter;
-import Vue.Arbitre_Tournoi;
 import Vue.Ecurie_Accueil;
 import Vue.Ecurie_AddJoueur;
 import Vue.Ecurie_AddJoueur.Erreurs;
