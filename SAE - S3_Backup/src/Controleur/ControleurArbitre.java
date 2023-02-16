@@ -76,8 +76,9 @@ public class ControleurArbitre implements ActionListener {
 	private boolean poulesTermines() throws SQLException { 
 		ResultSet idsPoules = getIdsPoules();
 		int nbPouleFinis = 0;
+		ResultSet pouleTermines;
 		while(idsPoules.next()) {
-			ResultSet pouleTermines = FonctionsSQL.select("SAEPartiePoule", "count(resultat)", "IDPoule = " + idsPoules.getInt(1) + "AND resultat = 'aucune'");
+			pouleTermines = FonctionsSQL.select("SAEPartiePoule", "count(resultat)", "IDPoule = " + idsPoules.getInt(1) + "AND resultat = 'aucune'");
 			pouleTermines.next();
 			if(pouleTermines.getInt(1) == 0) {
 				nbPouleFinis++;
@@ -97,8 +98,9 @@ public class ControleurArbitre implements ActionListener {
 	private boolean demisFinalesTerminees() throws SQLException { 
 		ResultSet idsPhasesFinales = getIdsPhasesFinales();
 		int nbDemisFinalesTerminees = 0;
+		ResultSet phasesDemisFinalesTerminees;
 		while(idsPhasesFinales.next()) {
-			ResultSet phasesDemisFinalesTerminees = FonctionsSQL.select("SAEPartiePhaseFinale", "count(resultat)", "IDPhaseFinale = " + idsPhasesFinales.getInt(1) + " AND resultat = 'aucune'");
+			phasesDemisFinalesTerminees = FonctionsSQL.select("SAEPartiePhaseFinale", "count(resultat)", "IDPhaseFinale = " + idsPhasesFinales.getInt(1) + " AND resultat = 'aucune'");
 			phasesDemisFinalesTerminees.next();
 			if(phasesDemisFinalesTerminees.getInt(1) == 0) {
 				nbDemisFinalesTerminees++;

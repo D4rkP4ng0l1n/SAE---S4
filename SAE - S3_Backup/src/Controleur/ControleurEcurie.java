@@ -57,13 +57,13 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 
 	// Génération des poules
 	private static void  genererPoules(String IdTournoi) {
-		for (int i = 1; i <= 4;i++) { 
-			try {
+		try {
+			for (int i = 1; i <= 4;i++) { 
 				String[] poule = {"" + FonctionsSQL.newIDPoule(), "''", "" + i, "" + IdTournoi};
 				FonctionsSQL.insert("saepoule", poule);
-			} catch (SQLException e) {
-				e.printStackTrace();
 			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 		// Liens entre les équipes et les poules (insertion dans la table saeconcourir)
 		try {
@@ -71,9 +71,10 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 			ResultSet listeEquipe = FonctionsSQL.select("saeequipe e, CRJ3957A.saeparticiper p","e.nom"," e.nom=p.nom and p.idtournoi= " + ApplicationEsporter.idTournoi + " order by e.nbpoints desc,1");
 
 			int pouleCounter = 1;
+			ResultSet IdPoule;
 			while (listeEquipe.next()) {
 				// Récupération d'un id de poule avec le bon numéro
-				ResultSet IdPoule = FonctionsSQL.select("saepoule", "idpoule", "numero = '" + pouleCounter + "' and idtournoi = " + ApplicationEsporter.idTournoi);
+				IdPoule = FonctionsSQL.select("saepoule", "idpoule", "numero = '" + pouleCounter + "' and idtournoi = " + ApplicationEsporter.idTournoi);
 				IdPoule.next();
 				String[] equipe = {"'" + listeEquipe.getString("nom") + "'", "" + IdPoule.getInt("Idpoule"), "'0'"};
 				FonctionsSQL.insert("saeconcourir", equipe);
@@ -98,27 +99,35 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 			idPoules[numero] = "" + idPoule.getInt(1);
 			numero++;
 		}
+		int k;
+		String[]equipes;
+		String[]matchsEquipe1;
+		String[]matchsEquipe2;
+		int index;
+		int i;
+		int j;
+		int id;
 		for (int numPoule = 0; numPoule < 4; numPoule++) {
 			ResultSet listeEquipe = FonctionsSQL.select("SAEConcourir", "nom", "IDPoule = " + idPoules[numPoule]);
-			int k = 0;
-			String[]equipes = new String[4];
+			k = 0;
+			equipes = new String[4];
 			while (listeEquipe.next()) {
 				equipes[k] = listeEquipe.getString(1);
 				k++;
 			}
 			int nbMatch = equipes.length * (equipes.length - 1) / 2;
-			String[]matchsEquipe1 = new String[nbMatch];
-			String[]matchsEquipe2 = new String[nbMatch];
-			int index = 0;
-			for (int i = 0; i < equipes.length; i++) {
-				for (int j = i+1; j < equipes.length; j++) {
+			matchsEquipe1 = new String[nbMatch];
+			matchsEquipe2 = new String[nbMatch];
+			index = 0;
+			for (i = 0; i < equipes.length; i++) {
+				for (j = i+1; j < equipes.length; j++) {
 					matchsEquipe1[index] = equipes[i];
 					matchsEquipe2[index] = equipes[j];
 					index ++;
 				}
 			}
-			for (int i = 0; i < nbMatch; i++) {
-				int id = FonctionsSQL.newIDPartiePoule();
+			for (i = 0; i < nbMatch; i++) {
+				id = FonctionsSQL.newIDPartiePoule();
 				String[]match = { "" + id, "'aucune'", "" + idPoules[numPoule] };
 				String[]equipe1 = { "'" + matchsEquipe1[i] + "'", "" + id };
 				String[]equipe2 = { "'" + matchsEquipe2[i] + "'", "" + id };

@@ -2,9 +2,6 @@ package Modele;
 
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import Vue.ApplicationEsporter;
 
 public class Main {
 

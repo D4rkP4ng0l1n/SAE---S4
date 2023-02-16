@@ -246,8 +246,9 @@ public class ControleurEsporter implements ActionListener {
 							String[]tournoiData = { "" + FonctionsSQL.newIDTournoi("saeTournoi"), "'" + Esporter_CreerTournoi.getLieu() + "'", "TO_DATE('" + Esporter_CreerTournoi.getDate() + " " + Esporter_CreerTournoi.getHeure() + ":" + Esporter_CreerTournoi.getMinute() + "', 'YYYY-MM-DD HH:MI')", finaleData[0], "'" + Esporter_CreerTournoi.getAmPm() + "'" };
 							FonctionsSQL.insert("saephasefinale", finaleData);
 							FonctionsSQL.insert("saeTournoi", tournoiData);
+							String[] concernerData;
 							for (String jeu : this.jeux) {
-								String[] concernerData = new String[2];
+								concernerData = new String[2];
 								concernerData[0] = "'" + jeu + "'";
 								concernerData[1] = tournoiData[0];
 								FonctionsSQL.insert("saeconcerner", concernerData );
@@ -318,8 +319,9 @@ public class ControleurEsporter implements ActionListener {
 							}
 							//ResultSet nombreAncienJeu= FonctionsSQL.select("saetournoi", "AM_PM", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
 							FonctionsSQL.delete("saeconcerner", "idtournoi = '" + ApplicationEsporter.idTournoi + "'");
+							String[] concernerData;
 							for (String jeu : this.jeux) {
-								String[] concernerData = new String[2];
+								concernerData = new String[2];
 								concernerData[0] = "'" + jeu + "'";
 								concernerData[1] = ApplicationEsporter.idTournoi;
 								FonctionsSQL.insert("saeconcerner", concernerData );

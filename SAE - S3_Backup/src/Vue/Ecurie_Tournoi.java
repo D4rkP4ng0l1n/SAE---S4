@@ -143,16 +143,19 @@ public class Ecurie_Tournoi extends JPanel{
 		String data[][] = new String[count.getInt(1)][5];
 		ResultSet res = FonctionsSQL.select("saetournoi", "*", "1 = 1 ORDER BY IDTOURNOI");
 		int i = 0;
+		char[]date;
+		int dateOK;
+		String dateDuTournoi;
 		while (res.next()) {
 			data[i][0] = res.getString(2);
-			char[]date = res.getDate(3).toString().toCharArray();
+			date = res.getDate(3).toString().toCharArray();
 			data[i][1] = res.getDate(3).toString();
 			if (date[0] == '0') {
-				@SuppressWarnings("deprecation") int dateOK = res.getDate(3).getYear();
+				dateOK = res.getDate(3).getYear();
 				dateOK = (dateOK - 1977) * (-1) + 2024;
 				data[i][1] = "" + dateOK;
 				date[0] = '2';
-				String dateDuTournoi = "";
+				dateDuTournoi = "";
 				for (char c : date) {
 					dateDuTournoi += c;
 				}
