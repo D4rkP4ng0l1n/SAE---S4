@@ -132,16 +132,16 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 
 	// Methode pour faciliter la navigation depuis n'importe où en tant qu'Ecurie
 	private Boolean changerDePage(JButton b) {
-		if(b.getText() == "Déconnexion") {
+		if(b.getText().equals("Déconnexion")) {
 			goDeconnexion();
 		} 
-		if(b.getText() == "Accueil") {
+		if(b.getText().equals("Accueil")) {
 			goAccueil();
 		}
-		if(b.getText() == "Mes équipes") {
+		if(b.getText().equals("Mes équipes")) {
 			goEquipes();
 		}
-		if(b.getText() == "Tournois"){
+		if(b.getText().equals("Tournois")){
 			goTournois();
 		}
 		return false;
@@ -190,7 +190,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 		if(!changerDePage(b)) {
 			switch(this.etat) {
 			case CREATION :
-				if(b.getText() == "Ajouter un logo") {
+				if(b.getText().equals("Ajouter un logo")) {
 					JFileChooser j = new JFileChooser();
 					j.setCurrentDirectory(new File("Images"));
 					j.setFileFilter(new FileNameExtensionFilter("PNG, JPG, GIF", "png", "jpg", "gif"));
@@ -207,7 +207,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 						e1.printStackTrace();
 					}
 				}
-				if(b.getText() == "Valider") {
+				if(b.getText().equals("Valider")) {
 					if (! (Ecurie_CreerEcurie.labelsVide() && this.pathLogo == null)) {
 						String[] aInserer = {"'" + Ecurie_CreerEcurie.getNomEcurie() + "'", "'" + Ecurie_CreerEcurie.getNomCEO() + "'", "'" + this.pathLogo + "'", "" + ApplicationEsporter.idCompte};
 						try {
@@ -225,7 +225,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 			case ACCUEIL:
 				break;
 			case TOURNOI:
-				if(b.getText() == "S'inscrire") {
+				if(b.getText().equals("S'inscrire")) {
 					try {
 						ApplicationEsporter.f.setContentPane(new Ecurie_PreInscription());
 						ApplicationEsporter.f.validate();
@@ -233,7 +233,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 						e1.printStackTrace();
 					}
 				}
-				if(b.getText() == "Voir le(s) jeu(x)") {
+				if(b.getText().equals("Voir le(s) jeu(x)")) {
 					try {
 						ResultSet jeux = FonctionsSQL.select("saeconcerner", "NOM", "IDTOURNOI = " + Ecurie_Inscription.getIdTournoiSelected());
 						String afficherJeux = "Liste des jeux : \n";
@@ -245,7 +245,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 						e1.printStackTrace();
 					}
 				}
-				if(b.getText() == "Accéder") {
+				if(b.getText().equals("Accéder")) {
 					try {
 						ApplicationEsporter.f.setContentPane(new Ecurie_InfoTournoi());
 						ApplicationEsporter.f.validate();
@@ -255,7 +255,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 				}
 				break;
 			case PREINSCRIPTION_TOURNOI:
-				if(b.getText() == "S'inscrire") {
+				if(b.getText().equals("S'inscrire")) {
 					try {
 						ResultSet selectIDTournoi = FonctionsSQL.select("SAETournoi", "IDTournoi", "Lieu = '" + Ecurie_Tournoi.getTable().getValueAt(Ecurie_Tournoi.getTable().getSelectedRow(), 0)
 								+ "' AND DATEETHEURE LIKE TO_DATE('" + Ecurie_Tournoi.getTable().getValueAt(Ecurie_Tournoi.getTable().getSelectedRow(), 1) + "', 'YYYY-MM-DD')");
@@ -269,7 +269,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 				}
 				break;
 			case INSCRIPTION_TOURNOI:
-				if(b.getText() == "S'inscrire") {
+				if(b.getText().equals("S'inscrire")) {
 					int result = JOptionPane.showConfirmDialog(null,"Attention, l'inscription est définitive\n Confirmer l'inscription ?", "Confirmer l'inscription", JOptionPane.YES_NO_OPTION);
 					if (result == 0) {
 						try {
@@ -289,7 +289,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 						}
 					}
 				}
-				if(b.getText() == "Pas encore d'équipe ?") {
+				if(b.getText().equals("Pas encore d'équipe ?")) {
 					try {
 						ApplicationEsporter.f.setContentPane(new Ecurie_CreationEquipe());
 						ApplicationEsporter.f.validate();
@@ -299,7 +299,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 				}
 				break;
 			case EQUIPES:
-				if(b.getText() == "Ajouter une Equipe") {
+				if(b.getText().equals("Ajouter une Equipe")) {
 					try {
 						ApplicationEsporter.f.setContentPane(new Ecurie_CreationEquipe());
 						ApplicationEsporter.f.validate();
@@ -307,7 +307,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 						e1.printStackTrace();
 					}
 				}
-				if(b.getText() == "Acceder") {
+				if(b.getText().equals("Acceder")) {
 					try {
 						ApplicationEsporter.f.setContentPane(new Ecurie_GestionEquipe());
 						ApplicationEsporter.f.validate();
@@ -315,7 +315,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 						e1.printStackTrace();
 					}
 				}
-				if(b.getText() == "Valider") {
+				if(b.getText().equals("Valider")) {
 					try {
 						ApplicationEsporter.f.setContentPane(new Ecurie_Equipes());
 						ApplicationEsporter.f.validate();
@@ -323,7 +323,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 						e1.printStackTrace();
 					}
 				}
-				if(b.getText() == "Annuler") {
+				if(b.getText().equals("Annuler")) {
 					try {
 						ApplicationEsporter.f.setContentPane(new Ecurie_Equipes());
 						ApplicationEsporter.f.validate();
@@ -333,7 +333,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 				}
 				break;
 			case GESTIONEQUIPE:
-				if(b.getText() == "Retour") {
+				if(b.getText().equals("Retour")) {
 					try {
 						ApplicationEsporter.f.setContentPane(new Ecurie_Equipes());
 						ApplicationEsporter.f.validate();
@@ -343,7 +343,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 				}
 				break;
 			case CREATIONEQUIPE:
-				if(b.getText() == "Ajouter un Logo") {
+				if(b.getText().equals("Ajouter un Logo")) {
 					JFileChooser j = new JFileChooser();
 					j.setCurrentDirectory(new File("Images"));
 					j.setFileFilter(new FileNameExtensionFilter("PNG, JPG, GIF", "png", "jpg", "gif"));
@@ -360,7 +360,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 						e1.printStackTrace();
 					}
 				}
-				if(b.getText() == "Annuler") {
+				if(b.getText().equals("Annuler")) {
 					try {
 						ApplicationEsporter.f.setContentPane(new Ecurie_Equipes());
 						ApplicationEsporter.f.validate();
@@ -368,7 +368,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 						e1.printStackTrace();
 					}
 				}
-				if(b.getText() == "Créer Equipe") {
+				if(b.getText().equals("Créer Equipe")) {
 					if (Ecurie_CreationEquipe.tousRempli()) {
 						try {
 							Ecurie_AddJoueur.setEquipe(new Equipe(getNomEcurie(), Ecurie_CreationEquipe.getNomEquipe(), Ecurie_CreationEquipe.getJeu(), this.pathLogo));
@@ -385,7 +385,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 				}
 				break;
 			case AJOUTERJOUEUR:
-				if(b.getText()=="Annuler") {
+				if(b.getText().equals("Annuler")) {
 					try {
 						Ecurie_AddJoueur.annuler();
 						ApplicationEsporter.f.setContentPane(new Ecurie_Equipes());
@@ -394,7 +394,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 						e1.printStackTrace();
 					}
 				}
-				if(b.getText() == "Ajouter le joueur") {
+				if(b.getText().equals("Ajouter le joueur")) {
 					if(Ecurie_AddJoueur.isNomNull()) {
 						Ecurie_AddJoueur.setErreur(Erreurs.ERREURNOMNUL);
 					} else if(Ecurie_AddJoueur.isPseudoNull()) {
@@ -417,7 +417,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 						e1.printStackTrace();
 					}
 				}
-				if(b.getText() == "Supprimer") {
+				if(b.getText().equals("Supprimer")) {
 					String aSupprimerPseudo = (String) Ecurie_AddJoueur.getTable().getValueAt(Ecurie_AddJoueur.getTable().getSelectedRow(), 1);
 					String aSupprimerEquipe = (String) Ecurie_AddJoueur.getTable().getValueAt(Ecurie_AddJoueur.getTable().getSelectedRow(), 3);
 					try {
@@ -433,7 +433,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 						e1.printStackTrace();
 					}
 				}
-				if(b.getText()=="Valider") {
+				if(b.getText().equals("Valider")) {
 					try {
 						ApplicationEsporter.f.setContentPane(new Ecurie_Equipes());
 						ApplicationEsporter.f.validate();
