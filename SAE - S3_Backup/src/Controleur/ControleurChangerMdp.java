@@ -24,7 +24,7 @@ public class ControleurChangerMdp implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JButton b = (JButton) e.getSource();
-		if (b.getText() == "Valider le mot de passe") {
+		if (b.getText().equals("Valider le mot de passe")) {
 			if(!this.vue.getNomUtilisateur().isEmpty() && !this.vue.getMdp().isEmpty() && !this.vue.getNouveauMdp().isEmpty()) {
 				try {
 					if(Compte.compteExiste(this.vue.getNomUtilisateur()) && Compte.mdpOK(this.vue.getNomUtilisateur(), this.vue.getMdp())) {
@@ -44,7 +44,7 @@ public class ControleurChangerMdp implements ActionListener {
 				this.vue.setMessage("Nom d'utilisateur ou mot de passe incorrect");
 			}
 		}
-		if (b.getText() == "Déjà un compte?") {
+		if (b.getText().equals("Déjà un compte?")) {
 			ApplicationEsporter.f.setContentPane(new PageConnexion()); // Change de page
 			ApplicationEsporter.f.validate();
 		}
