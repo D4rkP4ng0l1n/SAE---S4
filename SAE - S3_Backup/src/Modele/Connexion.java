@@ -20,11 +20,10 @@ public class Connexion {
 		}
 	}
 
-	public static void seConnecter() { // Permet de se connecter a un compte
-		new Connexion();
-	}
-
-	public static Connection getConnexion() { // Récupère la connexion
+	public static synchronized Connection seConnecter() { // Permet de se connecter a un compte
+		if (connexion == null) {
+			new Connexion();
+        }
 		return connexion;
 	}
 

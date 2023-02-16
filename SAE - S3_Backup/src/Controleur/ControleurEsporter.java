@@ -148,7 +148,6 @@ public class ControleurEsporter implements ActionListener {
 					for(int i=0; i<dateEnLettre.length(); i++) {
 						mathdate[i]=dateEnLettre.charAt(i);
 					}
-					int mathdate2= (Character.getNumericValue(mathdate[0])*1000)+(Character.getNumericValue(mathdate[1])*100)+(Character.getNumericValue(mathdate[2])*10)+(Character.getNumericValue(mathdate[3]));
 					String condition2;
 					condition2 = Esporter_Tournois.getTable().getValueAt(Esporter_Tournois.getTable().getSelectedRow(), 1).toString();
 					try {
@@ -612,6 +611,10 @@ public class ControleurEsporter implements ActionListener {
 					ApplicationEsporter.f.validate();
 					this.etat = EtatEsporter.JEU;
 				}
+				break;
+			case INFO_TOURNOI:
+				break;
+			default:
 				break;
 			}
 		}
