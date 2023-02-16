@@ -292,7 +292,7 @@ public class ControleurArbitre implements ActionListener {
 						ResultSet rsIdTournoi = FonctionsSQL.select("saepoule p, saepartiepoule pp", "p.idtournoi", "p.idpoule = " + idPoule + " and pp.idpoule = p.idpoule and pp.id_partiepoule = " + idMatch);
 						rsIdTournoi.next();
 						int idTournoi = rsIdTournoi.getInt(1);
-						if(equipeVictorieuse != "aucune") {
+						if(!equipeVictorieuse.equals("aucune")) {
 							FonctionsSQL.update("saeparticiper", "classementfinal", "classementfinal - 1", "nom = '" + equipeVictorieuse + "' and idtournoi = " + idTournoi);
 							FonctionsSQL.update("saeconcourir", "classementpoule", "classementpoule - 1", "nom = '" + equipeVictorieuse + "' and idpoule = " + idPoule);
 						}
@@ -339,14 +339,6 @@ public class ControleurArbitre implements ActionListener {
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
-					try {
-						if(demisFinalesTerminees()) {
-							//delDemisFinales();
-						}
-						vueMatch.updateTableFinale();
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
 					vueMatch.updateTableFinale();
 				}
 				if(b.getText().equals("Victoire équipe 2 ")) {
@@ -367,21 +359,13 @@ public class ControleurArbitre implements ActionListener {
 						ResultSet rsIdTournoi = FonctionsSQL.select("saephasefinale f, saepartiephasefinale pf, saetournoi t", "t.idtournoi", "f.idphasefinale = " + idPoule + " and pf.idphasefinale = f.idphasefinale and f.idphasefinale = t.idphasefinale and pf.id_partiephasefinale = " + idMatch);
 						rsIdTournoi.next();
 						int idTournoi = rsIdTournoi.getInt(1);
-						if(equipeVictorieuse != "aucune") {
+						if(!equipeVictorieuse.equals("aucune")) {
 							FonctionsSQL.update("saeparticiper", "classementfinal", "classementfinal - 2", "nom = '" + equipeVictorieuse + "' and idtournoi = " + idTournoi);
 							FonctionsSQL.update("saesequalifier", "classementphasefinale", "classementphasefinale - 2", "nom = '" + equipeVictorieuse + "' and idphasefinale = " + idPoule);
 						}
 						FonctionsSQL.update("saeparticiper", "classementfinal", "classementfinal + 2", "nom = '" + nomEquipe2 + "' and idtournoi = " + idTournoi);
 						FonctionsSQL.update("saesequalifier", "classementphasefinale", "classementphasefinale + 2", "nom = '" + nomEquipe2 + "' and idphasefinale = " + idPoule);
 					} catch (Exception e1) {
-						e1.printStackTrace();
-					}
-					try {
-						if(demisFinalesTerminees()) {
-							//delDemisFinales();
-						}
-						vueMatch.updateTableFinale();
-					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}
 				}
