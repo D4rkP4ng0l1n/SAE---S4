@@ -254,7 +254,7 @@ public class ControleurArbitre implements ActionListener {
 						ResultSet rsIdTournoi = FonctionsSQL.select("saepoule p, saepartiepoule pp", "p.idtournoi", "p.idpoule = " + idPoule + " and pp.idpoule = p.idpoule and pp.id_partiepoule = " + idMatch);
 						rsIdTournoi.next();
 						int idTournoi = rsIdTournoi.getInt(1);
-						if(equipeVictorieuse != "aucune") {
+						if(!equipeVictorieuse.equals("aucune")) {
 							FonctionsSQL.update("saeparticiper", "classementfinal", "classementfinal - 1", "nom = '" + equipeVictorieuse + "' and idtournoi = " + idTournoi);
 							FonctionsSQL.update("saeconcourir", "classementpoule", "classementpoule - 1", "nom = '" + equipeVictorieuse + "' and idpoule = " + idPoule);
 						}
