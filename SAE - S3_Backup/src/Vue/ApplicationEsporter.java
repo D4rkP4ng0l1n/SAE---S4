@@ -17,7 +17,6 @@ public class ApplicationEsporter {
 	public static String logo_Path;
 
 	public static final int NB_MAX_EQUIPE_PAR_TOURNOI = 16;
-	//commentaire test + ratio
 	public static testMusique musique = new testMusique();
 
 	public static void main(String[] args) {
