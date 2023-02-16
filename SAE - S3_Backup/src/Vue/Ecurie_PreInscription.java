@@ -25,10 +25,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Ecurie_PreInscription extends JPanel {
-
-	/**
-	 * 
-	 */
 	
 	private static final long serialVersionUID = 1L;
 	

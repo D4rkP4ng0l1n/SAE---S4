@@ -60,18 +60,12 @@ public class Compte {
 	
 	public static boolean compteExiste(String login) throws SQLException { // Vérifie si le compte existe
         ResultSet rsCompte = FonctionsSQL.select(NOM_TABLE, "utilisateur", "utilisateur = '" + login + "'");
-        if (rsCompte.next()) {
-            return true;
-        } 
-        return false;
+        return(rsCompte.next());
     }
 	
 	public static boolean mdpOK(String login, String mdp) throws NoSuchAlgorithmException, SQLException { // Vérifie si le mot de passe est bon
 		ResultSet rsCompte = FonctionsSQL.select(NOM_TABLE, "idcompte" , "utilisateur = '" + login + "' AND mdp = '" + crypterMdp(mdp) + "'");
-		if (rsCompte.next()) {
-			return true;
-		}
-		return false;
+		return(rsCompte.next());
 	}
 	
 	public static void changerMdp(String login, String mdp, String nouveauMdp) throws Exception { // Permet de changer le mot de passe pour un utilisateur
