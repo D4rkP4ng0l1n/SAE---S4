@@ -23,11 +23,11 @@ public class ControleurInscription implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JButton b = (JButton) e.getSource();
-		if (b.getText() == "Déjà un compte?") {
+		if (b.getText().equals("Déjà un compte?")) {
 			ApplicationEsporter.f.setContentPane(new PageConnexion());
 			ApplicationEsporter.f.validate();
 		} else {
-			if (b.getText() == "S'inscrire") {
+			if (b.getText().equals("S'inscrire")) {
 				try {
 					// Si le compte n'existe pas, le compte est créé et l'utilisateur est redirigé vers la page de connexion
 					if (Compte.creerCompte(this.vue.getNomUtilisateur(), this.vue.getMdp(), Compte.Type.ECURIE) == 1) {
