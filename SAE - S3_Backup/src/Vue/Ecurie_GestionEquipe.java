@@ -1,13 +1,8 @@
 package Vue;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.awt.Image;
-
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.FlowLayout;
@@ -15,19 +10,11 @@ import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
-import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.ImageIcon;
-import java.awt.Toolkit;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -38,11 +25,8 @@ import Controleur.ControleurEcurie.EtatEcurie;
 import Modele.Equipe;
 import Modele.FonctionsSQL;
 import Modele.Joueur;
-import Modele.MyRendererAndEditor;
 
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
-
+@SuppressWarnings("serial")
 public class Ecurie_GestionEquipe extends JPanel{
 
 	private static JTable tableJoueurs;

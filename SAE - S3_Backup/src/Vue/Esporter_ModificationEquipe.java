@@ -26,18 +26,20 @@ import Modele.Jeu;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 
+@SuppressWarnings("serial")
 public class Esporter_ModificationEquipe extends JPanel{
 	
 	private static JTextField NomEquipe;
 	private static JLabel Image_placeholder;
 	private static boolean imageSet;
-	private static JLabel previsualisationImage;
 	private String[] listjeu;
+	@SuppressWarnings("rawtypes")
 	private static JComboBox comboBox;
 	private static JLabel messageErreur;
 	
 	private ControleurEsporter controleur = new ControleurEsporter(this, EtatEsporter.MODIF_EQUIPE);
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Esporter_ModificationEquipe() throws SQLException {
 		setLayout(new BorderLayout(0,0));
 		

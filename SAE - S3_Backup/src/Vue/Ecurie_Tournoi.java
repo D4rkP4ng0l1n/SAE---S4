@@ -24,10 +24,6 @@ import Modele.MyRendererAndEditor;
 
 public class Ecurie_Tournoi extends JPanel{
 	
-	/**
-	 * 
-	 */
-	
 	private static final long serialVersionUID = 1L;
 	private static DefaultTableModel model;
 	private static JTable tableTournois;

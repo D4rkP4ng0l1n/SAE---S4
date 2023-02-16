@@ -23,6 +23,7 @@ import Modele.MyRendererAndEditor;
 
 import javax.swing.JScrollPane;
 
+@SuppressWarnings("serial")
 public class Esporter_Jeux extends JPanel{
 	
 	private static JTable table1;

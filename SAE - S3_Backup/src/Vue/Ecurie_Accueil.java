@@ -13,11 +13,10 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
-import java.awt.event.ActionListener;
 import java.sql.SQLException;
-import java.awt.event.ActionEvent;
 import java.awt.FlowLayout;
 
+@SuppressWarnings("serial")
 public class Ecurie_Accueil extends JPanel {
 	
 	private ControleurEcurie controleur = new ControleurEcurie(this, EtatEcurie.ACCUEIL);

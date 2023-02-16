@@ -14,7 +14,7 @@ public class FonctionsSQL {
 		try {
 			Connexion.seConnecter();
 			statement = Connexion.seConnecter().createStatement();
-			if (conditions != "") {
+			if (!conditions.equals("")) {
 				resultSet = statement.executeQuery(	"SELECT " + select + 
 													" FROM CRJ3957A." + nomTable + 
 													" WHERE " + conditions );

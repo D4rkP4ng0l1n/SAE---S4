@@ -67,19 +67,19 @@ public class ControleurEsporter implements ActionListener {
 
 	// Méthode pour aller sur les pages accessibles depuis n'importe où
 	private Boolean changerDePage(JButton b) { 
-		if (b.getText() == "Déconnexion") {
+		if (b.getText().equals("Déconnexion")) {
 			goDeconnexion();
 		}
-		if(b.getText() == "Accueil") {
+		if(b.getText().equals("Accueil")) {
 			goAccueil();
 		}
-		if(b.getText() == "Tournois") {
+		if(b.getText().equals("Tournois")) {
 			goTournois();
 		}
-		if (b.getText() == "Ecuries") {
+		if (b.getText().equals("Ecuries")) {
 			goEcuries();
 		}
-		if (b.getText() == "Jeux") {
+		if (b.getText().equals("Jeux")) {
 			goJeux();
 		}
 		return false;
@@ -132,7 +132,7 @@ public class ControleurEsporter implements ActionListener {
 			case ACCUEIL:
 				break;
 			case TOURNOI:
-				if(b.getText() == "Créer un tournoi") {
+				if(b.getText().equals("Créer un tournoi")) {
 					try {
 						// Changement de page
 						ApplicationEsporter.f.setContentPane(new Esporter_CreerTournoi());
@@ -141,7 +141,7 @@ public class ControleurEsporter implements ActionListener {
 						e1.printStackTrace();
 					}
 				}
-				if (b.getText() == "Supprimer") {
+				if (b.getText().equals("Supprimer")) {
 					String condition = (String) Esporter_Tournois.getTable().getValueAt(Esporter_Tournois.getTable().getSelectedRow(), 0);
 					String dateEnLettre= Esporter_Tournois.getTable().getValueAt(Esporter_Tournois.getTable().getSelectedRow(), 1).toString();
 					char[] mathdate = new char[dateEnLettre.length()];
@@ -173,7 +173,7 @@ public class ControleurEsporter implements ActionListener {
 						e1.printStackTrace();
 					}
 				}
-				if (b.getText() == "Voir le(s) jeu(x)") {
+				if (b.getText().equals("Voir le(s) jeu(x)")) {
 					try {
 						// Sélectionne les jeux du tournois où l'utilisateur a cliqué
 						ResultSet selectTournoi = FonctionsSQL.select("saetournoi", "idtournoi", "Lieu = '" + Esporter_Tournois.getTable().getValueAt(Esporter_Tournois.getTable().getSelectedRow(), 0) + "'");
@@ -189,7 +189,7 @@ public class ControleurEsporter implements ActionListener {
 						e1.printStackTrace();
 					}
 				}
-				if (b.getText() == "Modifier") {
+				if (b.getText().equals("Modifier")) {
 					// Créer un String pour stocker le lieu du tournoi sélectionné
 					String condition = (String) Esporter_Tournois.getTable().getValueAt(Esporter_Tournois.getTable().getSelectedRow(), 0);
 					// Transforme le type date en String
@@ -214,13 +214,13 @@ public class ControleurEsporter implements ActionListener {
 						e1.printStackTrace();
 					}
 				}
-				if(b.getText() == "Accéder") {
+				if(b.getText().equals("Accéder")) {
 					ApplicationEsporter.f.setContentPane(new Esporter_InfoTournoi());
 					ApplicationEsporter.f.validate();
 				}
 				break;
 			case CREE_TOURNOI:
-				if(b.getText() == "Ajouter le jeu") {
+				if(b.getText().equals("Ajouter le jeu")) {
 					// Ajoute le jeu sélectionné dans la liste des jeu du tournoi courant
 					Esporter_CreerTournoi.addList();
 					if (error == 0) { // Problème parce que le bouton s'active 2 fois, du coup on effectue l'action une seule fois
@@ -230,7 +230,7 @@ public class ControleurEsporter implements ActionListener {
 						error = 0;
 					}
 				}
-				if(b.getText() == "Valider") {
+				if(b.getText().equals("Valider")) {
 					// Mise en place des messages d'erreurs au cas où un label est vide
 					if(Esporter_CreerTournoi.lieuEstVide()) {
 						Esporter_CreerTournoi.setMessage("Veuillez entrer un Lieu");
@@ -265,7 +265,7 @@ public class ControleurEsporter implements ActionListener {
 						}
 					}
 				}
-				if(b.getText() == "Retour") {
+				if(b.getText().equals("Retour")) {
 					Esporter_CreerTournoi.DLMVide();
 					try {
 						// Changement de page
@@ -277,7 +277,7 @@ public class ControleurEsporter implements ActionListener {
 				}
 				break;
 			case MODIF_TOURNOI:
-				if(b.getText() == "Ajouter le jeu") {
+				if(b.getText().equals("Ajouter le jeu")) {
 					Esporter_ModifTournoi.addList();
 					if (error == 0) {
 						error = 1;
@@ -286,7 +286,7 @@ public class ControleurEsporter implements ActionListener {
 						error = 0;
 					}
 				}
-				if(b.getText() == "Valider") {
+				if(b.getText().equals("Valider")) {
 					if(Esporter_ModifTournoi.lieuEstVide()) {
 						Esporter_ModifTournoi.setMessage("Veuillez entrer un Lieu");
 					}else if(Esporter_ModifTournoi.DateEstVide()) {
@@ -316,7 +316,6 @@ public class ControleurEsporter implements ActionListener {
 							} catch (Exception e1) {
 								e1.printStackTrace();
 							}
-							//ResultSet nombreAncienJeu= FonctionsSQL.select("saetournoi", "AM_PM", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
 							FonctionsSQL.delete("saeconcerner", "idtournoi = '" + ApplicationEsporter.idTournoi + "'");
 							for (String jeu : this.jeux) {
 								String[] concernerData = new String[2];
@@ -336,7 +335,7 @@ public class ControleurEsporter implements ActionListener {
 						}
 					}
 				}
-				if(b.getText() == "Retour") {
+				if(b.getText().equals("Retour")) {
 					Esporter_ModifTournoi.DLMVide();
 					try {
 						ApplicationEsporter.f.setContentPane(new Esporter_Tournois());
@@ -345,12 +344,12 @@ public class ControleurEsporter implements ActionListener {
 						e1.printStackTrace();
 					}
 				}
-				if(b.getText() == "Supprimer tout les jeux") {
+				if(b.getText().equals("Supprimer tout les jeux")) {
 					Esporter_ModifTournoi.suprimerJeux();
 				}
 				break;
 			case ECURIE:
-				if (b.getText() == "Supprimer") {
+				if (b.getText().equals("Supprimer")) {
 					String aSupprimer = (String) Esporter_Ecuries.getTable().getValueAt(Esporter_Ecuries.getTable().getSelectedRow(), 0);
 					try {
 						int result = JOptionPane.showConfirmDialog(null,"Voulez vous vraiment supprimer " + aSupprimer, "Supprimer l'écurie", JOptionPane.YES_NO_OPTION);
@@ -364,7 +363,7 @@ public class ControleurEsporter implements ActionListener {
 						e1.printStackTrace();
 					}
 				}
-				if (b.getText() == "Acceder") {
+				if (b.getText().equals("Acceder")) {
 					String condition = (String) Esporter_Ecuries.getTable().getValueAt(Esporter_Ecuries.getTable().getSelectedRow(), 0);
 					try {
 						ResultSet ecurie = FonctionsSQL.select("saeecurie", "nom", "nom = '" + condition + "'");
@@ -378,7 +377,7 @@ public class ControleurEsporter implements ActionListener {
 				}
 				break;
 			case EQUIPE:
-				if(b.getText() == "Acceder") {
+				if(b.getText().equals("Acceder")) {
 					try {
 						ApplicationEsporter.f.setContentPane(new Esporter_Joueurs());
 						ApplicationEsporter.f.validate();
@@ -386,11 +385,11 @@ public class ControleurEsporter implements ActionListener {
 						e1.printStackTrace();
 					}
 				}
-				if (b.getText() == "Modifier l'écurie") {
+				if (b.getText().equals("Modifier l'écurie")) {
 					ApplicationEsporter.f.setContentPane(new Esporter_ModifEcurie());
 					ApplicationEsporter.f.validate();
 				}
-				if (b.getText() == "Supprimer") {
+				if (b.getText().equals("Supprimer")) {
 					String aSupprimer = (String) Esporter_Equipes.getTable().getValueAt(Esporter_Equipes.getTable().getSelectedRow(), 0);
 					try {
 						int result = JOptionPane.showConfirmDialog(null,"Voulez vous vraiment supprimer " + aSupprimer, "Supprimer l'équipe", JOptionPane.YES_NO_OPTION);
@@ -406,7 +405,7 @@ public class ControleurEsporter implements ActionListener {
 				}
 				break;
 			case MODIF:
-				if(b.getText() == "Annuler") {
+				if(b.getText().equals("Annuler")) {
 					try {
 						ApplicationEsporter.f.setContentPane(new Esporter_Equipes());
 					} catch (SQLException e1) {
@@ -414,7 +413,7 @@ public class ControleurEsporter implements ActionListener {
 					}
 					ApplicationEsporter.f.validate();
 				}
-				if(b.getText() == "Ajouter un logo") {
+				if(b.getText().equals("Ajouter un logo")) {
 					JFileChooser j = new JFileChooser();
 					j.setCurrentDirectory(new File("Images"));
 					j.setFileFilter(new FileNameExtensionFilter("PNG, JPG, GIF", "png", "jpg", "gif"));
@@ -431,7 +430,7 @@ public class ControleurEsporter implements ActionListener {
 						e1.printStackTrace();
 					}
 				}
-				if(b.getText() == "Valider") {
+				if(b.getText().equals("Valider")) {
 					if (! (Esporter_ModifEcurie.labelsVide() && this.pathLogo == null)) {
 						try {
 							FonctionsSQL.update("saeecurie", "CEO", "'" + Esporter_ModifEcurie.getNomCEO() + "'", "Nom = '" + ApplicationEsporter.nomEcurie + "'");
@@ -448,7 +447,7 @@ public class ControleurEsporter implements ActionListener {
 				}
 				break;
 			case MODIF_EQUIPE:
-				if(b.getText() == "Modifier le Logo") {
+				if(b.getText().equals("Modifier le Logo")) {
 					JFileChooser j = new JFileChooser();
 					j.setCurrentDirectory(new File("Images"));
 					j.setFileFilter(new FileNameExtensionFilter("PNG, JPG, GIF", "png", "jpg", "gif"));
@@ -465,7 +464,7 @@ public class ControleurEsporter implements ActionListener {
 						e1.printStackTrace();
 					}
 				}
-				if(b.getText() == "Annuler") {
+				if(b.getText().equals("Annuler")) {
 					try {
 						ApplicationEsporter.f.setContentPane(new Esporter_Joueurs());
 						ApplicationEsporter.f.validate();
@@ -473,7 +472,7 @@ public class ControleurEsporter implements ActionListener {
 						e1.printStackTrace();
 					}
 				}
-				if(b.getText() == "Modifier Equipe") {
+				if(b.getText().equals("Modifier Equipe")) {
 					if (Esporter_ModificationEquipe.tousRempli()) {
 						try {
 							Esporter_ModifierJoueur.setEquipe(new Equipe(getNomEcurie(), Esporter_ModificationEquipe.getNomEquipe(), Esporter_ModificationEquipe.getJeu(), ApplicationEsporter.logo_Path));
@@ -498,7 +497,7 @@ public class ControleurEsporter implements ActionListener {
 				}
 				break;
 			case JOUEUR:
-				if (b.getText() == "Retour") {
+				if (b.getText().equals("Retour")) {
 					try {
 						ApplicationEsporter.f.setContentPane(new Esporter_Equipes());
 						ApplicationEsporter.f.validate();
@@ -506,7 +505,7 @@ public class ControleurEsporter implements ActionListener {
 						e1.printStackTrace();
 					}
 				}
-				if (b.getText() == "Modifier Equipe") {
+				if (b.getText().equals("Modifier Equipe")) {
                     try {
                         ApplicationEsporter.f.setContentPane(new Esporter_ModificationEquipe());
                         ApplicationEsporter.f.validate();
@@ -517,7 +516,7 @@ public class ControleurEsporter implements ActionListener {
                 }
 				break;
 			case MODIFIER_JOUEUR:
-				if(b.getText()=="Annuler") {
+				if(b.getText().equals("Annuler")) {
 					try {
 						Ecurie_AddJoueur.annuler();
 						ApplicationEsporter.f.setContentPane(new Esporter_Equipes());
@@ -526,7 +525,7 @@ public class ControleurEsporter implements ActionListener {
 						e1.printStackTrace();
 					}
 				}
-				if(b.getText() == "Ajouter le joueur") {
+				if(b.getText().equals("Ajouter le joueur")) {
 					if(Esporter_ModifierJoueur.isNomNull()) {
 						Esporter_ModifierJoueur.setErreur(Esporter_ModifierJoueur.Erreurs.ERREURNOMNUL);
 					} else if(Esporter_ModifierJoueur.isPseudoNull()) {
@@ -549,7 +548,7 @@ public class ControleurEsporter implements ActionListener {
 						e1.printStackTrace();
 					}
 				}
-				if(b.getText()=="Valider") {
+				if(b.getText().equals("Valider")) {
 					try {
 						ApplicationEsporter.f.setContentPane(new Esporter_Equipes());
 						ApplicationEsporter.f.validate();
@@ -559,12 +558,12 @@ public class ControleurEsporter implements ActionListener {
 				}
 				break;
 			case JEU:
-				if(b.getText() == "Ajouter un jeu") {
+				if(b.getText().equals("Ajouter un jeu")) {
 					ApplicationEsporter.f.setContentPane(new Esporter_AjouterJeu());
 					ApplicationEsporter.f.validate();
 					this.etat = EtatEsporter.AJOUTER_JEU;
 				}
-				if(b.getText() == "Supprimer") {
+				if(b.getText().equals("Supprimer")) {
 					String aSupprimer = (String) Esporter_Jeux.getTable().getValueAt(Esporter_Jeux.getTable().getSelectedRow(), 0);
 					try {
 						int result = JOptionPane.showConfirmDialog(null,"Voulez vous vraiment supprimer " + aSupprimer, "Supprimer le jeu", JOptionPane.YES_NO_OPTION);
@@ -578,14 +577,14 @@ public class ControleurEsporter implements ActionListener {
 						e1.printStackTrace();
 					}
 				}
-				if(b.getText() == "Accéder au classement") {
+				if(b.getText().equals("Accéder au classement")) {
 					String nomJeu = (String) Esporter_Jeux.getTable().getValueAt(Esporter_Jeux.getTable().getSelectedRow(), 0);
 					ApplicationEsporter.f.setContentPane(new Esporter_Classement(nomJeu));
 					ApplicationEsporter.f.validate();
 				}
 				break;
 			case AJOUTER_JEU:
-				if(b.getText() == "Valider") {
+				if(b.getText().equals("Valider")) {
 					if (Esporter_AjouterJeu.nomJeuEstVide() || Esporter_AjouterJeu.nbJoueursParEquipeEstVide()) {
 						Esporter_AjouterJeu.setLabelErreur("Veuillez remplir les champs textuels");
 					} else {
@@ -606,7 +605,7 @@ public class ControleurEsporter implements ActionListener {
 						}
 					}
 				}
-				if(b.getText()=="Retour") {
+				if(b.getText().equals("Retour")) {
 					ApplicationEsporter.f.setContentPane(new Esporter_Jeux());
 					ApplicationEsporter.f.validate();
 					this.etat = EtatEsporter.JEU;

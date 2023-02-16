@@ -28,10 +28,9 @@ import Modele.FonctionsSQL;
 import Modele.Joueur;
 
 import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 
+@SuppressWarnings("serial")
 public class Ecurie_Inscription extends JPanel {
 
 	private ControleurEcurie controleur = new ControleurEcurie(this, ControleurEcurie.EtatEcurie.INSCRIPTION_TOURNOI);

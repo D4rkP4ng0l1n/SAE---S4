@@ -68,9 +68,7 @@ public class Compte {
 	public static boolean compteExiste(String login) {
 		try {
 			ResultSet rsCompte = FonctionsSQL.select(NOM_TABLE, "utilisateur", "utilisateur = '" + login + "'");
-	        if (rsCompte.next()) {
-	            return true;
-	        } 
+	        return(rsCompte.next());
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}
@@ -81,9 +79,7 @@ public class Compte {
 	public static boolean mdpOK(String login, String mdp) {
 		try {
 			ResultSet rsCompte = FonctionsSQL.select(NOM_TABLE, "idcompte" , "utilisateur = '" + login + "' AND mdp = '" + crypterMdp(mdp) + "'");
-			if (rsCompte.next()) {
-				return true;
-			}
+			return(rsCompte.next());
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}
