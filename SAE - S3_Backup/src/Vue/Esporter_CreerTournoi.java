@@ -35,6 +35,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Properties;
 
+@SuppressWarnings("serial")
 public class Esporter_CreerTournoi extends JPanel{
 
 	private static JTextField Lieu;
@@ -51,6 +52,7 @@ public class Esporter_CreerTournoi extends JPanel{
 	
 	private ControleurEsporter controleur = new ControleurEsporter(this, EtatEsporter.CREE_TOURNOI);
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Esporter_CreerTournoi() throws SQLException {
 		setLayout(new BorderLayout(0,0));
 
@@ -143,7 +145,7 @@ public class Esporter_CreerTournoi extends JPanel{
         JPanel panel_17 = new JPanel();
         panel_10.add(panel_17);
         
-        this.message = new JLabel("");
+        Esporter_CreerTournoi.message = new JLabel("");
         panel_17.add(message);
         
         JPanel panel_11 = new JPanel();
@@ -169,9 +171,9 @@ public class Esporter_CreerTournoi extends JPanel{
         panel_14.add(lblNewLabel_3);
         
         this.setUpCombo= FonctionsSQL.select("SAEJeu", "nom", "");
-        this.Jeu = new JComboBox();
-        this.Jeu.setModel(new DefaultComboBoxModel(listJeu(setUpCombo)));
-        panel_14.add(this.Jeu);
+        Esporter_CreerTournoi.Jeu = new JComboBox();
+        Esporter_CreerTournoi.Jeu.setModel(new DefaultComboBoxModel(listJeu(setUpCombo)));
+        panel_14.add(Esporter_CreerTournoi.Jeu);
         
         JButton btnAjouterJeu = new JButton("Ajouter le jeu");
         btnAjouterJeu.addActionListener(controleur);
@@ -181,9 +183,9 @@ public class Esporter_CreerTournoi extends JPanel{
         scrollPane.setPreferredSize(new Dimension(250,100));
         panel_14.add(scrollPane);
         
-        this.Jeux = new JList();
+        Esporter_CreerTournoi.Jeux = new JList();
         Jeux.setVisibleRowCount(5);
-        this.Jeux.setModel(new AbstractListModel() {
+        Esporter_CreerTournoi.Jeux.setModel(new AbstractListModel() {
         	String[] values = new String[] {};
         	public int getSize() {
         		return values.length;
@@ -192,7 +194,7 @@ public class Esporter_CreerTournoi extends JPanel{
         		return values[index];
         	}
         });
-        scrollPane.setViewportView(this.Jeux);
+        scrollPane.setViewportView(Esporter_CreerTournoi.Jeux);
         btnAjouterJeu.addActionListener(controleur);
         
         JPanel panel_12 = new JPanel();
@@ -256,6 +258,7 @@ public class Esporter_CreerTournoi extends JPanel{
 		return model.getValue();
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public static JList getJeux() { // Retourne la liste de tous les jeux du tournoi
 		return Jeux;
 	}

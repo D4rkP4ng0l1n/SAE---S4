@@ -14,9 +14,7 @@ import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.SqlDateModel;
 
-import Controleur.ControleurEcurie;
 import Controleur.ControleurEsporter;
-import Controleur.ControleurEcurie.EtatEcurie;
 import Controleur.ControleurEsporter.EtatEsporter;
 import Modele.Equipe;
 import Modele.FonctionsSQL;
@@ -37,6 +35,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+@SuppressWarnings("serial")
 public class Esporter_ModifierJoueur extends JPanel {
 
 	private static JTable tableJoueurs;
@@ -46,7 +45,6 @@ public class Esporter_ModifierJoueur extends JPanel {
 	private static JTextField textFieldPseudo;
 	private static JLabel LabelErreur;
 	private static JButton boutonValider;
-	private JTable table;
 	private JLabel compteurNbJoueurs;
 
 	private static Equipe nouvelleEquipe;
