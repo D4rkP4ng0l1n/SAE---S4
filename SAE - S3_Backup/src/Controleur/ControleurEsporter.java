@@ -316,7 +316,6 @@ public class ControleurEsporter implements ActionListener {
 							} catch (Exception e1) {
 								e1.printStackTrace();
 							}
-							//ResultSet nombreAncienJeu= FonctionsSQL.select("saetournoi", "AM_PM", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
 							FonctionsSQL.delete("saeconcerner", "idtournoi = '" + ApplicationEsporter.idTournoi + "'");
 							for (String jeu : this.jeux) {
 								String[] concernerData = new String[2];
