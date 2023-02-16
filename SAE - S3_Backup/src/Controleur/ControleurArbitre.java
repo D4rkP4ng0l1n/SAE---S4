@@ -15,16 +15,12 @@ import Vue.Arbitre_Accueil;
 import Vue.Arbitre_InfoTournoi;
 import Vue.Arbitre_Match;
 import Vue.Arbitre_Tournoi;
-import Vue.Ecurie_Tournoi;
-import Vue.Esporter_Accueil;
-import Vue.Esporter_Tournois;
 import Vue.PageAccueil;
 
 public class ControleurArbitre implements ActionListener {
 
 	public enum EtatArbitre {ACCUEIL, TOURNOI, INFOTOURNOI, MATCHS}
 
-	private JPanel vue;
 	private EtatArbitre etat;
 	private Arbitre_Match vueMatch;
 
@@ -36,7 +32,6 @@ public class ControleurArbitre implements ActionListener {
 
 	// Constructeur du controleur arbitre
 	public ControleurArbitre(JPanel vue, EtatArbitre etat) {
-		this.vue = vue;
 		this.etat = etat;
 	}
 
@@ -94,18 +89,6 @@ public class ControleurArbitre implements ActionListener {
 		return false;
 	}
 
-	// Supprime tous les matchs des poules
-	private void delPoules() throws SQLException { 
-		ResultSet idsPoules = getIdsPoules();
-		while(idsPoules.next()) {
-			ResultSet idsPartiePoule = FonctionsSQL.select("SAEPartiePoule","ID_PartiePoule", "IDPoule = " + idsPoules.getInt(1));
-			while(idsPartiePoule.next()) {
-				FonctionsSQL.delete("SAECompetiter", "Id_PartiePoule = " + idsPartiePoule.getInt(1));
-			}
-			FonctionsSQL.delete("SAEPartiePoule", "IDPoule = " + idsPoules.getInt(1));
-		}
-	}
-
 	// Retourne un result set contenant les ids des phases finales
 	private ResultSet getIdsPhasesFinales() throws SQLException { 
 		ResultSet selectIdPhaseFinale = FonctionsSQL.select("SAETournoi", "IDPhaseFinale", "IDTournoi = " + ApplicationEsporter.idTournoi);
@@ -129,24 +112,6 @@ public class ControleurArbitre implements ActionListener {
 			return true;
 		}
 		return false;
-	}
-
-	// Retourne le nom des équipes finalistes
-	private ResultSet nomFinalistes() throws SQLException {
-		ResultSet idsPhasesFinales = getIdsPhasesFinales();
-		idsPhasesFinales.next();
-		return FonctionsSQL.select("SAESeQualifier", "nom", "IDPhaseFinale = " + idsPhasesFinales.getInt(1));
-	}
-
-	// Supprime les 2 demis finales
-	private void delDemisFinales() throws SQLException {
-		ResultSet idsPhasesFinales = getIdsPhasesFinales();
-		idsPhasesFinales.next();
-		ResultSet selectIdPartiePhaseFinale = FonctionsSQL.select("SAEPartiePhaseFinale", "Id_PartiePhaseFinale", "IDPhaseFinale = " + idsPhasesFinales.getInt(1) + " AND resultat != 'aucune'");
-		while(selectIdPartiePhaseFinale.next()) {	
-			FonctionsSQL.delete("SAECompetiterPhaseFinale", "Id_PartiePhaseFinale = " + selectIdPartiePhaseFinale.getInt(1));
-			FonctionsSQL.delete("SAEPartiePhaseFinale", "Id_PartiePhaseFinale = " + selectIdPartiePhaseFinale.getInt(1));
-		}
 	}
 
 	// Génère les phases finales
