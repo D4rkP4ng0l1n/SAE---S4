@@ -156,11 +156,7 @@ public class Esporter_ModifierJoueur extends JPanel {
 		panel_2.add(panel_5, BorderLayout.SOUTH);
 
 		boutonValider = new JButton("Valider");
-		if(! nbJoueurSuffisant()) {
-			boutonValider.setEnabled(false);
-		} else {
-			boutonValider.setEnabled(true);
-		}
+		boutonValider.setEnabled(!nbJoueurSuffisant());
 		boutonValider.addActionListener(controleur);
 		panel_5.add(boutonValider);	
 		

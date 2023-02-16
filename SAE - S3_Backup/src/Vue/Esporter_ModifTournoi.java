@@ -287,7 +287,7 @@ public class Esporter_ModifTournoi extends JPanel{
 	public static void addList() {
 		if (erreur==0) {
 			erreur=1;
-			if(getJeu()=="Choisir un Jeu") {
+			if(getJeu().equals("Choisir un Jeu")) {
 				setMessage("Choisissez un jeu avant de cliquer sur Ajouter le jeu");
 			} else {
 				if(DLM.contains(getJeu())) {
