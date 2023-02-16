@@ -10,8 +10,6 @@ import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -19,8 +17,6 @@ import Controleur.ControleurEcurie;
 import Modele.FonctionsSQL;
 
 import javax.swing.JScrollPane;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 

@@ -35,6 +35,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Properties;
 
+@SuppressWarnings("serial")
 public class Esporter_ModifTournoi extends JPanel{
 
 	private static JTextField Lieu;
