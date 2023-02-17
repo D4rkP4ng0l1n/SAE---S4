@@ -17,6 +17,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import Modele.BDD.NomTablesBDD;
 import Modele.Equipe;
 import Modele.FonctionsSQL;
 import Modele.Jeu;
@@ -159,9 +160,9 @@ public class ControleurEsporter implements ActionListener {
 						try {
 							int result = JOptionPane.showConfirmDialog(null,"Voulez vous vraiment supprimer le tournoi de " + condition+" prevu le "+condition2, "Supprimer le tournoi", JOptionPane.YES_NO_OPTION);
 							if (result == 0) {
-								FonctionsSQL.delete("saeconcerner", "idtournoi = '" + idTournoi + "'");
-								FonctionsSQL.delete("saetournoi", "idtournoi = '" + idTournoi + "'");
-								FonctionsSQL.delete("saephasefinale", "idphasefinale = '" + idPhaseFinale + "'");
+								FonctionsSQL.delete(NomTablesBDD.SAECONCERNER, "idtournoi = '" + idTournoi + "'");
+								FonctionsSQL.delete(NomTablesBDD.SAETOURNOI, "idtournoi = '" + idTournoi + "'");
+								FonctionsSQL.delete(NomTablesBDD.SAEPHASEFINALE, "idphasefinale = '" + idPhaseFinale + "'");
 							}
 							ApplicationEsporter.f.setContentPane(new Esporter_Tournois());
 							ApplicationEsporter.f.validate();
@@ -244,13 +245,13 @@ public class ControleurEsporter implements ActionListener {
 						try {
 							String[]finaleData = { "" + FonctionsSQL.newIDFinale("saephasefinale"), "0"};
 							String[]tournoiData = { "" + FonctionsSQL.newIDTournoi("saeTournoi"), "'" + Esporter_CreerTournoi.getLieu() + "'", "TO_DATE('" + Esporter_CreerTournoi.getDate() + " " + Esporter_CreerTournoi.getHeure() + ":" + Esporter_CreerTournoi.getMinute() + "', 'YYYY-MM-DD HH:MI')", finaleData[0], "'" + Esporter_CreerTournoi.getAmPm() + "'" };
-							FonctionsSQL.insert("saephasefinale", finaleData);
-							FonctionsSQL.insert("saeTournoi", tournoiData);
+							FonctionsSQL.insert(NomTablesBDD.SAEPHASEFINALE, finaleData);
+							FonctionsSQL.insert(NomTablesBDD.SAETOURNOI, tournoiData);
 							for (String jeu : this.jeux) {
 								String[] concernerData = new String[2];
 								concernerData[0] = "'" + jeu + "'";
 								concernerData[1] = tournoiData[0];
-								FonctionsSQL.insert("saeconcerner", concernerData );
+								FonctionsSQL.insert(NomTablesBDD.SAECONCERNER, concernerData );
 							}
 						} catch (SQLException e2) {
 							e2.printStackTrace();
@@ -302,26 +303,26 @@ public class ControleurEsporter implements ActionListener {
 							tournoiData[1] = "TO_DATE('" + Esporter_ModifTournoi.getDate() + " " + Esporter_ModifTournoi.getHeure() + ":" + Esporter_ModifTournoi.getMinute() + "', 'YYYY-MM-DD HH:MI')";
 							tournoiData[2] = "'" + Esporter_ModifTournoi.getAmPm() + "'";
 							try {
-								FonctionsSQL.update("saeTournoi", "Lieu", tournoiData[0], "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
+								FonctionsSQL.update(NomTablesBDD.SAETOURNOI, "Lieu", tournoiData[0], "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
 							} catch (Exception e1) {
 								e1.printStackTrace();
 							}
 							try {
-								FonctionsSQL.update("saeTournoi", "DATEETHEURE", tournoiData[1], "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
+								FonctionsSQL.update(NomTablesBDD.SAETOURNOI, "DATEETHEURE", tournoiData[1], "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
 							} catch (Exception e1) {
 								e1.printStackTrace();
 							}
 							try {
-								FonctionsSQL.update("saeTournoi", "AM_PM", tournoiData[2], "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
+								FonctionsSQL.update(NomTablesBDD.SAETOURNOI, "AM_PM", tournoiData[2], "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
 							} catch (Exception e1) {
 								e1.printStackTrace();
 							}
-							FonctionsSQL.delete("saeconcerner", "idtournoi = '" + ApplicationEsporter.idTournoi + "'");
+							FonctionsSQL.delete(NomTablesBDD.SAECONCERNER, "idtournoi = '" + ApplicationEsporter.idTournoi + "'");
 							for (String jeu : this.jeux) {
 								String[] concernerData = new String[2];
 								concernerData[0] = "'" + jeu + "'";
 								concernerData[1] = ApplicationEsporter.idTournoi;
-								FonctionsSQL.insert("saeconcerner", concernerData );
+								FonctionsSQL.insert(NomTablesBDD.SAECONCERNER	, concernerData );
 							}
 						} catch (SQLException e2) {
 							e2.printStackTrace();
