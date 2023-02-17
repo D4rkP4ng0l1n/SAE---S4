@@ -132,6 +132,7 @@ public class Ecurie_Tournoi extends JPanel{
 		scrollPane.setViewportView(tableTournois);
     }
 	
+	@SuppressWarnings("deprecation")
 	private JTable setTable(JTable table) throws SQLException {
 		String columns[] = { "Lieu" , "Date" , "Jeu(x)" , "Classement", "Places disponibles", " "};
 		ResultSet count = FonctionsSQL.select("saetournoi", "count(*)", "");

@@ -51,6 +51,7 @@ public class Esporter_ModifTournoi extends JPanel{
 
 	private ControleurEsporter controleur = new ControleurEsporter(this, EtatEsporter.MODIF_TOURNOI);
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Esporter_ModifTournoi() throws SQLException {
 		setLayout(new BorderLayout(0,0));
 
@@ -406,6 +407,7 @@ public class Esporter_ModifTournoi extends JPanel{
 			res.next();
 			char[] dateduTournoi=  res.getDate(3).toString().toCharArray();
 			if (dateduTournoi[0]=='1') {
+				@SuppressWarnings("deprecation")
 				int dateOk=res.getDate(3).getYear();
 				dateOk = (((dateOk - 1977) * -1) + 2024);
 				String dateGalere = "" + dateOk;

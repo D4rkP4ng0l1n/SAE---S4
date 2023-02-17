@@ -219,44 +219,35 @@ public class ControleurArbitre implements ActionListener {
 				break;
 			case MATCHS:
 
-				if(b.getText().equals("Victoire équipe 1")) {
-					victoireMatchPouleEquipe(1);
-					if(poulesTermines() && !demisFinalesTerminees()) {
-						JOptionPane.showMessageDialog(null, "La phase de poule est terminée !");
-						JOptionPane.showMessageDialog(null, "Création des demis finales en cours");
-						genererFinale();
-						//delPoules();
-					} 
+				if(b.getText().equals("Victoire équipe 1") || b.getText().equals("Victoire équipe 2")) {
+					if(b.getText().equals("Victoire équipe 1")) {
+						victoireMatchPouleEquipe(1);
+					}
+					if(b.getText().equals("Victoire équipe 2")) {
+						victoireMatchPouleEquipe(2);
+					}
+					setMessagePouleFiniDemisFinPasFini(); 
 					vueMatch.updateTable();
 				}
-
-				if(b.getText().equals("Victoire équipe 2")) {
-					victoireMatchPouleEquipe(2);
-					if(poulesTermines() && !demisFinalesTerminees()) {
-						JOptionPane.showMessageDialog(null, "La phase de poule est terminée !");
-						JOptionPane.showMessageDialog(null, "Création des demis finales en cours");
-						genererFinale();
+				
+				if(b.getText().equals("Victoire équipe 1") || b.getText().equals("Victoire équipe 2")) {
+					if(b.getText().equals("Victoire équipe 1 ")) {
+						victoireMatchPhaseFinaleEquipe(1);
 					}
-					vueMatch.updateTable();
-				}
-
-				if(b.getText().equals("Victoire équipe 1 ")) {
-					victoireMatchPhaseFinaleEquipe(1);
-					if(demisFinalesTerminees()) {
-						//delDemisFinales();
-					}
-					vueMatch.updateTableFinale();
-				}
-
-
-				if(b.getText().equals("Victoire équipe 2 ")) {
-					victoireMatchPhaseFinaleEquipe(2);
-					if(demisFinalesTerminees()) {
-						//delDemisFinales();
+					if(b.getText().equals("Victoire équipe 2 ")) {
+						victoireMatchPhaseFinaleEquipe(2);
 					}
 					vueMatch.updateTableFinale();
 				}
 			}
+		}
+	}
+
+	public void setMessagePouleFiniDemisFinPasFini() {
+		if(poulesTermines() && !demisFinalesTerminees()) {
+			JOptionPane.showMessageDialog(null, "La phase de poule est terminée !");
+			JOptionPane.showMessageDialog(null, "Création des demis finales en cours");
+			genererFinale();
 		}
 	}
 

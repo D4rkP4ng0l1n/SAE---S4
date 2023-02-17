@@ -18,6 +18,7 @@ import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 
+@SuppressWarnings("serial")
 public class PageConnexion extends JPanel {
 
 	private ControleurConnexion controleur = new ControleurConnexion(this);

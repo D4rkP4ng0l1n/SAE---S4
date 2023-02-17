@@ -26,11 +26,8 @@ public class Joueur {
 	public int calculAge() {
         LocalDate dateActuelle = LocalDate.now();
         int age = dateActuelle.getYear() - this.dateNaissance.getYear();
-        if(dateActuelle.getMonthValue() < this.dateNaissance.getMonth() + 1) {
-            return age - 1;
-        }
-        if (dateActuelle.getMonthValue() == this.dateNaissance.getMonth() + 1 && dateActuelle.getDayOfMonth() < this.dateNaissance.getDay()) {
-            return age - 1 ;
+        if((dateActuelle.getMonthValue() < this.dateNaissance.getMonth() + 1) || (dateActuelle.getMonthValue() == this.dateNaissance.getMonth() + 1 && dateActuelle.getDayOfMonth() < this.dateNaissance.getDay())) {
+            age--;
         }
         return age;
     }
