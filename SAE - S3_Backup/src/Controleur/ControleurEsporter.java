@@ -22,6 +22,7 @@ import Modele.Equipe;
 import Modele.FonctionsSQL;
 import Modele.Jeu;
 import Modele.Joueur;
+import Modele.BDD.NomTablesBDD;
 import Vue.ApplicationEsporter;
 import Vue.Ecurie_AddJoueur;
 import Vue.Esporter_Accueil;
@@ -242,19 +243,16 @@ public class ControleurEsporter implements ActionListener {
 					}else if(Esporter_CreerTournoi.DLMIsVide()) {
 						Esporter_CreerTournoi.setMessage("Veillez sélectionner au moins un jeu avant de valider");
 					}else {
-						try {
-							String[]finaleData = { "" + FonctionsSQL.newIDFinale("saephasefinale"), "0"};
-							String[]tournoiData = { "" + FonctionsSQL.newIDTournoi("saeTournoi"), "'" + Esporter_CreerTournoi.getLieu() + "'", "TO_DATE('" + Esporter_CreerTournoi.getDate() + " " + Esporter_CreerTournoi.getHeure() + ":" + Esporter_CreerTournoi.getMinute() + "', 'YYYY-MM-DD HH:MI')", finaleData[0], "'" + Esporter_CreerTournoi.getAmPm() + "'" };
-							FonctionsSQL.insert(NomTablesBDD.SAEPHASEFINALE, finaleData);
-							FonctionsSQL.insert(NomTablesBDD.SAETOURNOI, tournoiData);
-							for (String jeu : this.jeux) {
-								String[] concernerData = new String[2];
-								concernerData[0] = "'" + jeu + "'";
-								concernerData[1] = tournoiData[0];
-								FonctionsSQL.insert(NomTablesBDD.SAECONCERNER, concernerData );
-							}
-						} catch (SQLException e2) {
-							e2.printStackTrace();
+						String[]finaleData = { "" + FonctionsSQL.newID(NomTablesBDD.SAEPHASEFINALE), "0"};
+						String[]tournoiData = { "" + FonctionsSQL.newID(NomTablesBDD.SAETOURNOI), "'" + Esporter_CreerTournoi.getLieu() + "'", "TO_DATE('" + Esporter_CreerTournoi.getDate() + " " + Esporter_CreerTournoi.getHeure() + ":" + Esporter_CreerTournoi.getMinute() + "', 'YYYY-MM-DD HH:MI')", finaleData[0], "'" + Esporter_CreerTournoi.getAmPm() + "'" };
+						FonctionsSQL.insert(NomTablesBDD.SAEPHASEFINALE, finaleData);
+						FonctionsSQL.insert(NomTablesBDD.SAETOURNOI, tournoiData);
+						String[] concernerData;
+						for (String jeu : this.jeux) {
+							concernerData = new String[2];
+							concernerData[0] = "'" + jeu + "'";
+							concernerData[1] = tournoiData[0];
+							FonctionsSQL.insert(NomTablesBDD.SAECONCERNER, concernerData );
 						}
 						Esporter_CreerTournoi.DLMVide();
 						try {
@@ -298,34 +296,31 @@ public class ControleurEsporter implements ActionListener {
 						Esporter_ModifTournoi.setMessage("Veillez sélectionner au moins un jeu avant de valider");
 					}else {
 						String[]tournoiData = new String[3] ;
+						tournoiData[0] ="'" + Esporter_ModifTournoi.getLieu() + "'";
+						tournoiData[1] = "TO_DATE('" + Esporter_ModifTournoi.getDate() + " " + Esporter_ModifTournoi.getHeure() + ":" + Esporter_ModifTournoi.getMinute() + "', 'YYYY-MM-DD HH:MI')";
+						tournoiData[2] = "'" + Esporter_ModifTournoi.getAmPm() + "'";
 						try {
-							tournoiData[0] ="'" + Esporter_ModifTournoi.getLieu() + "'";
-							tournoiData[1] = "TO_DATE('" + Esporter_ModifTournoi.getDate() + " " + Esporter_ModifTournoi.getHeure() + ":" + Esporter_ModifTournoi.getMinute() + "', 'YYYY-MM-DD HH:MI')";
-							tournoiData[2] = "'" + Esporter_ModifTournoi.getAmPm() + "'";
-							try {
-								FonctionsSQL.update(NomTablesBDD.SAETOURNOI, "Lieu", tournoiData[0], "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
-							} catch (Exception e1) {
-								e1.printStackTrace();
-							}
-							try {
-								FonctionsSQL.update(NomTablesBDD.SAETOURNOI, "DATEETHEURE", tournoiData[1], "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
-							} catch (Exception e1) {
-								e1.printStackTrace();
-							}
-							try {
-								FonctionsSQL.update(NomTablesBDD.SAETOURNOI, "AM_PM", tournoiData[2], "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
-							} catch (Exception e1) {
-								e1.printStackTrace();
-							}
-							FonctionsSQL.delete(NomTablesBDD.SAECONCERNER, "idtournoi = '" + ApplicationEsporter.idTournoi + "'");
-							for (String jeu : this.jeux) {
-								String[] concernerData = new String[2];
-								concernerData[0] = "'" + jeu + "'";
-								concernerData[1] = ApplicationEsporter.idTournoi;
-								FonctionsSQL.insert(NomTablesBDD.SAECONCERNER	, concernerData );
-							}
-						} catch (SQLException e2) {
-							e2.printStackTrace();
+							FonctionsSQL.update(NomTablesBDD.SAETOURNOI, "Lieu", tournoiData[0], "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
+						try {
+							FonctionsSQL.update(NomTablesBDD.SAETOURNOI, "DATEETHEURE", tournoiData[1], "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
+						try {
+							FonctionsSQL.update(NomTablesBDD.SAETOURNOI, "AM_PM", tournoiData[2], "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
+						FonctionsSQL.delete(NomTablesBDD.SAECONCERNER, "idtournoi = '" + ApplicationEsporter.idTournoi + "'");
+						String[] concernerData;
+						for (String jeu : this.jeux) {
+							concernerData = new String[2];
+							concernerData[0] = "'" + jeu + "'";
+							concernerData[1] = ApplicationEsporter.idTournoi;
+							FonctionsSQL.insert(NomTablesBDD.SAECONCERNER, concernerData );
 						}
 						Esporter_ModifTournoi.DLMVide();
 						try {
@@ -355,7 +350,7 @@ public class ControleurEsporter implements ActionListener {
 					try {
 						int result = JOptionPane.showConfirmDialog(null,"Voulez vous vraiment supprimer " + aSupprimer, "Supprimer l'écurie", JOptionPane.YES_NO_OPTION);
 						if (result == 0) {
-							FonctionsSQL.delete("saeecurie", "nom = '" + aSupprimer + "'");
+							FonctionsSQL.delete(NomTablesBDD.SAEECURIE, "nom = '" + aSupprimer + "'");
 						}
 						ApplicationEsporter.f.setContentPane(new Esporter_Ecuries());
 						ApplicationEsporter.f.validate();
@@ -395,7 +390,7 @@ public class ControleurEsporter implements ActionListener {
 					try {
 						int result = JOptionPane.showConfirmDialog(null,"Voulez vous vraiment supprimer " + aSupprimer, "Supprimer l'équipe", JOptionPane.YES_NO_OPTION);
 						if (result == 0) {
-							FonctionsSQL.delete("saeequipe", "nom = '" + aSupprimer + "'");
+							FonctionsSQL.delete(NomTablesBDD.SAEEQUIPE, "nom = '" + aSupprimer + "'");
 						}
 						ApplicationEsporter.f.setContentPane(new Esporter_Equipes());
 						ApplicationEsporter.f.validate();
@@ -434,9 +429,9 @@ public class ControleurEsporter implements ActionListener {
 				if(b.getText().equals("Valider")) {
 					if (! (Esporter_ModifEcurie.labelsVide() && this.pathLogo == null)) {
 						try {
-							FonctionsSQL.update("saeecurie", "CEO", "'" + Esporter_ModifEcurie.getNomCEO() + "'", "Nom = '" + ApplicationEsporter.nomEcurie + "'");
-							FonctionsSQL.update("saeecurie", "LOGO", "'" + this.pathLogo + "'", "Nom = '" + ApplicationEsporter.nomEcurie + "'");
-							FonctionsSQL.update("saeecurie", "Nom", "'" + Esporter_ModifEcurie.getNomEcurie() + "'", "Nom = '" + ApplicationEsporter.nomEcurie + "'");
+							FonctionsSQL.update(NomTablesBDD.SAEECURIE, "CEO", "'" + Esporter_ModifEcurie.getNomCEO() + "'", "Nom = '" + ApplicationEsporter.nomEcurie + "'");
+							FonctionsSQL.update(NomTablesBDD.SAEECURIE, "LOGO", "'" + this.pathLogo + "'", "Nom = '" + ApplicationEsporter.nomEcurie + "'");
+							FonctionsSQL.update(NomTablesBDD.SAEECURIE, "Nom", "'" + Esporter_ModifEcurie.getNomEcurie() + "'", "Nom = '" + ApplicationEsporter.nomEcurie + "'");
 							ApplicationEsporter.f.setContentPane(new Esporter_Ecuries());
 							ApplicationEsporter.f.validate();
 						} catch (Exception e1) {
@@ -566,17 +561,12 @@ public class ControleurEsporter implements ActionListener {
 				}
 				if(b.getText().equals("Supprimer")) {
 					String aSupprimer = (String) Esporter_Jeux.getTable().getValueAt(Esporter_Jeux.getTable().getSelectedRow(), 0);
-					try {
-						int result = JOptionPane.showConfirmDialog(null,"Voulez vous vraiment supprimer " + aSupprimer, "Supprimer le jeu", JOptionPane.YES_NO_OPTION);
-						if (result == 0) {
-							FonctionsSQL.delete("saejeu", "nom = '" + aSupprimer + "'");
-						}
-						ApplicationEsporter.f.setContentPane(new Esporter_Jeux());
-						ApplicationEsporter.f.validate();
-					} catch (SQLException e1) {
-						JOptionPane.showMessageDialog(null,"Echec de la suppression");
-						e1.printStackTrace();
+					int result = JOptionPane.showConfirmDialog(null,"Voulez vous vraiment supprimer " + aSupprimer, "Supprimer le jeu", JOptionPane.YES_NO_OPTION);
+					if (result == 0) {
+						FonctionsSQL.delete(NomTablesBDD.SAEJEU, "nom = '" + aSupprimer + "'");
 					}
+					ApplicationEsporter.f.setContentPane(new Esporter_Jeux());
+					ApplicationEsporter.f.validate();
 				}
 				if(b.getText().equals("Accéder au classement")) {
 					String nomJeu = (String) Esporter_Jeux.getTable().getValueAt(Esporter_Jeux.getTable().getSelectedRow(), 0);
@@ -594,7 +584,7 @@ public class ControleurEsporter implements ActionListener {
 							if (this.jeu.estNouveau()) {
 								String[] req = new String[1];
 								req[0] =  "'" + this.jeu.getNom() + "', '" + this.jeu.getNbJoueursParEquipe() + "'";
-								FonctionsSQL.insert("saejeu", req);
+								FonctionsSQL.insert(NomTablesBDD.SAEJEU, req);
 								ApplicationEsporter.f.setContentPane(new Esporter_Jeux());
 								ApplicationEsporter.f.validate();
 								this.etat = EtatEsporter.JEU;

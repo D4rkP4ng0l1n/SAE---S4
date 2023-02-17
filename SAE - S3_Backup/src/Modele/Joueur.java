@@ -5,6 +5,8 @@ import java.time.LocalDate;
 
 import org.jdatepicker.impl.SqlDateModel;
 
+import Modele.BDD.NomTablesBDD;
+
 public class Joueur {
 
 	private int idJoueur;
@@ -14,7 +16,7 @@ public class Joueur {
 	private Equipe equipeAssocie;
 	
 	public Joueur(String nom, String pseudo, SqlDateModel dateNaissance, Equipe equipe) throws SQLException {
-		this.idJoueur = FonctionsSQL.newIDJoueur();
+		this.idJoueur = FonctionsSQL.newID(NomTablesBDD.SAEJOUEUR);
 		this.nom = nom;
 		this.pseudo = pseudo;
 		this.dateNaissance = dateNaissance;
@@ -55,10 +57,10 @@ public class Joueur {
 	
 	public void ajouterJoueur() throws SQLException {
 		String[]aInserer = {"" + this.idJoueur, "'" + this.nom + "'", "'" + this.pseudo + "'", "TO_DATE('" + this.dateNaissance.getValue() + "', 'YYYY-MM-DD')", "'" + this.equipeAssocie.getNomEquipe() + "'"};
-		FonctionsSQL.insert("saejoueur", aInserer);
+		FonctionsSQL.insert(NomTablesBDD.SAEJOUEUR, aInserer);
 	}
 	
 	public void supprimerJoueur() throws SQLException {
-		FonctionsSQL.delete("saejoueur", "idjoueur = " + this.idJoueur);
+		FonctionsSQL.delete(NomTablesBDD.SAEJOUEUR, "idjoueur = " + this.idJoueur);
 	}
 }
