@@ -2,6 +2,7 @@ package Vue;
 
 import java.awt.GridLayout;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import Modele.testMusique;
 
@@ -33,5 +34,11 @@ public class ApplicationEsporter {
 		f.setSize(800, 500);
 		f.setResizable(false);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+	
+	//permet de changer de page
+	public static void changerDePage(JPanel fenetre) {
+		ApplicationEsporter.f.setContentPane(fenetre);
+		ApplicationEsporter.f.validate();
 	}
 }

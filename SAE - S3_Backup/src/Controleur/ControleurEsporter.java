@@ -22,6 +22,7 @@ import Modele.Equipe;
 import Modele.FonctionsSQL;
 import Modele.Jeu;
 import Modele.Joueur;
+import Modele.BDD.NomTablesBDD;
 import Vue.ApplicationEsporter;
 import Vue.Ecurie_AddJoueur;
 import Vue.Esporter_Accueil;

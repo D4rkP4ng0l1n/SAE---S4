@@ -13,6 +13,7 @@ import org.junit.Test;
 import Modele.BDD.NomTablesBDD;
 import Modele.Compte;
 import Modele.FonctionsSQL;
+import Modele.BDD.NomTablesBDD;
 
 public class TestsEcurie {
 	

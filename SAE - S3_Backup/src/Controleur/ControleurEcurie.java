@@ -20,6 +20,7 @@ import Modele.BDD.NomTablesBDD;
 import Modele.Equipe;
 import Modele.FonctionsSQL;
 import Modele.Joueur;
+import Modele.BDD.NomTablesBDD;
 import Vue.ApplicationEsporter;
 import Vue.Ecurie_Accueil;
 import Vue.Ecurie_AddJoueur;
