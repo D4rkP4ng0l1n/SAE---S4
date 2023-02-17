@@ -3,6 +3,8 @@ package Modele;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import Modele.BDD.NomTablesBDD;
+
 public class Jeu {
 
     private String nom, nbJoueursParEquipe;
@@ -13,7 +15,7 @@ public class Jeu {
     }
 
     public boolean estNouveau() throws SQLException { // Vérifie que le jeu n'existe pas dans la bas de données
-        ResultSet rs = FonctionsSQL.select("saejeu", "*", "nom = '" + this.nom + "'");
+        ResultSet rs = FonctionsSQL.select(NomTablesBDD.SAEJEU, "*", "nom = '" + this.nom + "'");
         return !rs.next();
     }
 
@@ -32,10 +34,10 @@ public class Jeu {
     public void ajouterJeu() throws SQLException { // Ajoute le jeu dans la base de données
         String[] req = new String[1];
         req[0] =  "'" + this.getNom() + "', '" + this.getNbJoueursParEquipe() + "'";
-        FonctionsSQL.insert("saejeu", req);
+        FonctionsSQL.insert(NomTablesBDD.SAEJEU, req);
     }
 
     public void supprimerJeu() throws SQLException { // Supprime le jeu
-        FonctionsSQL.delete("saejeu", "nom = '" + this.getNom() + "'");
+        FonctionsSQL.delete(NomTablesBDD.SAEJEU, "nom = '" + this.getNom() + "'");
     }
 }

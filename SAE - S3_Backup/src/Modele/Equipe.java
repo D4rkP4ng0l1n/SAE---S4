@@ -3,6 +3,7 @@ package Modele;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import Modele.BDD.NomTablesBDD;
 import Vue.ApplicationEsporter;
 
 public class Equipe {
@@ -36,44 +37,47 @@ public class Equipe {
 		return this.jeu;
 	}
 	
-	public String getPathLogo() { // Récupère le chemin du logo
+	// Récupère le chemin du logo
+	public String getPathLogo() { 
 		return this.pathLogo;
 	}
 	
-	public void ajouterEquipe() throws SQLException { // Ajoute une équipe dans la base de données
+	// Ajoute une équipe dans la base de données
+	public void ajouterEquipe() throws SQLException { 
 		String[]aInserer = {"'" + this.nomEquipe + "'", "0" , "'" + this.pathLogo + "'" , "'" + this.nomJeu + "'" , "'" + this.nomEcurie + "'"};
-		FonctionsSQL.insert("saeequipe", aInserer);
+		FonctionsSQL.insert(NomTablesBDD.SAEEQUIPE, aInserer);
 	}
 	
-	public void modifierEquipe() throws SQLException { // Modifie une équipe dans la base de données
+	// Modifie une équipe dans la base de données
+	public void modifierEquipe() throws SQLException { 
 		try {
 			try {
 				this.ajouterEquipe();
 			}catch(Exception e) {
 			}
 			if(this.nomEquipe.equals(ApplicationEsporter.equipe)) { // Modifie l'équipe dans la base de données si le nom de l'équipe ne change pas
-				FonctionsSQL.update("saeequipe", "logo", "'"+this.pathLogo+"'", "nom ='"+ApplicationEsporter.equipe+"'");
-				FonctionsSQL.update("saeequipe", "nom_1", "'"+this.nomJeu+"'", "nom ='"+ApplicationEsporter.equipe+"'");
+				FonctionsSQL.update(NomTablesBDD.SAEEQUIPE, "logo", "'"+this.pathLogo+"'", "nom ='"+ApplicationEsporter.equipe+"'");
+				FonctionsSQL.update(NomTablesBDD.SAEEQUIPE, "nom_1", "'"+this.nomJeu+"'", "nom ='"+ApplicationEsporter.equipe+"'");
 			}else { // Modifie l'équipe et ceux qui utilise le nom de celui-ci quand le nom de l'équipe change
 				System.out.println(this.nomEquipe+" "+ApplicationEsporter.equipe);
 				this.ajouterEquipe();
-				FonctionsSQL.update("saejoueur", "nom_equipe", this.nomEquipe, "nom_equipe ='"+ApplicationEsporter.equipe+"'");
-				FonctionsSQL.update("saeParticiper", "nom_equipe", this.nomEquipe, "nom_equipe ='"+ApplicationEsporter.equipe+"'");
-				FonctionsSQL.update("saeconcourir", "nom", this.nomEquipe, "nom ='"+ApplicationEsporter.equipe+"'");
-				FonctionsSQL.update("saeCompetiter", "nom", this.nomEquipe, "nom ='"+ApplicationEsporter.equipe+"'");
-				FonctionsSQL.update("saeCompetiterphasefinale", "nom", this.nomEquipe, "nom ='"+ApplicationEsporter.equipe+"'");
+				FonctionsSQL.update(NomTablesBDD.SAEJOUEUR, "nom_equipe", this.nomEquipe, "nom_equipe ='"+ApplicationEsporter.equipe+"'");
+				FonctionsSQL.update(NomTablesBDD.SAEPARTICIPER, "nom_equipe", this.nomEquipe, "nom_equipe ='"+ApplicationEsporter.equipe+"'");
+				FonctionsSQL.update(NomTablesBDD.SAECONCOURIR, "nom", this.nomEquipe, "nom ='"+ApplicationEsporter.equipe+"'");
+				FonctionsSQL.update(NomTablesBDD.SAECOMPETITER, "nom", this.nomEquipe, "nom ='"+ApplicationEsporter.equipe+"'");
+				FonctionsSQL.update(NomTablesBDD.SAECOMPETITERPHASEFINALE, "nom", this.nomEquipe, "nom ='"+ApplicationEsporter.equipe+"'");
 				ResultSet rs = FonctionsSQL.select("saeequipe", "nbpoints", "nom ='"+ApplicationEsporter.equipe+"'");
 				rs.next();
-				FonctionsSQL.update("saeequipe", "nbpoints", ""+rs.getInt(1), "nom ='"+this.nomEquipe+"'");
-				FonctionsSQL.delete("saeequipe", "nom ='"+ApplicationEsporter.equipe+"'");
+				FonctionsSQL.update(NomTablesBDD.SAEEQUIPE, "nbpoints", ""+rs.getInt(1), "nom ='"+this.nomEquipe+"'");
+				FonctionsSQL.delete(NomTablesBDD.SAEEQUIPE, "nom ='"+ApplicationEsporter.equipe+"'");
 			}
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void supprimerEquipe() throws SQLException { // Supprime une équipe dans la base de données
-		FonctionsSQL.delete("saeequipe", "nom = '" + this.nomEquipe + "'");
+	// Supprime une équipe dans la base de données
+	public void supprimerEquipe() throws SQLException { 
+		FonctionsSQL.delete(NomTablesBDD.SAEEQUIPE, "nom = '" + this.nomEquipe + "'");
 	}
 }

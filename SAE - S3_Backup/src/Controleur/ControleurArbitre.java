@@ -355,7 +355,6 @@ public class ControleurArbitre implements ActionListener {
 									vueMatch.updateTableFinale();
 								} 
 							} catch(SQLException e1) {
-
 								e1.printStackTrace();
 							}
 						}
