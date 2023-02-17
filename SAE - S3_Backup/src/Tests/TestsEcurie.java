@@ -12,19 +12,20 @@ import org.junit.Test;
 
 import Modele.Compte;
 import Modele.FonctionsSQL;
+import Modele.BDD.NomTablesBDD;
 
 public class TestsEcurie {
 	
 	@Before
 	public void setUp() throws NoSuchAlgorithmException, SQLException, Exception {
 		Compte.creerCompte("CompteTestEcurie", "0000", Compte.Type.ECURIE);
-		FonctionsSQL.update("saecompte", "idcompte", "99999", "utilisateur = 'CompteTestEcurie'");
+		FonctionsSQL.update(NomTablesBDD.SAECOMPTE, "idcompte", "99999", "utilisateur = 'CompteTestEcurie'");
 	}
 	
 	@After
 	public void tearDown() throws SQLException {
-		FonctionsSQL.delete("saeecurie", "idcompte = 99999");
-		FonctionsSQL.delete("saecompte", "idcompte = 99999");
+		FonctionsSQL.delete(NomTablesBDD.SAEECURIE, "idcompte = 99999");
+		FonctionsSQL.delete(NomTablesBDD.SAECOMPTE, "idcompte = 99999");
 	}
 	
 	@Test
@@ -32,7 +33,7 @@ public class TestsEcurie {
 		ResultSet rsBefore = FonctionsSQL.select("saeecurie", "count(*)", "");
 		rsBefore.next();
 		String[]aInserer = {"'G3'","'Evil John LeSihiho'", "'LogoG3.png'", "99999"};
-		FonctionsSQL.insert("saeecurie", aInserer);
+		FonctionsSQL.insert(NomTablesBDD.SAEECURIE, aInserer);
 		ResultSet rsAfter = FonctionsSQL.select("saeecurie", "count(*)", "");
 		rsAfter.next();
 		assertTrue(rsBefore.getInt(1) < rsAfter.getInt(1));
@@ -41,10 +42,10 @@ public class TestsEcurie {
 	@Test
 	public void testDeleteEcurie() throws NoSuchAlgorithmException, SQLException, Exception {
 		String[]aInserer = {"'G3'","'Evil John LeSihiho'", "'LogoG3.png'", "99999"};
-		FonctionsSQL.insert("saeecurie", aInserer);
+		FonctionsSQL.insert(NomTablesBDD.SAEECURIE, aInserer);
 		ResultSet rsBefore = FonctionsSQL.select("saeecurie", "count(*)", "");
 		rsBefore.next();
-		FonctionsSQL.delete("saeecurie", "idcompte = 99999");
+		FonctionsSQL.delete(NomTablesBDD.SAEECURIE, "idcompte = 99999");
 		ResultSet rsAfter = FonctionsSQL.select("saeecurie", "count(*)", "");
 		rsAfter.next();
 		assertTrue(rsBefore.getInt(1) > rsAfter.getInt(1));	
@@ -53,8 +54,8 @@ public class TestsEcurie {
 	@Test
 	public void testModifEcurie() throws Exception {
 		String[]aInserer = {"'G3'","'Evil John LeSihiho'", "'LogoG3.png'", "99999"};
-		FonctionsSQL.insert("saeecurie", aInserer);
-		FonctionsSQL.update("saeecurie", "nom", "'G4'", "idcompte = 99999");
+		FonctionsSQL.insert(NomTablesBDD.SAEECURIE, aInserer);
+		FonctionsSQL.update(NomTablesBDD.SAEECURIE, "nom", "'G4'", "idcompte = 99999");
 		ResultSet rs = FonctionsSQL.select("saeecurie", "nom", "idcompte = 99999");
 		rs.next();
 		assertEquals(rs.getString(1), "G4");
