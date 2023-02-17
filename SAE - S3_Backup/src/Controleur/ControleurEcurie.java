@@ -59,8 +59,12 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 	// Génération des poules
 	private static void  genererPoules(String IdTournoi) {
 		for (int i = 1; i <= 4;i++) { 
-			String[] poule = {"" + FonctionsSQL.newID(NomTablesBDD.SAEPOULE), "''", "" + i, "" + IdTournoi};
-			FonctionsSQL.insert(NomTablesBDD.SAEPOULE, poule);
+			try {
+				String[] poule = {"" + FonctionsSQL.newID(NomTablesBDD.SAEPOULE), "''", "" + i, "" + IdTournoi};
+				FonctionsSQL.insert(NomTablesBDD.SAEPOULE, poule);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		// Liens entre les équipes et les poules (insertion dans la table saeconcourir)
 		try {
@@ -215,9 +219,13 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 				if(b.getText().equals("Valider")) {
 					if (! (Ecurie_CreerEcurie.labelsVide() && this.pathLogo == null)) {
 						String[] aInserer = {"'" + Ecurie_CreerEcurie.getNomEcurie() + "'", "'" + Ecurie_CreerEcurie.getNomCEO() + "'", "'" + this.pathLogo + "'", "" + ApplicationEsporter.idCompte};
-						FonctionsSQL.insert(NomTablesBDD.SAEECURIE, aInserer);
-						ApplicationEsporter.f.setContentPane(new PageAccueil());
-						ApplicationEsporter.f.validate();
+						try {
+							FonctionsSQL.insert(NomTablesBDD.SAEECURIE, aInserer);
+							ApplicationEsporter.f.setContentPane(new PageAccueil());
+							ApplicationEsporter.f.validate();
+						} catch (SQLException e1) {
+							e1.printStackTrace();
+						}
 					} else {
 						Ecurie_CreerEcurie.setMessage("Information(s) manquante(s)");
 					}
