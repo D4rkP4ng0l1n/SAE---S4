@@ -15,7 +15,7 @@ public class Joueur {
 	private SqlDateModel dateNaissance;
 	private Equipe equipeAssocie;
 	
-	public Joueur(String nom, String pseudo, SqlDateModel dateNaissance, Equipe equipe) throws SQLException {
+	public Joueur(String nom, String pseudo, SqlDateModel dateNaissance, Equipe equipe) {
 		this.idJoueur = FonctionsSQL.newID(NomTablesBDD.SAEJOUEUR);
 		this.nom = nom;
 		this.pseudo = pseudo;
@@ -55,12 +55,12 @@ public class Joueur {
 		this.idJoueur = id;
 	}
 	
-	public void ajouterJoueur() throws SQLException {
+	public void ajouterJoueur() {
 		String[]aInserer = {"" + this.idJoueur, "'" + this.nom + "'", "'" + this.pseudo + "'", "TO_DATE('" + this.dateNaissance.getValue() + "', 'YYYY-MM-DD')", "'" + this.equipeAssocie.getNomEquipe() + "'"};
 		FonctionsSQL.insert(NomTablesBDD.SAEJOUEUR, aInserer);
 	}
 	
-	public void supprimerJoueur() throws SQLException {
+	public void supprimerJoueur() {
 		FonctionsSQL.delete(NomTablesBDD.SAEJOUEUR, "idjoueur = " + this.idJoueur);
 	}
 }

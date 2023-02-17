@@ -18,7 +18,7 @@ import java.awt.Color;
 @SuppressWarnings("serial")
 public class Arbitre_Accueil extends JPanel{
 
-	private ControleurArbitre controleur = new ControleurArbitre(this, EtatArbitre.ACCUEIL);
+	private ControleurArbitre controleur = new ControleurArbitre(this, EtatArbitre.TOURNOI);
 
 	//constructeur de la page Arbitre Accueil
 	public Arbitre_Accueil() {

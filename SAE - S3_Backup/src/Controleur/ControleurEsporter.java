@@ -58,7 +58,7 @@ public class ControleurEsporter implements ActionListener {
 		this.etat = etat;
 		this.jeux = new ArrayList<String>();
 	}
-	
+
 	// Retourne le nom de l'écurie pour l'équipe courante
 	public String getNomEcurie() throws SQLException { 
 		ResultSet nomEcurie = FonctionsSQL.select(NomTablesBDD.SAEEQUIPE, "nom_2", "nom = '" + ApplicationEsporter.equipe+"'");
@@ -384,26 +384,17 @@ public class ControleurEsporter implements ActionListener {
 				}
 				if (b.getText().equals("Supprimer")) {
 					String aSupprimer = (String) Esporter_Equipes.getTable().getValueAt(Esporter_Equipes.getTable().getSelectedRow(), 0);
-					try {
-						int result = JOptionPane.showConfirmDialog(null,"Voulez vous vraiment supprimer " + aSupprimer, "Supprimer l'équipe", JOptionPane.YES_NO_OPTION);
-						if (result == 0) {
-							FonctionsSQL.delete(NomTablesBDD.SAEEQUIPE, "nom = '" + aSupprimer + "'");
-						}
-						ApplicationEsporter.f.setContentPane(new Esporter_Equipes());
-						ApplicationEsporter.f.validate();
-					} catch (SQLException e1) {
-						JOptionPane.showMessageDialog(null,"Echec de la suppression, veuillez vérifier que tous les joueurs sont supprimés");
-						e1.printStackTrace();
+					int result = JOptionPane.showConfirmDialog(null,"Voulez vous vraiment supprimer " + aSupprimer, "Supprimer l'équipe", JOptionPane.YES_NO_OPTION);
+					if (result == 0) {
+						FonctionsSQL.delete(NomTablesBDD.SAEEQUIPE, "nom = '" + aSupprimer + "'");
 					}
+					ApplicationEsporter.f.setContentPane(new Esporter_Equipes());
+					ApplicationEsporter.f.validate();
 				}
 				break;
 			case MODIF:
 				if(b.getText().equals("Annuler")) {
-					try {
-						ApplicationEsporter.f.setContentPane(new Esporter_Equipes());
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
+					ApplicationEsporter.f.setContentPane(new Esporter_Equipes());
 					ApplicationEsporter.f.validate();
 				}
 				if(b.getText().equals("Ajouter un logo")) {
@@ -491,22 +482,18 @@ public class ControleurEsporter implements ActionListener {
 				break;
 			case JOUEUR:
 				if (b.getText().equals("Retour")) {
+					ApplicationEsporter.f.setContentPane(new Esporter_Equipes());
+					ApplicationEsporter.f.validate();
+				}
+				if (b.getText().equals("Modifier Equipe")) {
 					try {
-						ApplicationEsporter.f.setContentPane(new Esporter_Equipes());
+						ApplicationEsporter.f.setContentPane(new Esporter_ModificationEquipe());
 						ApplicationEsporter.f.validate();
+						this.etat = EtatEsporter.MODIF_EQUIPE;
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}
 				}
-				if (b.getText().equals("Modifier Equipe")) {
-                    try {
-                        ApplicationEsporter.f.setContentPane(new Esporter_ModificationEquipe());
-                        ApplicationEsporter.f.validate();
-                        this.etat = EtatEsporter.MODIF_EQUIPE;
-                    } catch (SQLException e1) {
-                        e1.printStackTrace();
-                    }
-                }
 				break;
 			case MODIFIER_JOUEUR:
 				if(b.getText().equals("Annuler")) {
@@ -529,8 +516,7 @@ public class ControleurEsporter implements ActionListener {
 							Esporter_ModifierJoueur.addJoueur(new Joueur(Esporter_ModifierJoueur.getNomJoueur(), Esporter_ModifierJoueur.getPseudoJoueur(), Esporter_ModifierJoueur.getModel(), Esporter_ModifierJoueur.getEquipe()));
 							if(Esporter_ModifierJoueur.getLastJoueur().calculAge() >= 16) {
 								Esporter_ModifierJoueur.getLastJoueur().ajouterJoueur();
-								ApplicationEsporter.f.setContentPane(new Esporter_ModifierJoueur());
-								ApplicationEsporter.f.validate();
+								ApplicationEsporter.changerDePage(new Esporter_ModifierJoueur());
 							} else {
 								Esporter_ModifierJoueur.setErreur(Esporter_ModifierJoueur.Erreurs.ERREURDATE);
 							}		
@@ -542,18 +528,12 @@ public class ControleurEsporter implements ActionListener {
 					}
 				}
 				if(b.getText().equals("Valider")) {
-					try {
-						ApplicationEsporter.f.setContentPane(new Esporter_Equipes());
-						ApplicationEsporter.f.validate();
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
+					ApplicationEsporter.changerDePage(new Esporter_Equipes());
 				}
 				break;
 			case JEU:
 				if(b.getText().equals("Ajouter un jeu")) {
-					ApplicationEsporter.f.setContentPane(new Esporter_AjouterJeu());
-					ApplicationEsporter.f.validate();
+					ApplicationEsporter.changerDePage(new Esporter_AjouterJeu());
 					this.etat = EtatEsporter.AJOUTER_JEU;
 				}
 				if(b.getText().equals("Supprimer")) {
@@ -567,8 +547,7 @@ public class ControleurEsporter implements ActionListener {
 				}
 				if(b.getText().equals("Accéder au classement")) {
 					String nomJeu = (String) Esporter_Jeux.getTable().getValueAt(Esporter_Jeux.getTable().getSelectedRow(), 0);
-					ApplicationEsporter.f.setContentPane(new Esporter_Classement(nomJeu));
-					ApplicationEsporter.f.validate();
+					ApplicationEsporter.changerDePage(new Esporter_Classement(nomJeu));
 				}
 				break;
 			case AJOUTER_JEU:
@@ -582,9 +561,7 @@ public class ControleurEsporter implements ActionListener {
 								String[] req = new String[1];
 								req[0] =  "'" + this.jeu.getNom() + "', '" + this.jeu.getNbJoueursParEquipe() + "'";
 								FonctionsSQL.insert(NomTablesBDD.SAEJEU, req);
-								ApplicationEsporter.f.setContentPane(new Esporter_Jeux());
-								ApplicationEsporter.f.validate();
-								this.etat = EtatEsporter.JEU;
+								ApplicationEsporter.changerDePage(new Esporter_Jeux());
 							} else {
 								Esporter_AjouterJeu.setLabelErreur("Ce jeu existe déjà");
 							}
@@ -594,9 +571,7 @@ public class ControleurEsporter implements ActionListener {
 					}
 				}
 				if(b.getText().equals("Retour")) {
-					ApplicationEsporter.f.setContentPane(new Esporter_Jeux());
-					ApplicationEsporter.f.validate();
-					this.etat = EtatEsporter.JEU;
+					ApplicationEsporter.changerDePage(new Esporter_Jeux());
 				}
 				break;
 			case INFO_TOURNOI:

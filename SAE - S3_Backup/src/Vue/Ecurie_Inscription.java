@@ -175,12 +175,8 @@ public class Ecurie_Inscription extends JPanel {
 				case 0:
 					break;
 				default:
-					try {
-						tableEquipe = setTable();
-						scrollPane.setViewportView(tableEquipe);
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
+					tableEquipe = setTable();
+					scrollPane.setViewportView(tableEquipe);
 				}
 			}
 		};
@@ -188,39 +184,47 @@ public class Ecurie_Inscription extends JPanel {
 		panel_16.add(comboEquipes);
 	}
 
-	private static JTable setTable() throws SQLException {
-		setListJoueurs();
-		String columns[] = { "Nom" , "Pseudo" , "Age" , "Equipe" };
-		ResultSet count = FonctionsSQL.select("saejoueur", "count(*)", "NOM_EQUIPE = '" + comboEquipes.getSelectedItem() + "'");
-		count.next();
-		String data[][] = new String[count.getInt(1)][4];
-		ResultSet res = FonctionsSQL.select("saejoueur", "*", "NOM_EQUIPE = '" + comboEquipes.getSelectedItem() + "' ORDER BY IDJOUEUR");
-		int i = 0;
-		while (res.next()) {
-			data[i][0] = res.getString(2);
-			data[i][1] = res.getString(3);
-			data[i][2] = "";
-			data[i][3] = "" + comboEquipes.getSelectedItem();
-			i++;
+	private static JTable setTable() {
+		try {
+			setListJoueurs();
+			String columns[] = { "Nom" , "Pseudo" , "Age" , "Equipe" };
+			ResultSet count = FonctionsSQL.select("saejoueur", "count(*)", "NOM_EQUIPE = '" + comboEquipes.getSelectedItem() + "'");
+			count.next();
+			String data[][] = new String[count.getInt(1)][4];
+			ResultSet res = FonctionsSQL.select("saejoueur", "*", "NOM_EQUIPE = '" + comboEquipes.getSelectedItem() + "' ORDER BY IDJOUEUR");
+			int i = 0;
+			while (res.next()) {
+				data[i][0] = res.getString(2);
+				data[i][1] = res.getString(3);
+				data[i][2] = "";
+				data[i][3] = "" + comboEquipes.getSelectedItem();
+				i++;
+			}
+			for(int index = 0; index < data.length; index++) {
+				data[index][2] = "" + joueurs.get(index).calculAge(); 
+			}
+			model = new DefaultTableModel(data, columns);
+			return (new JTable(model));
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
 		}
-		for(int index = 0; index < data.length; index++) {
-			data[index][2] = "" + joueurs.get(index).calculAge(); 
-		}
-		model = new DefaultTableModel(data, columns);
-		return (new JTable(model));
-
 	}
 
-	private static void setListJoueurs() throws SQLException {
-		ResultSet selectJoueur = FonctionsSQL.select("saejoueur", "*", "NOM_EQUIPE = '" + comboEquipes.getSelectedItem() + "'");
-		ResultSet selectEquipe = FonctionsSQL.select("saeequipe", "*", "NOM = '" + comboEquipes.getSelectedItem() + "'");
-		selectEquipe.next();
-		Equipe equipe = new Equipe(selectEquipe.getString(5), selectEquipe.getString(1), selectEquipe.getString(4), selectEquipe.getString(3));
-		while(selectJoueur.next()) {
-			int i = selectJoueur.getInt(1);
-			SqlDateModel date = new SqlDateModel(selectJoueur.getDate(4));
-			joueurs.add(new Joueur(selectJoueur.getString(2), selectJoueur.getString(3), date, equipe ));
-			joueurs.get(joueurs.size() - 1).setId(i);
+	private static void setListJoueurs() {
+		try {
+			ResultSet selectJoueur = FonctionsSQL.select("saejoueur", "*", "NOM_EQUIPE = '" + comboEquipes.getSelectedItem() + "'");
+			ResultSet selectEquipe = FonctionsSQL.select("saeequipe", "*", "NOM = '" + comboEquipes.getSelectedItem() + "'");
+			selectEquipe.next();
+			Equipe equipe = new Equipe(selectEquipe.getString(5), selectEquipe.getString(1), selectEquipe.getString(4), selectEquipe.getString(3));
+			while(selectJoueur.next()) {
+				int i = selectJoueur.getInt(1);
+				SqlDateModel date = new SqlDateModel(selectJoueur.getDate(4));
+				joueurs.add(new Joueur(selectJoueur.getString(2), selectJoueur.getString(3), date, equipe ));
+				joueurs.get(joueurs.size() - 1).setId(i);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -228,28 +232,37 @@ public class Ecurie_Inscription extends JPanel {
 		return tableEquipe;
 	}
 
-	private void setComboBox() throws SQLException {
-		ResultSet countEquipes = FonctionsSQL.select("SAEEquipe", "count(*)", "NOM_2 = '" + controleur.getNomEcurie() + "' AND NOM_1 = '" + setJeux() + "'");
-		ResultSet selectEquipes = FonctionsSQL.select("SAEEquipe", "NOM", "NOM_2 = '" + controleur.getNomEcurie() + "' AND NOM_1 = '" + setJeux() + "'");
-		countEquipes.next();
-		String[]listeEquipes = new String[countEquipes.getInt(1) + 1];
-		listeEquipes[0] = "Choisir votre equipe";
-		int i = 1;
-		while(selectEquipes.next()) {
-			listeEquipes[i] = selectEquipes.getString(1);
-			i++;
+	private void setComboBox() {
+		try {
+			ResultSet countEquipes = FonctionsSQL.select("SAEEquipe", "count(*)", "NOM_2 = '" + controleur.getNomEcurie() + "' AND NOM_1 = '" + setJeux() + "'");
+			ResultSet selectEquipes = FonctionsSQL.select("SAEEquipe", "NOM", "NOM_2 = '" + controleur.getNomEcurie() + "' AND NOM_1 = '" + setJeux() + "'");
+			countEquipes.next();
+			String[]listeEquipes = new String[countEquipes.getInt(1) + 1];
+			listeEquipes[0] = "Choisir votre equipe";
+			int i = 1;
+			while(selectEquipes.next()) {
+				listeEquipes[i] = selectEquipes.getString(1);
+				i++;
+			}
+			comboEquipes = new JComboBox<String>(listeEquipes);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-		comboEquipes = new JComboBox<String>(listeEquipes);
 	}
 	
 	public static String getCombo() {
 		return (String) comboEquipes.getSelectedItem();
 	}
 
-	public static int getIdTournoiSelected() throws SQLException {
-		ResultSet selectTournoi = FonctionsSQL.select("saetournoi", "IDTOURNOI", "LIEU = '" + (String) Ecurie_Tournoi.getTable().getValueAt(Ecurie_Tournoi.getTable().getSelectedRow(), 0) + "' AND DATEETHEURE LIKE TO_DATE('" + (String) Ecurie_Tournoi.getTable().getValueAt(Ecurie_Tournoi.getTable().getSelectedRow(), 1) + "', 'YYYY-MM-DD')");
-		selectTournoi.next();
-		return selectTournoi.getInt(1);
+	public static int getIdTournoiSelected() {
+		try {
+			ResultSet selectTournoi = FonctionsSQL.select("saetournoi", "IDTOURNOI", "LIEU = '" + (String) Ecurie_Tournoi.getTable().getValueAt(Ecurie_Tournoi.getTable().getSelectedRow(), 0) + "' AND DATEETHEURE LIKE TO_DATE('" + (String) Ecurie_Tournoi.getTable().getValueAt(Ecurie_Tournoi.getTable().getSelectedRow(), 1) + "', 'YYYY-MM-DD')");
+			selectTournoi.next();
+			return selectTournoi.getInt(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		}
 	}
 
 	private String setJeux() {

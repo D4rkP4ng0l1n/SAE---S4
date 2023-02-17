@@ -30,7 +30,7 @@ public class Ecurie_PreInscription extends JPanel {
 	private DefaultTableModel model;
 	private JLabel Jeux;
 
-	public Ecurie_PreInscription() throws SQLException {
+	public Ecurie_PreInscription() {
 		setLayout(new BorderLayout(0,0));
 		
 		JPanel panel = new JPanel();
@@ -149,23 +149,33 @@ public class Ecurie_PreInscription extends JPanel {
         scrollPane.setViewportView(tableEquipes);
     }
 	
-	private int getIdTournoiSelected() throws SQLException {
-		ResultSet selectTournoi = FonctionsSQL.select("saetournoi", "IDTOURNOI", "LIEU = '" + (String) Ecurie_Tournoi.getTable().getValueAt(Ecurie_Tournoi.getTable().getSelectedRow(), 0) + "' AND DATEETHEURE LIKE TO_DATE('" + (String) Ecurie_Tournoi.getTable().getValueAt(Ecurie_Tournoi.getTable().getSelectedRow(), 1) + "', 'YYYY-MM-DD')");
-		selectTournoi.next();
-		ApplicationEsporter.idTournoi = "" + selectTournoi.getInt(1);
-		return selectTournoi.getInt(1);
-	}
-	
-	private int getNbEquipesInscrites() throws SQLException {
-		ResultSet countParticipant = FonctionsSQL.select("saeparticiper", "count(*)", "IDTOURNOI = " + getIdTournoiSelected());
-		countParticipant.next();
-		return countParticipant.getInt(1);
-	}
-	
-	private boolean dejaInscrit() throws SQLException {
-		ResultSet res = FonctionsSQL.select("saeparticiper, CRJ3957A.saeequipe", "CRJ3957A.saeequipe.NOM_2", "CRJ3957A.saeparticiper.IDTOURNOI = " + getIdTournoiSelected() + " AND CRJ3957A.saeparticiper.NOM = CRJ3957A.saeequipe.NOM");
-		res.next();
+	private int getIdTournoiSelected() {
 		try {
+			ResultSet selectTournoi = FonctionsSQL.select("saetournoi", "IDTOURNOI", "LIEU = '" + (String) Ecurie_Tournoi.getTable().getValueAt(Ecurie_Tournoi.getTable().getSelectedRow(), 0) + "' AND DATEETHEURE LIKE TO_DATE('" + (String) Ecurie_Tournoi.getTable().getValueAt(Ecurie_Tournoi.getTable().getSelectedRow(), 1) + "', 'YYYY-MM-DD')");
+			selectTournoi.next();
+			ApplicationEsporter.idTournoi = "" + selectTournoi.getInt(1);
+			return selectTournoi.getInt(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
+	
+	private int getNbEquipesInscrites() {
+		try {
+			ResultSet countParticipant = FonctionsSQL.select("saeparticiper", "count(*)", "IDTOURNOI = " + getIdTournoiSelected());
+			countParticipant.next();
+			return countParticipant.getInt(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
+	
+	private boolean dejaInscrit() {
+		try {
+			ResultSet res = FonctionsSQL.select("saeparticiper, CRJ3957A.saeequipe", "CRJ3957A.saeequipe.NOM_2", "CRJ3957A.saeparticiper.IDTOURNOI = " + getIdTournoiSelected() + " AND CRJ3957A.saeparticiper.NOM = CRJ3957A.saeequipe.NOM");
+			res.next();
 			return res.getString(1).equals(controleur.getNomEcurie());
 		} catch (Exception e) {
 			return false;
@@ -179,29 +189,35 @@ public class Ecurie_PreInscription extends JPanel {
 			while(selectJeux.next()) {
 				listeJeux += selectJeux.getString(1) + " - ";
 			}
+			return listeJeux.substring(0, listeJeux.length() - 3);
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return null;
 		}
-		return listeJeux.substring(0, listeJeux.length() - 3);
 	}
 	
-	private JTable setTable(JTable table) throws SQLException {
-		String columns[] = {"Ecuries", "Equipes", "Points"};
-		ResultSet countParticipant = FonctionsSQL.select("saeparticiper", "count(*)", "IDTOURNOI = " + getIdTournoiSelected());
-		countParticipant.next();
-		String data[][] = new String[countParticipant.getInt(1)][3];
-		ResultSet res = FonctionsSQL.select("saeparticiper, CRJ3957A.saeequipe", "CRJ3957A.saeequipe.NOM, CRJ3957A.saeequipe.NOM_2, CRJ3957A.saeequipe.NBPOINTS", 
-											"CRJ3957A.saeparticiper.IDTOURNOI = " + getIdTournoiSelected() + " AND CRJ3957A.saeparticiper.NOM = CRJ3957A.saeequipe.NOM ORDER BY CRJ3957A.saeequipe.NBPOINTS DESC");
-		int i = 0;
-		while (res.next()) {
-			data[i][0] = res.getString(2);
-			data[i][1] = res.getString(1);
-			data[i][2] = res.getString(3);
-			i++;
+	private JTable setTable(JTable table) {
+		try {
+			String columns[] = {"Ecuries", "Equipes", "Points"};
+			ResultSet countParticipant = FonctionsSQL.select("saeparticiper", "count(*)", "IDTOURNOI = " + getIdTournoiSelected());
+			countParticipant.next();
+			String data[][] = new String[countParticipant.getInt(1)][3];
+			ResultSet res = FonctionsSQL.select("saeparticiper, CRJ3957A.saeequipe", "CRJ3957A.saeequipe.NOM, CRJ3957A.saeequipe.NOM_2, CRJ3957A.saeequipe.NBPOINTS", 
+												"CRJ3957A.saeparticiper.IDTOURNOI = " + getIdTournoiSelected() + " AND CRJ3957A.saeparticiper.NOM = CRJ3957A.saeequipe.NOM ORDER BY CRJ3957A.saeequipe.NBPOINTS DESC");
+			int i = 0;
+			while (res.next()) {
+				data[i][0] = res.getString(2);
+				data[i][1] = res.getString(1);
+				data[i][2] = res.getString(3);
+				i++;
+			}
+			model = new DefaultTableModel(data, columns);
+			JTable returnTable = new JTable(model);
+			return returnTable;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
 		}
-		model = new DefaultTableModel(data, columns);
-		JTable returnTable = new JTable(model);
-		return returnTable;
 	}
 
 	public static JTable getTable() {

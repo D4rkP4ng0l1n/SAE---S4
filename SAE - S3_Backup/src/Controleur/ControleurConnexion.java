@@ -46,16 +46,13 @@ public class ControleurConnexion implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		JButton b = (JButton) e.getSource();
 		if (b.getText().equals("Pas de compte?")) {
-			ApplicationEsporter.f.setContentPane(new PageInscription()); // Changement de page
-			ApplicationEsporter.f.validate();
+			ApplicationEsporter.changerDePage(new PageInscription());
 		} 
 		if (b.getText().equals("Retour")) {
-			ApplicationEsporter.f.setContentPane(new PageAccueil()); // Changement de page
-			ApplicationEsporter.f.validate();
+			ApplicationEsporter.changerDePage(new PageAccueil());
 		}
 		if (b.getText().equals("Changer de mot de passe ?")) {
-			ApplicationEsporter.f.setContentPane(new PageChangerMdp()); // Changement de page
-			ApplicationEsporter.f.validate();
+			ApplicationEsporter.changerDePage(new PageChangerMdp());
 		} else {
 			if (b.getText().equals("Se connecter")) {
 				try {
@@ -63,20 +60,16 @@ public class ControleurConnexion implements ActionListener {
 						Compte.chargerCompte(this.vue.getNomUtilisateur(), this.vue.getMdp());
 						switch(ApplicationEsporter.idTypeCompte) { // Selon le type de compte, on redirige l'utilisateur vers sa page accueil défini
 						case 1:
-							ApplicationEsporter.f.setContentPane(new Esporter_Accueil()); // Changement de page
-							ApplicationEsporter.f.validate();
+							ApplicationEsporter.changerDePage(new Esporter_Accueil());
 							break;
 						case 2:
-							ApplicationEsporter.f.setContentPane(new Arbitre_Accueil()); // Changement de page
-							ApplicationEsporter.f.validate();
+							ApplicationEsporter.changerDePage(new Arbitre_Accueil());
 							break;
 						case 3:
 							if (verifEcurie()) {
-								ApplicationEsporter.f.setContentPane(new Ecurie_Accueil()); // Changement de page
-								ApplicationEsporter.f.validate();
-							} else {								
-								ApplicationEsporter.f.setContentPane(new Ecurie_CreerEcurie()); // Changement de page
-								ApplicationEsporter.f.validate();
+								ApplicationEsporter.changerDePage(new Ecurie_Accueil());
+							} else {
+								ApplicationEsporter.changerDePage(new Ecurie_CreerEcurie());
 							}
 							break;
 
@@ -90,7 +83,5 @@ public class ControleurConnexion implements ActionListener {
 			}
 		}
 		
-	}
-	
-	
+	}	
 }

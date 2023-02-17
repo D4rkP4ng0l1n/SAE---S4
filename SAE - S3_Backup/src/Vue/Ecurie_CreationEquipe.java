@@ -37,7 +37,7 @@ public class Ecurie_CreationEquipe extends JPanel{
 
 	private ControleurEcurie controleur = new ControleurEcurie(this, EtatEcurie.CREATIONEQUIPE);
 
-	public Ecurie_CreationEquipe() throws SQLException {
+	public Ecurie_CreationEquipe() {
 		setLayout(new BorderLayout(0,0));
 
 		JPanel panel = new JPanel();
@@ -207,18 +207,23 @@ public class Ecurie_CreationEquipe extends JPanel{
 		Image_placeholder.setIcon(imageAVisualiser);
 	}
 
-	private String[] listJeu() throws SQLException {
-		ResultSet rs = Jeu.getTousLesJeux();
-		ResultSet count = FonctionsSQL.select("SAEJeu", "count(nom)", "");
-		count.next();
-		listjeu = new String[count.getInt(1) + 1];
-		int i = 1;
-		listjeu[0] = "Choisir un Jeu";
-		while (rs.next()) {
-			listjeu[i]=rs.getString(1);
-			i++;
+	private String[] listJeu() {
+		try {
+			ResultSet rs = Jeu.getTousLesJeux();
+			ResultSet count = FonctionsSQL.select("SAEJeu", "count(nom)", "");
+			count.next();
+			listjeu = new String[count.getInt(1) + 1];
+			int i = 1;
+			listjeu[0] = "Choisir un Jeu";
+			while (rs.next()) {
+				listjeu[i]=rs.getString(1);
+				i++;
+			}
+			return listjeu;
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return null;
 		}
-		return listjeu;
 	}
 
 	public static Boolean tousRempli() {

@@ -31,7 +31,7 @@ public class Ecurie_Equipes extends JPanel {
 	private static JTable tableEcurie;
 	private static DefaultTableModel model;
 
-	public Ecurie_Equipes() throws SQLException {
+	public Ecurie_Equipes() {
 		setLayout(new BorderLayout(0,0));
 		
 		JPanel Header = new JPanel();
@@ -159,25 +159,30 @@ public class Ecurie_Equipes extends JPanel {
 		scrollPane.setViewportView(tableEcurie);
 	}
 	
-	public JTable setTable(JTable table) throws SQLException {
-		String columns[] = { "Nom de l'équipe" , "Jeu" , " " , "  " };
-		ResultSet count = FonctionsSQL.select("saeequipe", "count(*)", "Nom_2 = '" + controleur.getNomEcurie() + "'");
-		count.next();
-		String data[][] = new String[count.getInt(1)][4];
-		ResultSet res = FonctionsSQL.select("saeequipe", "*", "Nom_2 = '" + controleur.getNomEcurie() + "'");
-		int i = 0;
-		while (res.next()) {
-			data[i][0] = res.getString(1);
-			data[i][1] = res.getString(4);
-			i++;
+	public JTable setTable(JTable table) {
+		try {
+			String columns[] = { "Nom de l'équipe" , "Jeu" , " " , "  " };
+			ResultSet count = FonctionsSQL.select("saeequipe", "count(*)", "Nom_2 = '" + controleur.getNomEcurie() + "'");
+			count.next();
+			String data[][] = new String[count.getInt(1)][4];
+			ResultSet res = FonctionsSQL.select("saeequipe", "*", "Nom_2 = '" + controleur.getNomEcurie() + "'");
+			int i = 0;
+			while (res.next()) {
+				data[i][0] = res.getString(1);
+				data[i][1] = res.getString(4);
+				i++;
+			}
+			model = new DefaultTableModel(data, columns);
+			JTable returnTable = new JTable(model);
+			returnTable.getColumn(" ").setCellRenderer(new MyRendererAndEditor(returnTable, "Acceder", null, controleur, null));
+			returnTable.getColumn(" ").setCellEditor(new MyRendererAndEditor(returnTable, "Acceder", null, controleur, null));
+			returnTable.getColumn("  ").setCellRenderer(new MyRendererAndEditor(returnTable, "Modifier", null, controleur, null));
+			returnTable.getColumn("  ").setCellEditor(new MyRendererAndEditor(returnTable, "Modifier", null, controleur, null));
+			return returnTable;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
 		}
-		model = new DefaultTableModel(data, columns);
-		JTable returnTable = new JTable(model);
-		returnTable.getColumn(" ").setCellRenderer(new MyRendererAndEditor(returnTable, "Acceder", null, controleur, null));
-		returnTable.getColumn(" ").setCellEditor(new MyRendererAndEditor(returnTable, "Acceder", null, controleur, null));
-		returnTable.getColumn("  ").setCellRenderer(new MyRendererAndEditor(returnTable, "Modifier", null, controleur, null));
-		returnTable.getColumn("  ").setCellEditor(new MyRendererAndEditor(returnTable, "Modifier", null, controleur, null));
-		return returnTable;
 	}
 	
 	public static JTable getTable() {

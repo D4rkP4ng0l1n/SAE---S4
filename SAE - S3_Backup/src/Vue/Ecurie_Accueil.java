@@ -13,7 +13,6 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
-import java.sql.SQLException;
 import java.awt.FlowLayout;
 
 @SuppressWarnings("serial")
@@ -21,7 +20,7 @@ public class Ecurie_Accueil extends JPanel {
 	
 	private ControleurEcurie controleur = new ControleurEcurie(this, EtatEcurie.ACCUEIL);
 	
-	public Ecurie_Accueil() throws SQLException {
+	public Ecurie_Accueil() {
 		setLayout(new BorderLayout(0,0));
 		
 		JPanel Header = new JPanel();

@@ -6,7 +6,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.io.IOException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -29,7 +28,7 @@ public class Ecurie_CreerEcurie extends JPanel{
 	private static JTextField nomCEO;
 	private static JLabel messageErreur;
 
-	public Ecurie_CreerEcurie() throws IOException {
+	public Ecurie_CreerEcurie() {
 		setLayout(new BorderLayout(0,0));
 
 		JPanel Header = new JPanel();

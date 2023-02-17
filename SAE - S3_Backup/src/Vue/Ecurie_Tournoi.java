@@ -30,7 +30,7 @@ public class Ecurie_Tournoi extends JPanel{
 	
 	private ControleurEcurie controleur = new ControleurEcurie(this, EtatEcurie.TOURNOI);
 
-	public Ecurie_Tournoi() throws SQLException {
+	public Ecurie_Tournoi() {
 		setLayout(new BorderLayout(0,0));
 		
 		JPanel panel = new JPanel();
@@ -132,46 +132,56 @@ public class Ecurie_Tournoi extends JPanel{
 		scrollPane.setViewportView(tableTournois);
     }
 	
-	private JTable setTable(JTable table) throws SQLException {
-		String columns[] = { "Lieu" , "Date" , "Jeu(x)" , "Classement", "Places disponibles", " "};
-		ResultSet count = FonctionsSQL.select("saetournoi", "count(*)", "");
-		count.next();
-		String data[][] = new String[count.getInt(1)][5];
-		ResultSet res = FonctionsSQL.select("saetournoi", "*", "1 = 1 ORDER BY IDTOURNOI");
-		int i = 0;
-		while (res.next()) {
-			data[i][0] = res.getString(2);
-			char[]date = res.getDate(3).toString().toCharArray();
-			data[i][1] = res.getDate(3).toString();
-			if (date[0] == '0') {
-				@SuppressWarnings("deprecation") int dateOK = res.getDate(3).getYear();
-				dateOK = (dateOK - 1977) * (-1) + 2024;
-				data[i][1] = "" + dateOK;
-				date[0] = '2';
-				String dateDuTournoi = "";
-				for (char c : date) {
-					dateDuTournoi += c;
+	private JTable setTable(JTable table) {
+		try {
+			String columns[] = { "Lieu" , "Date" , "Jeu(x)" , "Classement", "Places disponibles", " "};
+			ResultSet count = FonctionsSQL.select("saetournoi", "count(*)", "");
+			count.next();
+			String data[][] = new String[count.getInt(1)][5];
+			ResultSet res = FonctionsSQL.select("saetournoi", "*", "1 = 1 ORDER BY IDTOURNOI");
+			int i = 0;
+			while (res.next()) {
+				data[i][0] = res.getString(2);
+				char[]date = res.getDate(3).toString().toCharArray();
+				data[i][1] = res.getDate(3).toString();
+				if (date[0] == '0') {
+					@SuppressWarnings("deprecation") int dateOK = res.getDate(3).getYear();
+					dateOK = (dateOK - 1977) * (-1) + 2024;
+					data[i][1] = "" + dateOK;
+					date[0] = '2';
+					String dateDuTournoi = "";
+					for (char c : date) {
+						dateDuTournoi += c;
+					}
+					data[i][1] = dateDuTournoi;
 				}
-				data[i][1] = dateDuTournoi;
+				data[i][4] = getNbInscrits(res.getInt("idTournoi")) + " / 16";
+				i++;
 			}
-			data[i][4] = getNbInscrits(res.getInt("idTournoi")) + " / 16";
-			i++;
+			model = new DefaultTableModel(data, columns);
+			JTable returnTable = new JTable(model);
+			returnTable.getColumn("Jeu(x)").setCellRenderer(new MyRendererAndEditor(returnTable, "Voir le(s) jeu(x)", null, controleur, null));
+			returnTable.getColumn("Jeu(x)").setCellEditor(new MyRendererAndEditor(returnTable, "Voir le(s) jeu(x)", null, controleur, null));
+			returnTable.getColumn("Classement").setCellRenderer(new MyRendererAndEditor(returnTable, "Accéder", null, controleur, null));
+			returnTable.getColumn("Classement").setCellEditor(new MyRendererAndEditor(returnTable, "Accéder", null, controleur, null));
+			returnTable.getColumn(" ").setCellRenderer(new MyRendererAndEditor(returnTable, "S'inscrire", null, controleur, null));
+			returnTable.getColumn(" ").setCellEditor(new MyRendererAndEditor(returnTable, "S'inscrire", null, controleur, null));
+			return returnTable;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
 		}
-		model = new DefaultTableModel(data, columns);
-		JTable returnTable = new JTable(model);
-		returnTable.getColumn("Jeu(x)").setCellRenderer(new MyRendererAndEditor(returnTable, "Voir le(s) jeu(x)", null, controleur, null));
-		returnTable.getColumn("Jeu(x)").setCellEditor(new MyRendererAndEditor(returnTable, "Voir le(s) jeu(x)", null, controleur, null));
-		returnTable.getColumn("Classement").setCellRenderer(new MyRendererAndEditor(returnTable, "Accéder", null, controleur, null));
-		returnTable.getColumn("Classement").setCellEditor(new MyRendererAndEditor(returnTable, "Accéder", null, controleur, null));
-		returnTable.getColumn(" ").setCellRenderer(new MyRendererAndEditor(returnTable, "S'inscrire", null, controleur, null));
-		returnTable.getColumn(" ").setCellEditor(new MyRendererAndEditor(returnTable, "S'inscrire", null, controleur, null));
-		return returnTable;
 	}
 
-	private int getNbInscrits(int id) throws SQLException {
-		ResultSet select = FonctionsSQL.select("SAEParticiper", "count(*)", "IdTournoi = " + id);
-		select.next();
-		return 16 - select.getInt(1);
+	private int getNbInscrits(int id) {
+		try {
+			ResultSet select = FonctionsSQL.select("SAEParticiper", "count(*)", "IdTournoi = " + id);
+			select.next();
+			return 16 - select.getInt(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		}
 	}
 	
 	public static JTable getTable() {
