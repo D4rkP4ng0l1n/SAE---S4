@@ -2,118 +2,123 @@ package Modele;
 
 import java.sql.*;
 
+import Modele.BDD.NomTablesBDD;
+
 public class FonctionsSQL {
 
-	public static ResultSet select(String nomTable, String select, String conditions) throws SQLException { // Sélectionne dans une table des données
-		Connexion.seConnecter();
-		Statement statement = Connexion.seConnecter().createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-		ResultSet resultSet;
-		if (conditions != "") {
-			resultSet = statement.executeQuery("SELECT " + select + 
-					" FROM CRJ3957A." + nomTable + 
-					" WHERE " + conditions );
-		} else {
-			resultSet = statement.executeQuery("SELECT " + select + " FROM " + nomTable);
+	private static Statement statement;
+	private static ResultSet resultSet;
+	
+	// Sélectionne dans une table des données
+	public static ResultSet select(NomTablesBDD nomTable, String select, String conditions) { 
+		try {
+			Connexion.seConnecter();
+			statement = Connexion.seConnecter().createStatement();
+			if (!conditions.equals("")) {
+				resultSet = statement.executeQuery(	"SELECT " + select + 
+													" FROM CRJ3957A." + nomTable + 
+													" WHERE " + conditions );
+			} else {
+				resultSet = statement.executeQuery("SELECT " + select + " FROM " + nomTable);
+			}
+			return resultSet;
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return null;
 		}
-		return resultSet;
+	}
+	
+	// Sélectionne dans une table des données avec plusieurs tables
+	public static ResultSet select(String nomsTables, String select, String conditions) {
+		try {
+			Connexion.seConnecter();
+			statement = Connexion.seConnecter().createStatement();
+			if (conditions != "") {
+				resultSet = statement.executeQuery(	"SELECT " + select + 
+													" FROM " + nomsTables + 
+													" WHERE " + conditions );
+			} else {
+				resultSet = statement.executeQuery("SELECT " + select + " FROM " + nomsTables);
+			}
+			return resultSet;
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
-	public static void delete(String nomTable, String conditions) throws SQLException { // Supprime les lignes d'une table qui corresponde au condition
-		Connexion.seConnecter();
-		Statement statement = Connexion.seConnecter().createStatement();
-		statement.executeUpdate("DELETE FROM CRJ3957A." + nomTable + " WHERE " + conditions);
-		FonctionsSQL.commit();
-		Connexion.closeConnexion();
+	// Supprime les lignes d'une table qui corresponde au condition
+	public static void delete(NomTablesBDD nomTable, String conditions) {
+		try {
+			Connexion.seConnecter();
+			statement = Connexion.seConnecter().createStatement();
+			statement.executeUpdate("DELETE FROM CRJ3957A." + nomTable + " WHERE " + conditions);
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
-	public static void insert(String nomTable, String[]aInserer) throws SQLException { // Insere une ligne dans une table
-		Connexion.seConnecter();
-		Statement statement = Connexion.seConnecter().createStatement();
+	// Insere une ligne dans une table
+	public static void insert(NomTablesBDD nomTable, String[]aInserer) { 
+		try {
+			Connexion.seConnecter();
+			statement = Connexion.seConnecter().createStatement();
+			String insert = creationStringAInserer(aInserer);
+			statement.executeUpdate("INSERT INTO CRJ3957A." + nomTable + " VALUES(" + insert + ")"  );
+			Connexion.closeConnexion();
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	// Creation d'un String à inserer dans la table à partir d'un tableau de String pour la fonction SQL INSERT
+	private static String creationStringAInserer(String[] aInserer) {
 		String insert = "";
 		for (String i : aInserer) {
 			insert += i + ", ";
 		}
-		insert = insert.substring(0, insert.length() - 2);
-		statement.executeUpdate("INSERT INTO CRJ3957A." + nomTable + " VALUES(" + insert + ")"  );
-		FonctionsSQL.commit();
-		Connexion.closeConnexion();
+		return insert.substring(0, insert.length() - 2);
 	}
 
-	public static void update(String nomTable, String colonne, String nouvelleValeur, String conditions) throws Exception { // Modifie les lignes dans une table qui respecte les conditions
-		Connexion.seConnecter();
-		Statement statement = Connexion.seConnecter().createStatement();
-		statement.executeUpdate("UPDATE CRJ3957A." + nomTable + 
-				" SET " + colonne + " = " + nouvelleValeur + 
-				" WHERE " + conditions);
+	// Modifie les lignes dans une table qui respecte les conditions
+	public static void update(NomTablesBDD nomTable, String colonne, String nouvelleValeur, String conditions) {
+		try {
+			Connexion.seConnecter();
+			statement = Connexion.seConnecter().createStatement();
+			statement.executeUpdate("UPDATE CRJ3957A." + nomTable + 
+									" SET " + colonne + " = " + nouvelleValeur + 
+									" WHERE " + conditions);
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
-	private static void commit() throws SQLException { // Valide les modifications
-		Connexion.seConnecter();
-		Statement statement = Connexion.seConnecter().createStatement();
-		statement.executeUpdate("commit");
+	// Récupère les id d'une table
+	public static int getId(NomTablesBDD nomTable, String condition) {
+		try {
+			Connexion.seConnecter();
+			Statement statement = Connexion.seConnecter().createStatement();
+			ResultSet id = statement.executeQuery(	"SELECT idcompte FROM CRJ3957A." + nomTable + 
+													" WHERE " + condition );
+			id.next();
+			return id.getInt(1);
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return -1;
+		}
 	}
 
-	public static int getId(String nomTable, String condition) throws SQLException { // Récupère les id d'une table
-		Connexion.seConnecter();
-		Statement statement = Connexion.seConnecter().createStatement();
-		ResultSet id = statement.executeQuery("SELECT idcompte FROM CRJ3957A." + nomTable + " WHERE " + condition );
-		id.next();
-		return id.getInt(1);
-	}
-
-	public static int newID(String nomTable) throws SQLException { // Donne une ID inexistante a un compte
-		Connexion.seConnecter();
-		Statement statement = Connexion.seConnecter().createStatement();
-		ResultSet resultSet = statement.executeQuery("SELECT max(idcompte) FROM " + nomTable);
-		resultSet.next();
-		return resultSet.getInt(1) + 1;
-	}
-
-	public static int newIDTournoi(String nomTable) throws SQLException { // Donne une ID inexistante a un Tournoi
-		Connexion.seConnecter();
-		Statement statement = Connexion.seConnecter().createStatement();
-		ResultSet resultSet = statement.executeQuery("SELECT max(idTournoi) FROM " + nomTable);
-		resultSet.next();
-		return resultSet.getInt(1) + 1;
-	}
-
-	public static int newIDFinale(String nomTable) throws SQLException { // Donne une ID inexistante a un poule finale
-		Connexion.seConnecter();
-		Statement statement = Connexion.seConnecter().createStatement();
-		ResultSet resultSet = statement.executeQuery("SELECT max(idphasefinale) FROM " + nomTable);
-		resultSet.next();
-		return resultSet.getInt(1) + 1;
-	}
-
-	public static int newIDJoueur() throws SQLException { // Donne une ID inexistante a un joueur
-		Connexion.seConnecter();
-		Statement statement = Connexion.seConnecter().createStatement();
-		ResultSet resultSet = statement.executeQuery("SELECT max(idjoueur) FROM saejoueur");
-		resultSet.next();
-		return resultSet.getInt(1) + 1;
-	}
-	
-	public static int newIDPoule() throws SQLException { // Donne une ID inexistante a une poule
-		Connexion.seConnecter();
-		Statement statement = Connexion.seConnecter().createStatement();
-		ResultSet resultSet = statement.executeQuery("SELECT max(idpoule) FROM saepoule");
-		resultSet.next();
-		return resultSet.getInt(1) + 1;
-	}
-	
-	public static int newIDPartiePoule() throws SQLException { // Donne une ID inexistante aux matchs d'une poule
-		Connexion.seConnecter();
-		Statement statement = Connexion.seConnecter().createStatement();
-		ResultSet resultSet = statement.executeQuery("SELECT max(id_PartiePoule) FROM SAEPartiePoule");
-		resultSet.next();
-		return resultSet.getInt(1) + 1;
-	}
-	
-	public static int newIDPartiePhaseFinale() throws SQLException { // Donne une ID inexistante aux matchs d'une poule
-		Connexion.seConnecter();
-		Statement statement = Connexion.seConnecter().createStatement();
-		ResultSet resultSet = statement.executeQuery("SELECT max(id_PartiePhaseFinale) FROM SAEPartiePhaseFinale");
-		resultSet.next();
-		return resultSet.getInt(1) + 1;
+	// Donne une ID inexistante a un compte
+	public static int newID(NomTablesBDD nomTable) {
+		try {
+			Connexion.seConnecter();
+			statement = Connexion.seConnecter().createStatement();
+			resultSet = statement.executeQuery("SELECT max(" + BDD.getNomId(nomTable) + ") FROM " + nomTable);
+			resultSet.next();
+			return resultSet.getInt(1) + 1;
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return -1;
+		}
 	}
 }

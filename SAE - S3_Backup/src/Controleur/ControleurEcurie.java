@@ -16,6 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import Modele.BDD.NomTablesBDD;
 import Modele.Equipe;
 import Modele.FonctionsSQL;
 import Modele.Joueur;
@@ -57,13 +58,9 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 
 	// Génération des poules
 	private static void  genererPoules(String IdTournoi) {
-		try {
-			for (int i = 1; i <= 4;i++) { 
-				String[] poule = {"" + FonctionsSQL.newIDPoule(), "''", "" + i, "" + IdTournoi};
-				FonctionsSQL.insert("saepoule", poule);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+		for (int i = 1; i <= 4;i++) { 
+			String[] poule = {"" + FonctionsSQL.newID(NomTablesBDD.SAEPOULE), "''", "" + i, "" + IdTournoi};
+			FonctionsSQL.insert(NomTablesBDD.SAEPOULE, poule);
 		}
 		// Liens entre les équipes et les poules (insertion dans la table saeconcourir)
 		try {
@@ -77,7 +74,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 				IdPoule = FonctionsSQL.select("saepoule", "idpoule", "numero = '" + pouleCounter + "' and idtournoi = " + ApplicationEsporter.idTournoi);
 				IdPoule.next();
 				String[] equipe = {"'" + listeEquipe.getString("nom") + "'", "" + IdPoule.getInt("Idpoule"), "'0'"};
-				FonctionsSQL.insert("saeconcourir", equipe);
+				FonctionsSQL.insert(NomTablesBDD.SAECONCOURIR, equipe);
 				pouleCounter = (pouleCounter % 4) + 1;
 			}
 		} catch (SQLException e) {
@@ -127,13 +124,13 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 				}
 			}
 			for (i = 0; i < nbMatch; i++) {
-				id = FonctionsSQL.newIDPartiePoule();
+				id = FonctionsSQL.newID(NomTablesBDD.SAEPARTIEPOULE);
 				String[]match = { "" + id, "'aucune'", "" + idPoules[numPoule] };
 				String[]equipe1 = { "'" + matchsEquipe1[i] + "'", "" + id };
 				String[]equipe2 = { "'" + matchsEquipe2[i] + "'", "" + id };
-				FonctionsSQL.insert("SAEpartiePoule", match);
-				FonctionsSQL.insert("SAEcompetiter", equipe1);
-				FonctionsSQL.insert("SAEcompetiter", equipe2);
+				FonctionsSQL.insert(NomTablesBDD.SAEPARTIEPOULE, match);
+				FonctionsSQL.insert(NomTablesBDD.SAECOMPETITER, equipe1);
+				FonctionsSQL.insert(NomTablesBDD.SAECOMPETITER, equipe2);
 			}
 		}
 	}
@@ -218,13 +215,9 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 				if(b.getText().equals("Valider")) {
 					if (! (Ecurie_CreerEcurie.labelsVide() && this.pathLogo == null)) {
 						String[] aInserer = {"'" + Ecurie_CreerEcurie.getNomEcurie() + "'", "'" + Ecurie_CreerEcurie.getNomCEO() + "'", "'" + this.pathLogo + "'", "" + ApplicationEsporter.idCompte};
-						try {
-							FonctionsSQL.insert("saeecurie", aInserer);
-							ApplicationEsporter.f.setContentPane(new PageAccueil());
-							ApplicationEsporter.f.validate();
-						} catch (SQLException e1) {
-							e1.printStackTrace();
-						}
+						FonctionsSQL.insert(NomTablesBDD.SAEECURIE, aInserer);
+						ApplicationEsporter.f.setContentPane(new PageAccueil());
+						ApplicationEsporter.f.validate();
 					} else {
 						Ecurie_CreerEcurie.setMessage("Information(s) manquante(s)");
 					}
@@ -282,7 +275,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 					if (result == 0) {
 						try {
 							String[]aInserer = { "'" + Ecurie_Inscription.getCombo() + "'", ApplicationEsporter.idTournoi, "0" }; 
-							FonctionsSQL.insert("SAEparticiper", aInserer);
+							FonctionsSQL.insert(NomTablesBDD.SAEPARTICIPER, aInserer);
 							JOptionPane.showMessageDialog(null, Ecurie_Inscription.getCombo() + " a bien été inscrite au tournoi !");
 							ResultSet countNbEquipesInscrites = FonctionsSQL.select("SAEparticiper", "count(*)", "IDTournoi = " + ApplicationEsporter.idTournoi);
 							countNbEquipesInscrites.next();
@@ -432,7 +425,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 						int result = JOptionPane.showConfirmDialog(null,"Voulez vous vraiment supprimer " + aSupprimerPseudo, "Supprimer le joueur", JOptionPane.YES_NO_OPTION);
 						if (result == 0) {
 							Ecurie_AddJoueur.supprimerJoueur(aSupprimerPseudo);
-							FonctionsSQL.delete("saejoueur", "NOM_EQUIPE = '" + aSupprimerEquipe + "' and PSEUDONYME = '" + aSupprimerPseudo + "'");
+							FonctionsSQL.delete(NomTablesBDD.SAEJOUEUR, "NOM_EQUIPE = '" + aSupprimerEquipe + "' and PSEUDONYME = '" + aSupprimerPseudo + "'");
 							ApplicationEsporter.f.setContentPane(new Ecurie_AddJoueur());
 							ApplicationEsporter.f.validate();
 						} 

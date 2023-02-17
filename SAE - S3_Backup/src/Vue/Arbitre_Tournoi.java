@@ -150,7 +150,7 @@ public class Arbitre_Tournoi extends JPanel{
 			data[i][0] = res.getString(2);
 			date = res.getDate(3).toString().toCharArray();
 			data[i][1] = res.getDate(3).toString();
-			if (date[0] == '0') {
+			if (date[0]=='0') {
 				@SuppressWarnings("deprecation") int dateOK = res.getDate(3).getYear();
 				dateOK = (dateOK - 1977) * (-1) + 2024;
 				data[i][1] = "" + dateOK;

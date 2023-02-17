@@ -282,7 +282,7 @@ public class Esporter_CreerTournoi extends JPanel{
 	public static void addList() { // Ajoute le jeu sélectionné sur le combobox dans la liste de jeux du tournoi
 		if (erreur==0) {
 			erreur=1;
-			if(getJeu()=="Choisir un Jeu") {
+			if(getJeu().equals("Choisir un Jeu")) {
 				setMessage("Choisissez un jeu avant de cliquer sur Ajouter le jeu");
 			} else {
 				if(DLM.contains(getJeu())) {
