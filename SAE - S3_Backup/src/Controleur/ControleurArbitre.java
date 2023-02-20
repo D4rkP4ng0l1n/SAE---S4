@@ -37,36 +37,17 @@ public class ControleurArbitre implements ActionListener {
 	}
 
 	// Methode pour faciliter la navigation depuis n'importe où en tant qu'Arbitre
-
 	private Boolean changerDePageHeader(JButton b) {
 		if (b.getText().equals("Déconnexion")) {
-			goDeconnexion();
+			ApplicationEsporter.changerDePage(new PageAccueil());
 		}
 		if(b.getText().equals("Accueil")) {
-			goAccueil();
+			ApplicationEsporter.changerDePage(new Arbitre_Accueil());
 		}
 		if(b.getText().equals("Tournois")) {
-			goTournois();
+			ApplicationEsporter.changerDePage(new Arbitre_Tournoi());
 		}
 		return false;
-	}
-
-	// Méthode pour se déconnecter
-	private void goDeconnexion() {
-		ApplicationEsporter.f.setContentPane(new PageAccueil());
-		ApplicationEsporter.f.validate();
-	}
-
-	// Méthode pour accéder à la page d'accueil
-	private void goAccueil() {
-		ApplicationEsporter.f.setContentPane(new Arbitre_Accueil());
-		ApplicationEsporter.f.validate();
-	}
-
-	// Méthode pour accéder à la page des tournois
-	private void goTournois() {
-		ApplicationEsporter.f.setContentPane(new Arbitre_Tournoi());
-		ApplicationEsporter.f.validate();
 	}
 
 	// Recupere toutes les poules liees a un tournoi
@@ -200,26 +181,20 @@ public class ControleurArbitre implements ActionListener {
 		if(!changerDePageHeader(b)) {
 			switch(this.etat) {
 			case TOURNOI:
-
 				if (b.getText().equals("Voir le(s) jeu(x)")) {
 					afficherJeux();
 				}
-
 				if(b.getText().equals("Accéder")) {
 					stockageIdTournoi();
 					ApplicationEsporter.changerDePage(new Arbitre_InfoTournoi());
 				}
 				break;
 			case INFOTOURNOI:
-
 				if(b.getText().equals("Voir les matchs")) {
 					ApplicationEsporter.changerDePage(new Arbitre_Match());
-
-					this.etat = EtatArbitre.MATCHS;
 				}
 				break;
 			case MATCHS:
-
 				if(b.getText().equals("Victoire équipe 1") || b.getText().equals("Victoire équipe 2")) {
 					if(b.getText().equals("Victoire équipe 1")) {
 						victoireMatchPouleEquipe(1);
@@ -230,7 +205,6 @@ public class ControleurArbitre implements ActionListener {
 					setMessagePouleFiniDemisFinPasFini(); 
 					vueMatch.updateTable();
 				}
-				
 				if(b.getText().equals("Victoire équipe 1") || b.getText().equals("Victoire équipe 2")) {
 					if(b.getText().equals("Victoire équipe 1 ")) {
 						victoireMatchPhaseFinaleEquipe(1);
