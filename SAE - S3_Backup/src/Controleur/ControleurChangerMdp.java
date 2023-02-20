@@ -25,7 +25,7 @@ public class ControleurChangerMdp implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		JButton b = (JButton) e.getSource();
 		if (b.getText().equals("Valider le mot de passe")) {
-			if(!this.vue.getNomUtilisateur().isEmpty() && !this.vue.getMdp().isEmpty() && !this.vue.getNouveauMdp().isEmpty()) {
+			if(tousRempli()) {
 				try {
 					if(Compte.compteExiste(this.vue.getNomUtilisateur()) && Compte.mdpOK(this.vue.getNomUtilisateur(), this.vue.getMdp())) {
 						Compte.changerMdp(this.vue.getNomUtilisateur(), this.vue.getMdp(), this.vue.getNouveauMdp());
@@ -49,6 +49,10 @@ public class ControleurChangerMdp implements ActionListener {
 			ApplicationEsporter.f.validate();
 		}
 		
+	}
+
+	public boolean tousRempli() {
+		return !this.vue.getNomUtilisateur().isEmpty() && !this.vue.getMdp().isEmpty() && !this.vue.getNouveauMdp().isEmpty();
 	}
 
 }
