@@ -163,7 +163,7 @@ public class Ecurie_PreInscription extends JPanel {
 	}
 	
 	private boolean dejaInscrit() throws SQLException {
-		ResultSet res = FonctionsSQL.select("saeparticiper, CRJ3957A.saeequipe", "CRJ3957A.saeequipe.NOM_2", "CRJ3957A.saeparticiper.IDTOURNOI = " + getIdTournoiSelected() + " AND CRJ3957A.saeparticiper.NOM = CRJ3957A.saeequipe.NOM");
+		ResultSet res = FonctionsSQL.select("saeparticiper, saeequipe", "saeequipe.NOM_2", "saeparticiper.IDTOURNOI = " + getIdTournoiSelected() + " AND saeparticiper.NOM = saeequipe.NOM");
 		res.next();
 		try {
 			return res.getString(1).equals(controleur.getNomEcurie());
@@ -190,8 +190,8 @@ public class Ecurie_PreInscription extends JPanel {
 		ResultSet countParticipant = FonctionsSQL.select("saeparticiper", "count(*)", "IDTOURNOI = " + getIdTournoiSelected());
 		countParticipant.next();
 		String data[][] = new String[countParticipant.getInt(1)][3];
-		ResultSet res = FonctionsSQL.select("saeparticiper, CRJ3957A.saeequipe", "CRJ3957A.saeequipe.NOM, CRJ3957A.saeequipe.NOM_2, CRJ3957A.saeequipe.NBPOINTS", 
-											"CRJ3957A.saeparticiper.IDTOURNOI = " + getIdTournoiSelected() + " AND CRJ3957A.saeparticiper.NOM = CRJ3957A.saeequipe.NOM ORDER BY CRJ3957A.saeequipe.NBPOINTS DESC");
+		ResultSet res = FonctionsSQL.select("saeparticiper, saeequipe", "saeequipe.NOM, saeequipe.NOM_2, saeequipe.NBPOINTS", 
+											"saeparticiper.IDTOURNOI = " + getIdTournoiSelected() + " AND saeparticiper.NOM = saeequipe.NOM ORDER BY saeequipe.NBPOINTS DESC");
 		int i = 0;
 		while (res.next()) {
 			data[i][0] = res.getString(2);

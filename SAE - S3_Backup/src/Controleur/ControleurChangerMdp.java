@@ -27,7 +27,7 @@ public class ControleurChangerMdp implements ActionListener {
 		if (b.getText().equals("Valider le mot de passe")) {
 			if(!this.vue.getNomUtilisateur().isEmpty() && !this.vue.getMdp().isEmpty() && !this.vue.getNouveauMdp().isEmpty()) {
 				try {
-					if(Compte.compteExiste(this.vue.getNomUtilisateur()) && Compte.mdpOK(this.vue.getNomUtilisateur(), this.vue.getMdp())) {
+					if(Compte.compteEtMdpExistent(this.vue.getNomUtilisateur(), this.vue.getMdp())) {
 						Compte.changerMdp(this.vue.getNomUtilisateur(), this.vue.getMdp(), this.vue.getNouveauMdp());
 						ApplicationEsporter.f.setContentPane(new PageConnexion());
 						ApplicationEsporter.f.validate();

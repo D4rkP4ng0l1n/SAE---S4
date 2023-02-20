@@ -65,7 +65,6 @@ public class FonctionsSQL {
 			statement = Connexion.seConnecter().createStatement();
 			String insert = creationStringAInserer(aInserer);
 			statement.executeUpdate("INSERT INTO CRJ3957A." + nomTable + " VALUES(" + insert + ")"  );
-			Connexion.closeConnexion();
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}

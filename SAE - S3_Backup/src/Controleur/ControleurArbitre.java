@@ -40,33 +40,15 @@ public class ControleurArbitre implements ActionListener {
 
 	private Boolean changerDePageHeader(JButton b) {
 		if (b.getText().equals("Déconnexion")) {
-			goDeconnexion();
+			ApplicationEsporter.changerDePage(new PageAccueil());
 		}
 		if(b.getText().equals("Accueil")) {
-			goAccueil();
+			ApplicationEsporter.changerDePage(new Arbitre_Accueil());
 		}
 		if(b.getText().equals("Tournois")) {
-			goTournois();
+			ApplicationEsporter.changerDePage(new Arbitre_Tournoi());
 		}
 		return false;
-	}
-
-	// Méthode pour se déconnecter
-	private void goDeconnexion() {
-		ApplicationEsporter.f.setContentPane(new PageAccueil());
-		ApplicationEsporter.f.validate();
-	}
-
-	// Méthode pour accéder à la page d'accueil
-	private void goAccueil() {
-		ApplicationEsporter.f.setContentPane(new Arbitre_Accueil());
-		ApplicationEsporter.f.validate();
-	}
-
-	// Méthode pour accéder à la page des tournois
-	private void goTournois() {
-		ApplicationEsporter.f.setContentPane(new Arbitre_Tournoi());
-		ApplicationEsporter.f.validate();
 	}
 
 	// Recupere toutes les poules liees a un tournoi
