@@ -26,6 +26,7 @@ import Controleur.ControleurEcurie;
 import Modele.Equipe;
 import Modele.FonctionsSQL;
 import Modele.Joueur;
+import Modele.BDD.NomTablesBDD;
 
 import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
@@ -188,10 +189,10 @@ public class Ecurie_Inscription extends JPanel {
 		try {
 			setListJoueurs();
 			String columns[] = { "Nom" , "Pseudo" , "Age" , "Equipe" };
-			ResultSet count = FonctionsSQL.select("saejoueur", "count(*)", "NOM_EQUIPE = '" + comboEquipes.getSelectedItem() + "'");
+			ResultSet count = FonctionsSQL.select(NomTablesBDD.SAEJOUEUR, "count(*)", "NOM_EQUIPE = '" + comboEquipes.getSelectedItem() + "'");
 			count.next();
 			String data[][] = new String[count.getInt(1)][4];
-			ResultSet res = FonctionsSQL.select("saejoueur", "*", "NOM_EQUIPE = '" + comboEquipes.getSelectedItem() + "' ORDER BY IDJOUEUR");
+			ResultSet res = FonctionsSQL.select(NomTablesBDD.SAEJOUEUR, "*", "NOM_EQUIPE = '" + comboEquipes.getSelectedItem() + "' ORDER BY IDJOUEUR");
 			int i = 0;
 			while (res.next()) {
 				data[i][0] = res.getString(2);
@@ -213,8 +214,8 @@ public class Ecurie_Inscription extends JPanel {
 
 	private static void setListJoueurs() {
 		try {
-			ResultSet selectJoueur = FonctionsSQL.select("saejoueur", "*", "NOM_EQUIPE = '" + comboEquipes.getSelectedItem() + "'");
-			ResultSet selectEquipe = FonctionsSQL.select("saeequipe", "*", "NOM = '" + comboEquipes.getSelectedItem() + "'");
+			ResultSet selectJoueur = FonctionsSQL.select(NomTablesBDD.SAEJOUEUR, "*", "NOM_EQUIPE = '" + comboEquipes.getSelectedItem() + "'");
+			ResultSet selectEquipe = FonctionsSQL.select(NomTablesBDD.SAEEQUIPE, "*", "NOM = '" + comboEquipes.getSelectedItem() + "'");
 			selectEquipe.next();
 			Equipe equipe = new Equipe(selectEquipe.getString(5), selectEquipe.getString(1), selectEquipe.getString(4), selectEquipe.getString(3));
 			while(selectJoueur.next()) {
@@ -234,8 +235,8 @@ public class Ecurie_Inscription extends JPanel {
 
 	private void setComboBox() {
 		try {
-			ResultSet countEquipes = FonctionsSQL.select("SAEEquipe", "count(*)", "NOM_2 = '" + controleur.getNomEcurie() + "' AND NOM_1 = '" + setJeux() + "'");
-			ResultSet selectEquipes = FonctionsSQL.select("SAEEquipe", "NOM", "NOM_2 = '" + controleur.getNomEcurie() + "' AND NOM_1 = '" + setJeux() + "'");
+			ResultSet countEquipes = FonctionsSQL.select(NomTablesBDD.SAEEQUIPE, "count(*)", "NOM_2 = '" + controleur.getNomEcurie() + "' AND NOM_1 = '" + setJeux() + "'");
+			ResultSet selectEquipes = FonctionsSQL.select(NomTablesBDD.SAEEQUIPE, "NOM", "NOM_2 = '" + controleur.getNomEcurie() + "' AND NOM_1 = '" + setJeux() + "'");
 			countEquipes.next();
 			String[]listeEquipes = new String[countEquipes.getInt(1) + 1];
 			listeEquipes[0] = "Choisir votre equipe";
@@ -256,7 +257,7 @@ public class Ecurie_Inscription extends JPanel {
 
 	public static int getIdTournoiSelected() {
 		try {
-			ResultSet selectTournoi = FonctionsSQL.select("saetournoi", "IDTOURNOI", "LIEU = '" + (String) Ecurie_Tournoi.getTable().getValueAt(Ecurie_Tournoi.getTable().getSelectedRow(), 0) + "' AND DATEETHEURE LIKE TO_DATE('" + (String) Ecurie_Tournoi.getTable().getValueAt(Ecurie_Tournoi.getTable().getSelectedRow(), 1) + "', 'YYYY-MM-DD')");
+			ResultSet selectTournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "IDTOURNOI", "LIEU = '" + (String) Ecurie_Tournoi.getTable().getValueAt(Ecurie_Tournoi.getTable().getSelectedRow(), 0) + "' AND DATEETHEURE LIKE TO_DATE('" + (String) Ecurie_Tournoi.getTable().getValueAt(Ecurie_Tournoi.getTable().getSelectedRow(), 1) + "', 'YYYY-MM-DD')");
 			selectTournoi.next();
 			return selectTournoi.getInt(1);
 		} catch (SQLException e) {
@@ -268,7 +269,7 @@ public class Ecurie_Inscription extends JPanel {
 	private String setJeux() {
 		String listeJeux = "";
 		try {
-			ResultSet selectJeux = FonctionsSQL.select("saeconcerner", "NOM", "IDTOURNOI = " + getIdTournoiSelected());
+			ResultSet selectJeux = FonctionsSQL.select(NomTablesBDD.SAECONCERNER, "NOM", "IDTOURNOI = " + getIdTournoiSelected());
 			while(selectJeux.next()) {
 				listeJeux += selectJeux.getString(1) + " - ";
 			}

@@ -25,6 +25,7 @@ import Controleur.ControleurEcurie.EtatEcurie;
 import Modele.Equipe;
 import Modele.FonctionsSQL;
 import Modele.Joueur;
+import Modele.BDD.NomTablesBDD;
 
 @SuppressWarnings("serial")
 public class Ecurie_GestionEquipe extends JPanel{
@@ -176,10 +177,10 @@ public class Ecurie_GestionEquipe extends JPanel{
 		try {
 			setListJoueurs();
 			String columns[] = { "Nom Joueur(s)" , "Pseudo" , "Age" , "Equipe" };
-			ResultSet count = FonctionsSQL.select("saejoueur", "count(*)", "NOM_EQUIPE = '" + (String) Ecurie_Equipes.getTable().getValueAt(Ecurie_Equipes.getTable().getSelectedRow(), 0) + "'");
+			ResultSet count = FonctionsSQL.select(NomTablesBDD.SAEJOUEUR, "count(*)", "NOM_EQUIPE = '" + (String) Ecurie_Equipes.getTable().getValueAt(Ecurie_Equipes.getTable().getSelectedRow(), 0) + "'");
 			count.next();
 			String data[][] = new String[count.getInt(1)][4];
-			ResultSet res = FonctionsSQL.select("saejoueur", "*", "NOM_EQUIPE = '" + (String) Ecurie_Equipes.getTable().getValueAt(Ecurie_Equipes.getTable().getSelectedRow(), 0) + "' ORDER BY IDJOUEUR");
+			ResultSet res = FonctionsSQL.select(NomTablesBDD.SAEJOUEUR, "*", "NOM_EQUIPE = '" + (String) Ecurie_Equipes.getTable().getValueAt(Ecurie_Equipes.getTable().getSelectedRow(), 0) + "' ORDER BY IDJOUEUR");
 			int i = 0;
 			while (res.next()) {
 				data[i][0] = res.getString(2);
@@ -202,7 +203,7 @@ public class Ecurie_GestionEquipe extends JPanel{
 
 	private void setNomJeu() {
 		try {
-			ResultSet selectNomJeu = FonctionsSQL.select("saeequipe", "NOM_1" , "NOM = '" + (String) Ecurie_Equipes.getTable().getValueAt(Ecurie_Equipes.getTable().getSelectedRow(), 0) + "'");
+			ResultSet selectNomJeu = FonctionsSQL.select(NomTablesBDD.SAEEQUIPE, "NOM_1" , "NOM = '" + (String) Ecurie_Equipes.getTable().getValueAt(Ecurie_Equipes.getTable().getSelectedRow(), 0) + "'");
 			selectNomJeu.next();
 			nomJeu.setText(selectNomJeu.getString(1));
 		} catch (SQLException e) {
@@ -212,7 +213,7 @@ public class Ecurie_GestionEquipe extends JPanel{
 	
 	private void setNbPoints() {
 		try {
-			ResultSet selectNbPoints = FonctionsSQL.select("saeequipe", "NBPOINTS" , "NOM = '" + (String) Ecurie_Equipes.getTable().getValueAt(Ecurie_Equipes.getTable().getSelectedRow(), 0) + "'");
+			ResultSet selectNbPoints = FonctionsSQL.select(NomTablesBDD.SAEEQUIPE, "NBPOINTS" , "NOM = '" + (String) Ecurie_Equipes.getTable().getValueAt(Ecurie_Equipes.getTable().getSelectedRow(), 0) + "'");
 			selectNbPoints.next();
 			nbPoints.setText("Points : " + selectNbPoints.getInt(1));
 		} catch (SQLException e) {
@@ -222,8 +223,8 @@ public class Ecurie_GestionEquipe extends JPanel{
 
 	private static void setListJoueurs() {
 		try {
-			ResultSet selectJoueur = FonctionsSQL.select("saejoueur", "*", "NOM_EQUIPE = '" + (String) Ecurie_Equipes.getTable().getValueAt(Ecurie_Equipes.getTable().getSelectedRow(), 0) + "'");
-			ResultSet selectEquipe = FonctionsSQL.select("saeequipe", "*", "NOM = '" + (String) Ecurie_Equipes.getTable().getValueAt(Ecurie_Equipes.getTable().getSelectedRow(), 0) + "'");
+			ResultSet selectJoueur = FonctionsSQL.select(NomTablesBDD.SAEJOUEUR, "*", "NOM_EQUIPE = '" + (String) Ecurie_Equipes.getTable().getValueAt(Ecurie_Equipes.getTable().getSelectedRow(), 0) + "'");
+			ResultSet selectEquipe = FonctionsSQL.select(NomTablesBDD.SAEEQUIPE, "*", "NOM = '" + (String) Ecurie_Equipes.getTable().getValueAt(Ecurie_Equipes.getTable().getSelectedRow(), 0) + "'");
 			selectEquipe.next();
 			Equipe equipe = new Equipe(selectEquipe.getString(5), selectEquipe.getString(1), selectEquipe.getString(4), selectEquipe.getString(3));
 			while(selectJoueur.next()) {

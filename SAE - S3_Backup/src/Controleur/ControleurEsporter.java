@@ -497,13 +497,9 @@ public class ControleurEsporter implements ActionListener {
 				break;
 			case MODIFIER_JOUEUR:
 				if(b.getText().equals("Annuler")) {
-					try {
-						Ecurie_AddJoueur.annuler();
-						ApplicationEsporter.f.setContentPane(new Esporter_Equipes());
-						ApplicationEsporter.f.validate();
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
+					Ecurie_AddJoueur.annuler();
+					ApplicationEsporter.f.setContentPane(new Esporter_Equipes());
+					ApplicationEsporter.f.validate();
 				}
 				if(b.getText().equals("Ajouter le joueur")) {
 					if(Esporter_ModifierJoueur.isNomNull()) {

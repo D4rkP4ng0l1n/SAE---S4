@@ -1,6 +1,5 @@
 package Modele;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 
 import org.jdatepicker.impl.SqlDateModel;

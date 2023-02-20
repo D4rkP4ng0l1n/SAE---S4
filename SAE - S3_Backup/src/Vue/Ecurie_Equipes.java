@@ -18,6 +18,7 @@ import javax.swing.table.DefaultTableModel;
 
 import Controleur.ControleurEcurie;
 import Controleur.ControleurEcurie.EtatEcurie;
+import Modele.BDD.NomTablesBDD;
 import Modele.FonctionsSQL;
 import Modele.MyRendererAndEditor;
 
@@ -162,10 +163,10 @@ public class Ecurie_Equipes extends JPanel {
 	public JTable setTable(JTable table) {
 		try {
 			String columns[] = { "Nom de l'équipe" , "Jeu" , " " , "  " };
-			ResultSet count = FonctionsSQL.select("saeequipe", "count(*)", "Nom_2 = '" + controleur.getNomEcurie() + "'");
+			ResultSet count = FonctionsSQL.select(NomTablesBDD.SAEEQUIPE, "count(*)", "Nom_2 = '" + controleur.getNomEcurie() + "'");
 			count.next();
 			String data[][] = new String[count.getInt(1)][4];
-			ResultSet res = FonctionsSQL.select("saeequipe", "*", "Nom_2 = '" + controleur.getNomEcurie() + "'");
+			ResultSet res = FonctionsSQL.select(NomTablesBDD.SAEEQUIPE, "*", "Nom_2 = '" + controleur.getNomEcurie() + "'");
 			int i = 0;
 			while (res.next()) {
 				data[i][0] = res.getString(1);

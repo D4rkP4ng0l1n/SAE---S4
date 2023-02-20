@@ -21,6 +21,7 @@ import Controleur.ControleurEcurie;
 import Controleur.ControleurEcurie.EtatEcurie;
 import Modele.FonctionsSQL;
 import Modele.MyRendererAndEditor;
+import Modele.BDD.NomTablesBDD;
 
 public class Ecurie_Tournoi extends JPanel{
 	
@@ -138,7 +139,7 @@ public class Ecurie_Tournoi extends JPanel{
 			ResultSet count = FonctionsSQL.select("saetournoi", "count(*)", "");
 			count.next();
 			String data[][] = new String[count.getInt(1)][5];
-			ResultSet res = FonctionsSQL.select("saetournoi", "*", "1 = 1 ORDER BY IDTOURNOI");
+			ResultSet res = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "*", "1 = 1 ORDER BY IDTOURNOI");
 			int i = 0;
 			while (res.next()) {
 				data[i][0] = res.getString(2);
@@ -175,7 +176,7 @@ public class Ecurie_Tournoi extends JPanel{
 
 	private int getNbInscrits(int id) {
 		try {
-			ResultSet select = FonctionsSQL.select("SAEParticiper", "count(*)", "IdTournoi = " + id);
+			ResultSet select = FonctionsSQL.select(NomTablesBDD.SAEPARTICIPER, "count(*)", "IdTournoi = " + id);
 			select.next();
 			return 16 - select.getInt(1);
 		} catch (SQLException e) {

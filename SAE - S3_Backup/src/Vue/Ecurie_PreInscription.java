@@ -15,6 +15,7 @@ import javax.swing.table.DefaultTableModel;
 
 import Controleur.ControleurEcurie;
 import Modele.FonctionsSQL;
+import Modele.BDD.NomTablesBDD;
 
 import javax.swing.JScrollPane;
 import java.sql.ResultSet;
@@ -151,7 +152,7 @@ public class Ecurie_PreInscription extends JPanel {
 	
 	private int getIdTournoiSelected() {
 		try {
-			ResultSet selectTournoi = FonctionsSQL.select("saetournoi", "IDTOURNOI", "LIEU = '" + (String) Ecurie_Tournoi.getTable().getValueAt(Ecurie_Tournoi.getTable().getSelectedRow(), 0) + "' AND DATEETHEURE LIKE TO_DATE('" + (String) Ecurie_Tournoi.getTable().getValueAt(Ecurie_Tournoi.getTable().getSelectedRow(), 1) + "', 'YYYY-MM-DD')");
+			ResultSet selectTournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "IDTOURNOI", "LIEU = '" + (String) Ecurie_Tournoi.getTable().getValueAt(Ecurie_Tournoi.getTable().getSelectedRow(), 0) + "' AND DATEETHEURE LIKE TO_DATE('" + (String) Ecurie_Tournoi.getTable().getValueAt(Ecurie_Tournoi.getTable().getSelectedRow(), 1) + "', 'YYYY-MM-DD')");
 			selectTournoi.next();
 			ApplicationEsporter.idTournoi = "" + selectTournoi.getInt(1);
 			return selectTournoi.getInt(1);
@@ -163,7 +164,7 @@ public class Ecurie_PreInscription extends JPanel {
 	
 	private int getNbEquipesInscrites() {
 		try {
-			ResultSet countParticipant = FonctionsSQL.select("saeparticiper", "count(*)", "IDTOURNOI = " + getIdTournoiSelected());
+			ResultSet countParticipant = FonctionsSQL.select(NomTablesBDD.SAEPARTICIPER, "count(*)", "IDTOURNOI = " + getIdTournoiSelected());
 			countParticipant.next();
 			return countParticipant.getInt(1);
 		} catch (SQLException e) {
@@ -185,7 +186,7 @@ public class Ecurie_PreInscription extends JPanel {
 	private String setJeux() {
 		String listeJeux = "";
 		try {
-			ResultSet selectJeux = FonctionsSQL.select("saeconcerner", "NOM", "IDTOURNOI = " + getIdTournoiSelected());
+			ResultSet selectJeux = FonctionsSQL.select(NomTablesBDD.SAECONCERNER, "NOM", "IDTOURNOI = " + getIdTournoiSelected());
 			while(selectJeux.next()) {
 				listeJeux += selectJeux.getString(1) + " - ";
 			}
@@ -199,7 +200,7 @@ public class Ecurie_PreInscription extends JPanel {
 	private JTable setTable(JTable table) {
 		try {
 			String columns[] = {"Ecuries", "Equipes", "Points"};
-			ResultSet countParticipant = FonctionsSQL.select("saeparticiper", "count(*)", "IDTOURNOI = " + getIdTournoiSelected());
+			ResultSet countParticipant = FonctionsSQL.select(NomTablesBDD.SAEPARTICIPER, "count(*)", "IDTOURNOI = " + getIdTournoiSelected());
 			countParticipant.next();
 			String data[][] = new String[countParticipant.getInt(1)][3];
 			ResultSet res = FonctionsSQL.select("saeparticiper, CRJ3957A.saeequipe", "CRJ3957A.saeequipe.NOM, CRJ3957A.saeequipe.NOM_2, CRJ3957A.saeequipe.NBPOINTS", 

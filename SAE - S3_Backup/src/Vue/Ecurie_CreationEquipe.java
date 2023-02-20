@@ -21,6 +21,7 @@ import Controleur.ControleurEcurie;
 import Controleur.ControleurEcurie.EtatEcurie;
 import Modele.FonctionsSQL;
 import Modele.Jeu;
+import Modele.BDD.NomTablesBDD;
 
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
@@ -210,7 +211,7 @@ public class Ecurie_CreationEquipe extends JPanel{
 	private String[] listJeu() {
 		try {
 			ResultSet rs = Jeu.getTousLesJeux();
-			ResultSet count = FonctionsSQL.select("SAEJeu", "count(nom)", "");
+			ResultSet count = FonctionsSQL.select(NomTablesBDD.SAEJEU, "count(nom)", "");
 			count.next();
 			listjeu = new String[count.getInt(1) + 1];
 			int i = 1;
