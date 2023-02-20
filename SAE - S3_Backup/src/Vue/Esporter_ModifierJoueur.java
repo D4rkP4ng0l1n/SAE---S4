@@ -181,7 +181,7 @@ public class Esporter_ModifierJoueur extends JPanel {
 	
 	private static int lastIndex() {
 		int index = 0;
-		for (Joueur j : joueurs) {
+		for (@SuppressWarnings("unused") Joueur j : joueurs) {
 			index++;
 		}
 		return index - 1;
@@ -302,6 +302,7 @@ public class Esporter_ModifierJoueur extends JPanel {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public String getAge(Date date) {
 		int age;
 		age= LocalDate.now().getYear()-(date.getYear()+1899);

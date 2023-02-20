@@ -16,6 +16,7 @@ import javax.swing.border.LineBorder;
 
 import Controleur.ControleurChangerMdp;
 
+@SuppressWarnings("serial")
 public class PageChangerMdp extends JPanel {
 
 	private JTextField nomUtilisateur;

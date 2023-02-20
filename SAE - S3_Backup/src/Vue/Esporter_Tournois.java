@@ -22,6 +22,7 @@ import Controleur.ControleurEsporter.EtatEsporter;
 import Modele.FonctionsSQL;
 import Modele.MyRendererAndEditor;
 
+@SuppressWarnings("serial")
 public class Esporter_Tournois extends JPanel{
 
 	private static DefaultTableModel model;
@@ -151,13 +152,15 @@ public class Esporter_Tournois extends JPanel{
 		ResultSet res = FonctionsSQL.select("saetournoi", "*", "");
 		int i = 0;
 		String datadateduTournoi="";
+		String dateGalere;
 		while (res.next()) {
 			data[i][0] = res.getString(2);
 			char[] dateduTournoi=  res.getDate(3).toString().toCharArray();
 			if (dateduTournoi[0]=='1') {
+				@SuppressWarnings("deprecation")
 				int dateOk = res.getDate(3).getYear();
 				dateOk = ((dateOk - 1977) * -1) + 2024;
-				String dateGalere = "" + dateOk;
+				dateGalere = "" + dateOk;
 				dateduTournoi[2]=dateGalere.charAt(2);
 				dateduTournoi[3]=dateGalere.charAt(3);
 			}

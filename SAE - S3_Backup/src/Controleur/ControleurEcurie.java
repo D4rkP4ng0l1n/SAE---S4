@@ -72,9 +72,10 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 			// Sélection des équipes de celles avec le plus de points à celles avec le moins
 			ResultSet listeEquipe = FonctionsSQL.select("saeequipe e, CRJ3957A.saeparticiper p","e.nom"," e.nom=p.nom and p.idtournoi= " + ApplicationEsporter.idTournoi + " order by e.nbpoints desc,1");
 			int pouleCounter = 1;
+			ResultSet IdPoule;
 			while (listeEquipe.next()) {
 				// Récupération d'un id de poule avec le bon numéro
-				ResultSet IdPoule = FonctionsSQL.select(NomTablesBDD.SAEPOULE, "idpoule", "numero = '" + pouleCounter + "' and idtournoi = " + ApplicationEsporter.idTournoi);
+				IdPoule = FonctionsSQL.select(NomTablesBDD.SAEPOULE, "idpoule", "numero = '" + pouleCounter + "' and idtournoi = " + ApplicationEsporter.idTournoi);
 				IdPoule.next();
 				String[] equipe = {"'" + listeEquipe.getString("nom") + "'", "" + IdPoule.getInt("Idpoule"), "'0'"};
 				FonctionsSQL.insert(NomTablesBDD.SAECONCOURIR, equipe);

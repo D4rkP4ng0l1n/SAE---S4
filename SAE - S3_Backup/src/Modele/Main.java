@@ -1,9 +1,9 @@
 package Modele;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import Modele.BDD.NomTablesBDD;
 import Vue.ApplicationEsporter;
 
@@ -23,4 +23,21 @@ public class Main {
 			System.out.println(select.getString(1) + " - " + select.getString(2) + " - " + select.getString(3) + " - " + select.getString(4));
 		}
 	}
+	
+	public static String crypterMdp(String mdp) { // Chiffre le mot de passe
+        try {
+            MessageDigest msg = MessageDigest.getInstance("SHA-256");
+            byte[] hash = msg.digest(mdp.getBytes(StandardCharsets.UTF_8));
+            
+            StringBuilder s = new StringBuilder();
+            for (byte b : hash) {
+                s.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
+            }
+            return s.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
+        
+    }
 }

@@ -268,11 +268,7 @@ public class Esporter_CreerTournoi extends JPanel{
 	}
 	
 	public static boolean datePassee() { // Retourne true si la date sélectionnée est antérieure à la date actuelle
-		if (model.getYear() > LocalDate.now().getYear()) {
-			return false;
-		} else if (model.getMonth()+1 > LocalDate.now().getMonthValue() &&  model.getYear() == LocalDate.now().getYear()) {
-			return false;
-		} else if (model.getDay() > LocalDate.now().getDayOfMonth() && model.getMonth()+1 == LocalDate.now().getMonthValue() &&  model.getYear() == LocalDate.now().getYear()) {
+		if ((model.getYear() > LocalDate.now().getYear()) || (model.getMonth()+1 > LocalDate.now().getMonthValue() &&  model.getYear() == LocalDate.now().getYear()) || (model.getDay() > LocalDate.now().getDayOfMonth() && model.getMonth()+1 == LocalDate.now().getMonthValue() &&  model.getYear() == LocalDate.now().getYear())) {
 			return false;
 		} else {
 			return true;

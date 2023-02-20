@@ -218,9 +218,10 @@ public class Ecurie_Inscription extends JPanel {
 			ResultSet selectEquipe = FonctionsSQL.select(NomTablesBDD.SAEEQUIPE, "*", "NOM = '" + comboEquipes.getSelectedItem() + "'");
 			selectEquipe.next();
 			Equipe equipe = new Equipe(selectEquipe.getString(5), selectEquipe.getString(1), selectEquipe.getString(4), selectEquipe.getString(3));
+			SqlDateModel date;
 			while(selectJoueur.next()) {
 				int i = selectJoueur.getInt(1);
-				SqlDateModel date = new SqlDateModel(selectJoueur.getDate(4));
+				date = new SqlDateModel(selectJoueur.getDate(4));
 				joueurs.add(new Joueur(selectJoueur.getString(2), selectJoueur.getString(3), date, equipe ));
 				joueurs.get(joueurs.size() - 1).setId(i);
 			}
