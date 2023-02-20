@@ -22,6 +22,7 @@ import org.jdatepicker.impl.SqlDateModel;
 
 import Controleur.ControleurEsporter;
 import Controleur.ControleurEsporter.EtatEsporter;
+import Modele.BDD.NomTablesBDD;
 import Modele.FonctionsSQL;
 
 import javax.swing.JComboBox;
@@ -52,7 +53,7 @@ public class Esporter_ModifTournoi extends JPanel{
 	private ControleurEsporter controleur = new ControleurEsporter(this, EtatEsporter.MODIF_TOURNOI);
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public Esporter_ModifTournoi() throws SQLException {
+	public Esporter_ModifTournoi() {
 		setLayout(new BorderLayout(0,0));
 
 		JPanel Header = new JPanel();
@@ -314,18 +315,23 @@ public class Esporter_ModifTournoi extends JPanel{
 		DLM.removeAllElements();
 	}
 
-	private String[] listJeu(ResultSet rs) throws SQLException {
-		ResultSet rss = FonctionsSQL.select("SAEJeu", "count(nom)", "");
-		rss.next();
-		int count = rss.getInt(1);
-		String[]listJeu= new String[count+1];
-		int i = 1;
-		listJeu[0]="Choisir un Jeu";
-		while (rs.next()) {
-			listJeu[i]=rs.getString(1);
-			i++;
+	private String[] listJeu(ResultSet rs) {
+		try {
+			ResultSet rss = FonctionsSQL.select(NomTablesBDD.SAEJEU, "count(nom)", "");
+			rss.next();
+			int count = rss.getInt(1);
+			String[]listJeu= new String[count+1];
+			int i = 1;
+			listJeu[0]="Choisir un Jeu";
+			while (rs.next()) {
+				listJeu[i]=rs.getString(1);
+				i++;
+			}
+			return listJeu;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
 		}
-		return listJeu;
 	}
 
 	public static boolean lieuEstVide() {
@@ -338,14 +344,14 @@ public class Esporter_ModifTournoi extends JPanel{
 
 	private static void setPage() {
 		try {
-			ResultSet tournoi = FonctionsSQL.select("saetournoi", "lieu", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
+			ResultSet tournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "lieu", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
 			tournoi.next();
 			setLieu(tournoi.getString(1));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		try {
-			ResultSet tournoi = FonctionsSQL.select("saeconcerner", "nom", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
+			ResultSet tournoi = FonctionsSQL.select(NomTablesBDD.SAECONCERNER, "nom", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
 			while(tournoi.next()) {
 				DLM.addElement(tournoi.getString(1));
 				Jeux.setModel(DLM);
@@ -354,7 +360,7 @@ public class Esporter_ModifTournoi extends JPanel{
 			e.printStackTrace();
 		}
 		try {
-			ResultSet tournoi = FonctionsSQL.select("saetournoi", "DATEETHEURE", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
+			ResultSet tournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "DATEETHEURE", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
 			tournoi.next();
 			String heureTournoi = tournoi.getString(1);
 			char[] ancienneHeureTournoi= heureTournoi.toCharArray();
@@ -363,7 +369,7 @@ public class Esporter_ModifTournoi extends JPanel{
 			for(char c:  ancienneHeureTournoi) {
 				heureTournoi=heureTournoi+c;
 			}
-			tournoi = FonctionsSQL.select("saetournoi", "AM_PM", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
+			tournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "AM_PM", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
 			tournoi.next();
 			heureTournoi= heureTournoi+" "+tournoi.getString(1);
 			setHeure(heureTournoi);
@@ -371,10 +377,10 @@ public class Esporter_ModifTournoi extends JPanel{
 			e.printStackTrace();
 		}
 		try {
-			ResultSet tournoi = FonctionsSQL.select("saeconcerner", "nom", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
+			ResultSet tournoi = FonctionsSQL.select(NomTablesBDD.SAECONCERNER, "nom", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
 			while(tournoi.next()) {
 				if (DLM.contains(tournoi.getString(1))) {
-				}else {
+				} else {
 					DLM.addElement(tournoi.getString(1));
 					Jeux.setModel(DLM);
 				}
