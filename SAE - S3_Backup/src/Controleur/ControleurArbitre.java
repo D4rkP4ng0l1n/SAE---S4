@@ -60,8 +60,9 @@ public class ControleurArbitre implements ActionListener {
 		try {
 			ResultSet idsPoules = getIdsPoules();
 			int nbPouleFinis = 0;
+			ResultSet pouleTermines;
 			while(idsPoules.next()) {
-				ResultSet pouleTermines = FonctionsSQL.select(NomTablesBDD.SAEPARTIEPOULE, "count(resultat)", "IDPoule = " + idsPoules.getInt(1) + "AND resultat = 'aucune'");
+				pouleTermines = FonctionsSQL.select(NomTablesBDD.SAEPARTIEPOULE, "count(resultat)", "IDPoule = " + idsPoules.getInt(1) + "AND resultat = 'aucune'");
 				pouleTermines.next();
 				if(pouleTermines.getInt(1) == 0) {
 					nbPouleFinis++;
