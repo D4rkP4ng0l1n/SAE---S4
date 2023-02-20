@@ -15,6 +15,7 @@ import javax.swing.border.LineBorder;
 
 import Controleur.ControleurAccueil;
 
+@SuppressWarnings("serial")
 public class PageAccueil extends JPanel {
 
 	private ControleurAccueil controleur = new ControleurAccueil();

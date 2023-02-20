@@ -16,10 +16,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import Modele.BDD.NomTablesBDD;
 import Modele.Equipe;
 import Modele.FonctionsSQL;
 import Modele.Joueur;
-import Modele.BDD.NomTablesBDD;
 import Vue.ApplicationEsporter;
 import Vue.Ecurie_Accueil;
 import Vue.Ecurie_AddJoueur;
@@ -50,10 +50,15 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 	}
 
 	// Retourne le nom de l'écurie sur laquelle on se trouve
-	public String getNomEcurie() throws SQLException {
-		ResultSet nomEcurie = FonctionsSQL.select("saeecurie", "nom", "idcompte = " + ApplicationEsporter.idCompte);
-		nomEcurie.next();
-		return nomEcurie.getString(1);
+	public String getNomEcurie() {
+		try {
+			ResultSet nomEcurie = FonctionsSQL.select("saeecurie", "nom", "idcompte = " + ApplicationEsporter.idCompte);
+			nomEcurie.next();
+			return nomEcurie.getString(1);
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	// Génération des poules
@@ -66,11 +71,11 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 		try {
 			// Sélection des équipes de celles avec le plus de points à celles avec le moins
 			ResultSet listeEquipe = FonctionsSQL.select("saeequipe e, CRJ3957A.saeparticiper p","e.nom"," e.nom=p.nom and p.idtournoi= " + ApplicationEsporter.idTournoi + " order by e.nbpoints desc,1");
-
 			int pouleCounter = 1;
+			ResultSet IdPoule;
 			while (listeEquipe.next()) {
 				// Récupération d'un id de poule avec le bon numéro
-				ResultSet IdPoule = FonctionsSQL.select("saepoule", "idpoule", "numero = '" + pouleCounter + "' and idtournoi = " + ApplicationEsporter.idTournoi);
+				IdPoule = FonctionsSQL.select(NomTablesBDD.SAEPOULE, "idpoule", "numero = '" + pouleCounter + "' and idtournoi = " + ApplicationEsporter.idTournoi);
 				IdPoule.next();
 				String[] equipe = {"'" + listeEquipe.getString("nom") + "'", "" + IdPoule.getInt("Idpoule"), "'0'"};
 				FonctionsSQL.insert(NomTablesBDD.SAECONCOURIR, equipe);
@@ -79,50 +84,50 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		try {
-			genererMatchs(IdTournoi);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		genererMatchs(IdTournoi);
 	}
 
 	// Génère les matchs pour les phases de poules
-	private static void genererMatchs(String idTournoi) throws SQLException {
-		ResultSet idPoule = FonctionsSQL.select("SAEPoule", "IDPoule", "IDTournoi = " + idTournoi);
-		String[]idPoules = new String[100];
-		int numero = 0;
-		while(idPoule.next()) {
-			idPoules[numero] = "" + idPoule.getInt(1);
-			numero++;
-		}
-		for (int numPoule = 0; numPoule < 4; numPoule++) {
-			ResultSet listeEquipe = FonctionsSQL.select("SAEConcourir", "nom", "IDPoule = " + idPoules[numPoule]);
-			int k = 0;
-			String[]equipes = new String[4];
-			while (listeEquipe.next()) {
-				equipes[k] = listeEquipe.getString(1);
-				k++;
+	private static void genererMatchs(String idTournoi) {
+		try {
+			ResultSet idPoule = FonctionsSQL.select(NomTablesBDD.SAEPOULE, "IDPoule", "IDTournoi = " + idTournoi);
+			String[]idPoules = new String[100];
+			int numero = 0;
+			while(idPoule.next()) {
+				idPoules[numero] = "" + idPoule.getInt(1);
+				numero++;
 			}
-			int nbMatch = equipes.length * (equipes.length - 1) / 2;
-			String[]matchsEquipe1 = new String[nbMatch];
-			String[]matchsEquipe2 = new String[nbMatch];
-			int index = 0;
-			for (int i = 0; i < equipes.length; i++) {
-				for (int j = i+1; j < equipes.length; j++) {
-					matchsEquipe1[index] = equipes[i];
-					matchsEquipe2[index] = equipes[j];
-					index ++;
+			for (int numPoule = 0; numPoule < 4; numPoule++) {
+				ResultSet listeEquipe = FonctionsSQL.select(NomTablesBDD.SAECONCOURIR, "nom", "IDPoule = " + idPoules[numPoule]);
+				int k = 0;
+				String[]equipes = new String[4];
+				while (listeEquipe.next()) {
+					equipes[k] = listeEquipe.getString(1);
+					k++;
+				}
+				int nbMatch = equipes.length * (equipes.length - 1) / 2;
+				String[]matchsEquipe1 = new String[nbMatch];
+				String[]matchsEquipe2 = new String[nbMatch];
+				int index = 0;
+				for (int i = 0; i < equipes.length; i++) {
+					for (int j = i+1; j < equipes.length; j++) {
+						matchsEquipe1[index] = equipes[i];
+						matchsEquipe2[index] = equipes[j];
+						index ++;
+					}
+				}
+				for (int i = 0; i < nbMatch; i++) {
+					int id = FonctionsSQL.newID(NomTablesBDD.SAEPARTIEPOULE);
+					String[]match = { "" + id, "'aucune'", "" + idPoules[numPoule] };
+					String[]equipe1 = { "'" + matchsEquipe1[i] + "'", "" + id };
+					String[]equipe2 = { "'" + matchsEquipe2[i] + "'", "" + id };
+					FonctionsSQL.insert(NomTablesBDD.SAEPARTIEPOULE, match);
+					FonctionsSQL.insert(NomTablesBDD.SAECOMPETITER, equipe1);
+					FonctionsSQL.insert(NomTablesBDD.SAECOMPETITER, equipe2);
 				}
 			}
-			for (int i = 0; i < nbMatch; i++) {
-				int id = FonctionsSQL.newID(NomTablesBDD.SAEPARTIEPOULE);
-				String[]match = { "" + id, "'aucune'", "" + idPoules[numPoule] };
-				String[]equipe1 = { "'" + matchsEquipe1[i] + "'", "" + id };
-				String[]equipe2 = { "'" + matchsEquipe2[i] + "'", "" + id };
-				FonctionsSQL.insert(NomTablesBDD.SAEPARTIEPOULE, match);
-				FonctionsSQL.insert(NomTablesBDD.SAECOMPETITER, equipe1);
-				FonctionsSQL.insert(NomTablesBDD.SAECOMPETITER, equipe2);
-			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -132,25 +137,13 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 			ApplicationEsporter.changerDePage(new PageAccueil());
 		} 
 		if(b.getText().equals("Accueil")) {
-			try {
-				ApplicationEsporter.changerDePage(new Ecurie_Accueil());
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			ApplicationEsporter.changerDePage(new Ecurie_Accueil());
 		}
 		if(b.getText().equals("Mes équipes")) {
-			try {
-				ApplicationEsporter.changerDePage(new Ecurie_Equipes());
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			ApplicationEsporter.changerDePage(new Ecurie_Equipes());
 		}
 		if(b.getText().equals("Tournois")){
-			try {
-				ApplicationEsporter.changerDePage(new Ecurie_Tournoi());
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			ApplicationEsporter.changerDePage(new Ecurie_Tournoi());
 		}
 		return false;
 	}
@@ -171,21 +164,13 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 				break;
 			case TOURNOI:
 				if(b.getText().equals("S'inscrire")) {
-					try {
-						ApplicationEsporter.changerDePage(new Ecurie_PreInscription());
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
+					ApplicationEsporter.changerDePage(new Ecurie_PreInscription());
 				}
 				if(b.getText().equals("Voir le(s) jeu(x)")) {
 					afficherJeu();
 				}
 				if(b.getText().equals("Accéder")) {
-					try {
-						ApplicationEsporter.changerDePage(new Ecurie_InfoTournoi());
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
+					ApplicationEsporter.changerDePage(new Ecurie_InfoTournoi());
 				}
 				break;
 			case PREINSCRIPTION_TOURNOI:
@@ -203,58 +188,30 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 					int result = JOptionPane.showConfirmDialog(null,"Attention, l'inscription est définitive\n Confirmer l'inscription ?", "Confirmer l'inscription", JOptionPane.YES_NO_OPTION);
 					if (result == 0) {
 						inscription();
-						try {
-							ApplicationEsporter.changerDePage(new Ecurie_Tournoi());
-						} catch (SQLException e1) {
-							e1.printStackTrace();
-						}
+						ApplicationEsporter.changerDePage(new Ecurie_Tournoi());
 					}
 				}
 				if(b.getText().equals("Pas encore d'équipe ?")) {
-					try {
-						ApplicationEsporter.changerDePage(new Ecurie_CreationEquipe());
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
+					ApplicationEsporter.changerDePage(new Ecurie_CreationEquipe());
 				}
 				break;
 			case EQUIPES:
 				if(b.getText().equals("Ajouter une Equipe")) {
-					try {
-						ApplicationEsporter.changerDePage(new Ecurie_CreationEquipe());
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
+					ApplicationEsporter.changerDePage(new Ecurie_CreationEquipe());
 				}
 				if(b.getText().equals("Acceder")) {
-					try {
-						ApplicationEsporter.changerDePage(new Ecurie_GestionEquipe());
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
+					ApplicationEsporter.changerDePage(new Ecurie_GestionEquipe());
 				}
 				if(b.getText().equals("Valider")) {
-					try {
-						ApplicationEsporter.changerDePage(new Ecurie_Equipes());
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
+					ApplicationEsporter.changerDePage(new Ecurie_Equipes());
 				}
 				if(b.getText().equals("Annuler")) {
-					try {
-						ApplicationEsporter.changerDePage(new Ecurie_Equipes());
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
+					ApplicationEsporter.changerDePage(new Ecurie_Equipes());
 				}
 				break;
 			case GESTIONEQUIPE:
 				if(b.getText().equals("Retour")) {
-					try {
-						ApplicationEsporter.changerDePage(new Ecurie_Equipes());
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
+					ApplicationEsporter.changerDePage(new Ecurie_Equipes());
 				}
 				break;
 			case CREATIONEQUIPE:
@@ -262,11 +219,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 					ajoutImageEquipe();
 				}
 				if(b.getText().equals("Annuler")) {
-					try {
-						ApplicationEsporter.changerDePage(new Ecurie_Equipes());
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
+					ApplicationEsporter.changerDePage(new Ecurie_Equipes());
 				}
 				if(b.getText().equals("Créer Equipe")) {
 					if (Ecurie_CreationEquipe.tousRempli()) {
@@ -278,12 +231,8 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 				break;
 			case AJOUTERJOUEUR:
 				if(b.getText().equals("Annuler")) {
-					try {
-						Ecurie_AddJoueur.annuler();
-						ApplicationEsporter.changerDePage(new Ecurie_Equipes());
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
+					Ecurie_AddJoueur.annuler();
+					ApplicationEsporter.changerDePage(new Ecurie_Equipes());
 				}
 				if(b.getText().equals("Ajouter le joueur")) {
 					if(Ecurie_AddJoueur.isNomNull()) {
@@ -297,11 +246,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 					supprimerJoueur();
 				}
 				if(b.getText().equals("Valider")) {
-					try {
-						ApplicationEsporter.changerDePage(new Ecurie_Equipes());
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
+					ApplicationEsporter.changerDePage(new Ecurie_Equipes());
 				}
 				break;
 			}
@@ -345,15 +290,10 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 	}
 
 	private void creationEquipe() {
-		try {
-			Ecurie_AddJoueur.setEquipe(new Equipe(getNomEcurie(), Ecurie_CreationEquipe.getNomEquipe(), Ecurie_CreationEquipe.getJeu(), this.pathLogo));
-			Ecurie_AddJoueur.getEquipe().ajouterEquipe();
-			ApplicationEsporter.f.setContentPane(new Ecurie_AddJoueur());
-			ApplicationEsporter.f.validate();
-		} catch (SQLException e1) {
-			System.out.println("Catched");
-			e1.printStackTrace();
-		}
+		Ecurie_AddJoueur.setEquipe(new Equipe(getNomEcurie(), Ecurie_CreationEquipe.getNomEquipe(), Ecurie_CreationEquipe.getJeu(), this.pathLogo));
+		Ecurie_AddJoueur.getEquipe().ajouterEquipe();
+		ApplicationEsporter.f.setContentPane(new Ecurie_AddJoueur());
+		ApplicationEsporter.f.validate();
 	}
 
 	private void ajoutImageEquipe() {

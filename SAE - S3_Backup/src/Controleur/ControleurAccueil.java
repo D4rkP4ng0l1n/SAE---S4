@@ -13,7 +13,6 @@ public class ControleurAccueil implements ActionListener {
 	// Défini les actions a effectuer selon le bouton et selon la page sur laquelle on se trouve
 	@Override
 	public void actionPerformed(ActionEvent e) {		
-		ApplicationEsporter.f.setContentPane(new PageConnexion()); // Changement de page
-		ApplicationEsporter.f.validate();
+		ApplicationEsporter.changerDePage(new PageConnexion());
 	}
 }

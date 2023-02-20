@@ -23,6 +23,7 @@ import org.jdatepicker.impl.SqlDateModel;
 
 import Controleur.ControleurEsporter;
 import Controleur.ControleurEsporter.EtatEsporter;
+import Modele.BDD.NomTablesBDD;
 import Modele.Equipe;
 import Modele.FonctionsSQL;
 import Modele.Joueur;
@@ -39,7 +40,7 @@ public class Esporter_Joueurs extends JPanel {
 	
 	private ControleurEsporter controleur = new ControleurEsporter(this, EtatEsporter.JOUEUR);
 
-	public Esporter_Joueurs() throws SQLException {
+	public Esporter_Joueurs() {
 		ApplicationEsporter.equipe=(String) Esporter_Equipes.getTable().getValueAt(Esporter_Equipes.getTable().getSelectedRow(), 0);
 		setLayout(new BorderLayout(0, 0));
 		
@@ -176,51 +177,71 @@ public class Esporter_Joueurs extends JPanel {
 		panel_10.add(btnNewButton_1);
 	}
 
-	private JTable setTable(JTable table) throws SQLException {
-		setListJoueurs();
-		String columns[] = { "Nom Joueur(s)" , "Pseudo" , "Age" , "Equipe" };
-		ResultSet count = FonctionsSQL.select("saejoueur", "count(*)", "NOM_EQUIPE = '" + ApplicationEsporter.equipe + "'");
-		count.next();
-		String data[][] = new String[count.getInt(1)][4];
-		ResultSet res = FonctionsSQL.select("saejoueur", "*", "NOM_EQUIPE = '" + ApplicationEsporter.equipe + "' ORDER BY IDJOUEUR");
-		int i = 0;
-		while (res.next()) {
-			data[i][0] = res.getString(2);
-			data[i][1] = res.getString(3);
-			data[i][2] = "";
-			data[i][3] = "" + ApplicationEsporter.equipe;
-			i++;
+	private JTable setTable(JTable table) {
+		try {
+			setListJoueurs();
+			String columns[] = { "Nom Joueur(s)" , "Pseudo" , "Age" , "Equipe" };
+			ResultSet count = FonctionsSQL.select(NomTablesBDD.SAEJOUEUR, "count(*)", "NOM_EQUIPE = '" + ApplicationEsporter.equipe + "'");
+			count.next();
+			String data[][] = new String[count.getInt(1)][4];
+			ResultSet res = FonctionsSQL.select(NomTablesBDD.SAEJOUEUR, "*", "NOM_EQUIPE = '" + ApplicationEsporter.equipe + "' ORDER BY IDJOUEUR");
+			int i = 0;
+			while (res.next()) {
+				data[i][0] = res.getString(2);
+				data[i][1] = res.getString(3);
+				data[i][2] = "";
+				data[i][3] = "" + ApplicationEsporter.equipe;
+				i++;
+			}
+			int index;
+			for(index = 0; index < data.length; index++) {
+				data[index][2] = "" + joueurs.get(index).calculAge(); 
+			}
+			model = new DefaultTableModel(data, columns);
+			JTable returnTable = new JTable(model);
+			return returnTable;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
 		}
-		for(int index = 0; index < data.length; index++) {
-			data[index][2] = "" + joueurs.get(index).calculAge(); 
-		}
-		model = new DefaultTableModel(data, columns);
-		JTable returnTable = new JTable(model);
-		return returnTable;
 	}
 
-	private void setNomJeu() throws SQLException {
-		ResultSet selectNomJeu = FonctionsSQL.select("saeequipe", "NOM_1" , "NOM = '" + ApplicationEsporter.equipe + "'");
-		selectNomJeu.next();
-		nomJeu.setText(selectNomJeu.getString(1));
+	private void setNomJeu() {
+		try {
+			ResultSet selectNomJeu = FonctionsSQL.select(NomTablesBDD.SAEEQUIPE, "NOM_1" , "NOM = '" + ApplicationEsporter.equipe + "'");
+			selectNomJeu.next();
+			nomJeu.setText(selectNomJeu.getString(1));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
-	private void setNbPoints() throws SQLException {
-		ResultSet selectNbPoints = FonctionsSQL.select("saeequipe", "NBPOINTS" , "NOM = '" + ApplicationEsporter.equipe + "'");
-		selectNbPoints.next();
-		nbPoints.setText("Points : " + selectNbPoints.getInt(1));
+	private void setNbPoints() {
+		try {
+			ResultSet selectNbPoints = FonctionsSQL.select(NomTablesBDD.SAEEQUIPE, "NBPOINTS" , "NOM = '" + ApplicationEsporter.equipe + "'");
+			selectNbPoints.next();
+			nbPoints.setText("Points : " + selectNbPoints.getInt(1));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
-	private static void setListJoueurs() throws SQLException {
-		ResultSet selectJoueur = FonctionsSQL.select("saejoueur", "*", "NOM_EQUIPE = '" + ApplicationEsporter.equipe + "'");
-		ResultSet selectEquipe = FonctionsSQL.select("saeequipe", "*", "NOM = '" + ApplicationEsporter.equipe + "'");
-		selectEquipe.next();
-		Equipe equipe = new Equipe(selectEquipe.getString(5), selectEquipe.getString(1), selectEquipe.getString(4), selectEquipe.getString(3));
-		while(selectJoueur.next()) {
-			int i = selectJoueur.getInt(1);
-			SqlDateModel date = new SqlDateModel(selectJoueur.getDate(4));
-			joueurs.add(new Joueur(selectJoueur.getString(2), selectJoueur.getString(3), date, equipe ));
-			joueurs.get(joueurs.size() - 1).setId(i);
+	private static void setListJoueurs() {
+		try {
+			ResultSet selectJoueur = FonctionsSQL.select(NomTablesBDD.SAEJOUEUR, "*", "NOM_EQUIPE = '" + ApplicationEsporter.equipe + "'");
+			ResultSet selectEquipe = FonctionsSQL.select(NomTablesBDD.SAEEQUIPE, "*", "NOM = '" + ApplicationEsporter.equipe + "'");
+			selectEquipe.next();
+			Equipe equipe = new Equipe(selectEquipe.getString(5), selectEquipe.getString(1), selectEquipe.getString(4), selectEquipe.getString(3));
+			int i;
+			SqlDateModel date;
+			while(selectJoueur.next()) {
+				i = selectJoueur.getInt(1);
+				date = new SqlDateModel(selectJoueur.getDate(4));
+				joueurs.add(new Joueur(selectJoueur.getString(2), selectJoueur.getString(3), date, equipe ));
+				joueurs.get(joueurs.size() - 1).setId(i);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 

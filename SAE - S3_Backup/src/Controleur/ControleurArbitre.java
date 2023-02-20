@@ -37,7 +37,6 @@ public class ControleurArbitre implements ActionListener {
 	}
 
 	// Methode pour faciliter la navigation depuis n'importe où en tant qu'Arbitre
-
 	private Boolean changerDePageHeader(JButton b) {
 		if (b.getText().equals("Déconnexion")) {
 			ApplicationEsporter.changerDePage(new PageAccueil());
@@ -61,8 +60,9 @@ public class ControleurArbitre implements ActionListener {
 		try {
 			ResultSet idsPoules = getIdsPoules();
 			int nbPouleFinis = 0;
+			ResultSet pouleTermines;
 			while(idsPoules.next()) {
-				ResultSet pouleTermines = FonctionsSQL.select(NomTablesBDD.SAEPARTIEPOULE, "count(resultat)", "IDPoule = " + idsPoules.getInt(1) + "AND resultat = 'aucune'");
+				pouleTermines = FonctionsSQL.select(NomTablesBDD.SAEPARTIEPOULE, "count(resultat)", "IDPoule = " + idsPoules.getInt(1) + "AND resultat = 'aucune'");
 				pouleTermines.next();
 				if(pouleTermines.getInt(1) == 0) {
 					nbPouleFinis++;
@@ -88,12 +88,13 @@ public class ControleurArbitre implements ActionListener {
 	}
 
 	// Retourne true si les demis finales sont terminees
-	private boolean demisFinalesTerminees() {
+		private boolean demisFinalesTerminees() {
 		try {
 			ResultSet idsPhasesFinales = getIdsPhasesFinales();
 			int nbDemisFinalesTerminees = 0;
+			ResultSet phasesDemisFinalesTerminees;
 			while(idsPhasesFinales.next()) {
-				ResultSet phasesDemisFinalesTerminees = FonctionsSQL.select(NomTablesBDD.SAEPARTIEPHASEFINALE, "count(resultat)", "IDPhaseFinale = " + idsPhasesFinales.getInt(1) + " AND resultat = 'aucune'");
+				phasesDemisFinalesTerminees = FonctionsSQL.select(NomTablesBDD.SAEPARTIEPHASEFINALE, "count(resultat)", "IDPhaseFinale = " + idsPhasesFinales.getInt(1) + " AND resultat = 'aucune'");
 				phasesDemisFinalesTerminees.next();
 				if(phasesDemisFinalesTerminees.getInt(1) == 0) {
 					nbDemisFinalesTerminees++;
@@ -180,64 +181,48 @@ public class ControleurArbitre implements ActionListener {
 		if(!changerDePageHeader(b)) {
 			switch(this.etat) {
 			case TOURNOI:
-
 				if (b.getText().equals("Voir le(s) jeu(x)")) {
 					afficherJeux();
 				}
-
 				if(b.getText().equals("Accéder")) {
 					stockageIdTournoi();
 					ApplicationEsporter.changerDePage(new Arbitre_InfoTournoi());
 				}
 				break;
 			case INFOTOURNOI:
-
 				if(b.getText().equals("Voir les matchs")) {
 					ApplicationEsporter.changerDePage(new Arbitre_Match());
-
-					this.etat = EtatArbitre.MATCHS;
 				}
 				break;
 			case MATCHS:
-
-				if(b.getText().equals("Victoire équipe 1")) {
-					victoireMatchPouleEquipe(1);
-					if(poulesTermines() && !demisFinalesTerminees()) {
-						JOptionPane.showMessageDialog(null, "La phase de poule est terminée !");
-						JOptionPane.showMessageDialog(null, "Création des demis finales en cours");
-						genererFinale();
-						//delPoules();
-					} 
+				if(b.getText().equals("Victoire équipe 1") || b.getText().equals("Victoire équipe 2")) {
+					if(b.getText().equals("Victoire équipe 1")) {
+						victoireMatchPouleEquipe(1);
+					}
+					if(b.getText().equals("Victoire équipe 2")) {
+						victoireMatchPouleEquipe(2);
+					}
+					setMessagePouleFiniDemisFinPasFini(); 
 					vueMatch.updateTable();
 				}
-
-				if(b.getText().equals("Victoire équipe 2")) {
-					victoireMatchPouleEquipe(2);
-					if(poulesTermines() && !demisFinalesTerminees()) {
-						JOptionPane.showMessageDialog(null, "La phase de poule est terminée !");
-						JOptionPane.showMessageDialog(null, "Création des demis finales en cours");
-						genererFinale();
+				if(b.getText().equals("Victoire équipe 1") || b.getText().equals("Victoire équipe 2")) {
+					if(b.getText().equals("Victoire équipe 1 ")) {
+						victoireMatchPhaseFinaleEquipe(1);
 					}
-					vueMatch.updateTable();
-				}
-
-				if(b.getText().equals("Victoire équipe 1 ")) {
-					victoireMatchPhaseFinaleEquipe(1);
-					if(demisFinalesTerminees()) {
-						//delDemisFinales();
-					}
-					vueMatch.updateTableFinale();
-				}
-
-
-				if(b.getText().equals("Victoire équipe 2 ")) {
-					victoireMatchPhaseFinaleEquipe(2);
-					if(demisFinalesTerminees()) {
-						//delDemisFinales();
+					if(b.getText().equals("Victoire équipe 2 ")) {
+						victoireMatchPhaseFinaleEquipe(2);
 					}
 					vueMatch.updateTableFinale();
 				}
 			}
+		}
+	}
+
+	public void setMessagePouleFiniDemisFinPasFini() {
+		if(poulesTermines() && !demisFinalesTerminees()) {
+			JOptionPane.showMessageDialog(null, "La phase de poule est terminée !");
+			JOptionPane.showMessageDialog(null, "Création des demis finales en cours");
+			genererFinale();
 		}
 	}
 

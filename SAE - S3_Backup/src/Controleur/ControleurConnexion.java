@@ -48,7 +48,6 @@ public class ControleurConnexion implements ActionListener {
 		if (b.getText().equals("Pas de compte?")) {
 			ApplicationEsporter.changerDePage(new PageInscription());
 		} 
-
 		if (b.getText().equals("Retour")) {
 			ApplicationEsporter.changerDePage(new PageAccueil());
 		}
@@ -84,7 +83,5 @@ public class ControleurConnexion implements ActionListener {
 			}
 		}
 		
-	}
-	
-	
+	}	
 }

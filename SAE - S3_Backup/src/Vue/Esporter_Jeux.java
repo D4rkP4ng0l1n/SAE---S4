@@ -135,11 +135,7 @@ public class Esporter_Jeux extends JPanel{
 		JScrollPane scrollPane = new JScrollPane();
 		panel_13.add(scrollPane, BorderLayout.CENTER);
 
-		try {
-			table1 = initialiseJTable();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		table1 = initialiseJTable();
 		table1.setBorder(new LineBorder(new Color(0, 0, 0)));
 		table1.setToolTipText("");
 		table1.getColumnModel().getColumn(0).setResizable(false);
@@ -149,26 +145,30 @@ public class Esporter_Jeux extends JPanel{
 	}
 
 
-	private JTable initialiseJTable() throws SQLException {
-		String columns[] = { "Nom" , "Nombre de joueurs" , "Classement Mondial", " " };
-		ResultSet count = FonctionsSQL.select("saejeu", "count(*)", "");
-		count.next();
-		String data[][] = new String[count.getInt(1)][2];
-		ResultSet res = FonctionsSQL.select("saejeu", "*", "");
-		int i = 0;
-		while (res.next()) {
-			data[i][0] = res.getString(1);
-			data[i][1] = res.getString(2);
-			i++;
+	private JTable initialiseJTable() {
+		try {
+			String columns[] = { "Nom" , "Nombre de joueurs" , "Classement Mondial", " " };
+			ResultSet count = FonctionsSQL.select("saejeu", "count(*)", "");
+			count.next();
+			String data[][] = new String[count.getInt(1)][2];
+			ResultSet res = FonctionsSQL.select("saejeu", "*", "");
+			int i = 0;
+			while (res.next()) {
+				data[i][0] = res.getString(1);
+				data[i][1] = res.getString(2);
+				i++;
+			}
+			model = new DefaultTableModel(data, columns);
+			JTable returnTable =  new JTable(model);
+			returnTable.getColumn(" ").setCellRenderer(new MyRendererAndEditor(new JTable(), "Supprimer", controleur, null, null));
+			returnTable.getColumn(" ").setCellEditor(new MyRendererAndEditor(new JTable(), "Supprimer", controleur, null, null));
+			returnTable.getColumn("Classement Mondial").setCellRenderer(new MyRendererAndEditor(new JTable(), "Accéder au classement", controleur, null, null));
+			returnTable.getColumn("Classement Mondial").setCellEditor(new MyRendererAndEditor(new JTable(), "Accéder au classement", controleur, null, null));
+			return returnTable;
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return null;
 		}
-		model = new DefaultTableModel(data, columns);
-		JTable returnTable =  new JTable(model);
-		returnTable.getColumn(" ").setCellRenderer(new MyRendererAndEditor(new JTable(), "Supprimer", controleur, null, null));
-		returnTable.getColumn(" ").setCellEditor(new MyRendererAndEditor(new JTable(), "Supprimer", controleur, null, null));
-		returnTable.getColumn("Classement Mondial").setCellRenderer(new MyRendererAndEditor(new JTable(), "Accéder au classement", controleur, null, null));
-		returnTable.getColumn("Classement Mondial").setCellEditor(new MyRendererAndEditor(new JTable(), "Accéder au classement", controleur, null, null));
-		return returnTable;
-
 	}
 
 	public static JTable getTable () {
