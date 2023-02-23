@@ -205,10 +205,10 @@ public class Esporter_ModifEquipe extends JPanel{
 	public void setPage() {
 		NomEquipe.setText(ApplicationEsporter.equipe);
 		try {
-			ResultSet nomJeu=FonctionsSQL.select("saeequipe", "nom_1", "nom = '"+ApplicationEsporter.equipe+"'");
-			nomJeu.next();
+			ResultSet selectNomJeu=FonctionsSQL.select("saeequipe", "nom_1", "nom = '"+ApplicationEsporter.equipe+"'");
+			selectNomJeu.next();
 			for(int i=0; i<comboBox.getItemCount(); i++) {
-				if(comboBox.getItemAt(i).equals(nomJeu.getString(1))) {
+				if(comboBox.getItemAt(i).equals(selectNomJeu.getString(1))) {
 					comboBox.setSelectedIndex(i);
 				}
 			}
@@ -230,9 +230,9 @@ public class Esporter_ModifEquipe extends JPanel{
 	
 	private String[] listJeu() throws SQLException {
 		ResultSet rs = Jeu.getTousLesJeux();
-        ResultSet count = FonctionsSQL.select("SAEJeu", "count(nom)", "");
-        count.next();
-        listjeu = new String[count.getInt(1) + 1];
+        ResultSet selectCountJeu = FonctionsSQL.select("SAEJeu", "count(nom)", "");
+        selectCountJeu.next();
+        listjeu = new String[selectCountJeu.getInt(1) + 1];
         int i = 1;
         listjeu[0] = "Choisir un Jeu";
         while (rs.next()) {
@@ -259,10 +259,10 @@ public class Esporter_ModifEquipe extends JPanel{
 	}
 	
 	public static void setLogo() throws SQLException {
-		ResultSet unLogo = FonctionsSQL.select("saeequipe", "logo", "nom = '" + ApplicationEsporter.equipe + "'");
-		unLogo.next();
-		setImage(unLogo.getString(1));
-		ApplicationEsporter.logo_Path=unLogo.getString(1);
+		ResultSet selectLogo = FonctionsSQL.select("saeequipe", "logo", "nom = '" + ApplicationEsporter.equipe + "'");
+		selectLogo.next();
+		setImage(selectLogo.getString(1));
+		ApplicationEsporter.logo_Path=selectLogo.getString(1);
 	}
 
 }

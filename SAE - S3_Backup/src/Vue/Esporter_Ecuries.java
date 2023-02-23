@@ -119,11 +119,11 @@ public class Esporter_Ecuries extends JPanel {
 			ResultSet count = FonctionsSQL.select(NomTablesBDD.SAEECURIE, "count(*)", "");
 			count.next();
 			String data[][] = new String[count.getInt(1)][4];
-			ResultSet res = FonctionsSQL.select("saeecurie", "*", "");
+			ResultSet selectEcurie = FonctionsSQL.select("saeecurie", "*", "");
 			int i = 0;
-			while (res.next()) {
-				data[i][0] = res.getString(1);
-				data[i][1] = res.getString(2);
+			while (selectEcurie.next()) {
+				data[i][0] = selectEcurie.getString(1);
+				data[i][1] = selectEcurie.getString(2);
 				i++;
 			}
 			model = new DefaultTableModel(data, columns);

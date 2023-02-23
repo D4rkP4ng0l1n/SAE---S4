@@ -55,10 +55,10 @@ public class Compte {
 	// Permet de se connecter si le compte existe et que le mot de passe est bon
 	public static void chargerCompte(String login, String mdp) {
 		try {
-			ResultSet rsCompte = FonctionsSQL.select(NOM_TABLE, "type, idcompte", "utilisateur = '" + login + "' AND mdp = '" + crypterMdp(mdp) + "'");
-			rsCompte.next();
-			ApplicationEsporter.idCompte = rsCompte.getInt("idcompte");
-			ApplicationEsporter.idTypeCompte = rsCompte.getInt("type");
+			ResultSet selectCompte = FonctionsSQL.select(NOM_TABLE, "type, idcompte", "utilisateur = '" + login + "' AND mdp = '" + crypterMdp(mdp) + "'");
+			selectCompte.next();
+			ApplicationEsporter.idCompte = selectCompte.getInt("idcompte");
+			ApplicationEsporter.idTypeCompte = selectCompte.getInt("type");
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}
@@ -67,8 +67,8 @@ public class Compte {
 	// Vérifie si le mot de passe est bon
 	public static boolean compteEtMdpExistent(String login, String mdp) {
 		try {
-			ResultSet rsCompte = FonctionsSQL.select(NOM_TABLE, "idcompte" , "utilisateur = '" + login + "' AND mdp = '" + crypterMdp(mdp) + "'");
-			return(rsCompte.next());
+			ResultSet selectCompte = FonctionsSQL.select(NOM_TABLE, "idcompte" , "utilisateur = '" + login + "' AND mdp = '" + crypterMdp(mdp) + "'");
+			return(selectCompte.next());
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}

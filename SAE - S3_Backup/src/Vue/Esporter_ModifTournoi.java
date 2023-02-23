@@ -344,44 +344,44 @@ public class Esporter_ModifTournoi extends JPanel{
 
 	private static void setPage() {
 		try {
-			ResultSet tournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "lieu", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
-			tournoi.next();
-			setLieu(tournoi.getString(1));
+			ResultSet selectLieuTournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "lieu", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
+			selectLieuTournoi.next();
+			setLieu(selectLieuTournoi.getString(1));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		try {
-			ResultSet tournoi = FonctionsSQL.select(NomTablesBDD.SAECONCERNER, "nom", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
-			while(tournoi.next()) {
-				DLM.addElement(tournoi.getString(1));
+			ResultSet selectNomTournoi = FonctionsSQL.select(NomTablesBDD.SAECONCERNER, "nom", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
+			while(selectNomTournoi.next()) {
+				DLM.addElement(selectNomTournoi.getString(1));
 				Jeux.setModel(DLM);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		try {
-			ResultSet tournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "DATEETHEURE", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
-			tournoi.next();
-			String heureTournoi = tournoi.getString(1);
+			ResultSet selectDateTournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "DATEETHEURE", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
+			selectDateTournoi.next();
+			String heureTournoi = selectDateTournoi.getString(1);
 			char[] ancienneHeureTournoi= heureTournoi.toCharArray();
 			ancienneHeureTournoi[0]='2';
 			heureTournoi = "";
 			for(char c:  ancienneHeureTournoi) {
 				heureTournoi=heureTournoi+c;
 			}
-			tournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "AM_PM", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
-			tournoi.next();
-			heureTournoi= heureTournoi+" "+tournoi.getString(1);
+			selectDateTournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "AM_PM", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
+			selectDateTournoi.next();
+			heureTournoi= heureTournoi+" "+selectDateTournoi.getString(1);
 			setHeure(heureTournoi);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		try {
-			ResultSet tournoi = FonctionsSQL.select(NomTablesBDD.SAECONCERNER, "nom", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
-			while(tournoi.next()) {
-				if (DLM.contains(tournoi.getString(1))) {
+			ResultSet selectNomTournoi = FonctionsSQL.select(NomTablesBDD.SAECONCERNER, "nom", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
+			while(selectNomTournoi.next()) {
+				if (DLM.contains(selectNomTournoi.getString(1))) {
 				} else {
-					DLM.addElement(tournoi.getString(1));
+					DLM.addElement(selectNomTournoi.getString(1));
 					Jeux.setModel(DLM);
 				}
 			}

@@ -192,11 +192,11 @@ public class Ecurie_Inscription extends JPanel {
 			ResultSet count = FonctionsSQL.select(NomTablesBDD.SAEJOUEUR, "count(*)", "NOM_EQUIPE = '" + comboEquipes.getSelectedItem() + "'");
 			count.next();
 			String data[][] = new String[count.getInt(1)][4];
-			ResultSet res = FonctionsSQL.select(NomTablesBDD.SAEJOUEUR, "*", "NOM_EQUIPE = '" + comboEquipes.getSelectedItem() + "' ORDER BY IDJOUEUR");
+			ResultSet selectJoueur = FonctionsSQL.select(NomTablesBDD.SAEJOUEUR, "*", "NOM_EQUIPE = '" + comboEquipes.getSelectedItem() + "' ORDER BY IDJOUEUR");
 			int i = 0;
-			while (res.next()) {
-				data[i][0] = res.getString(2);
-				data[i][1] = res.getString(3);
+			while (selectJoueur.next()) {
+				data[i][0] = selectJoueur.getString(2);
+				data[i][1] = selectJoueur.getString(3);
 				data[i][2] = "";
 				data[i][3] = "" + comboEquipes.getSelectedItem();
 				i++;

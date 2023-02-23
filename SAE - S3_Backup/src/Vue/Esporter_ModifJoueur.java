@@ -199,15 +199,15 @@ public class Esporter_ModifJoueur extends JPanel {
 	
 	public JTable setTable(JTable table) throws SQLException {
 		String columns[] = { "Nom Joueur(s)" , "Pseudo" , "Age" , "Equipe", " " };
-		ResultSet count = FonctionsSQL.select("saejoueur", "count(*)", "NOM_EQUIPE = '" + nouvelleEquipe.getNomEquipe() + "'");
-		count.next();
-		String data[][] = new String[count.getInt(1)][5];
-		ResultSet res = FonctionsSQL.select("saejoueur", "*", "NOM_EQUIPE = '" + nouvelleEquipe.getNomEquipe() + "' ORDER BY IDJOUEUR");
+		ResultSet selectCountJoueur = FonctionsSQL.select("saejoueur", "count(*)", "NOM_EQUIPE = '" + nouvelleEquipe.getNomEquipe() + "'");
+		selectCountJoueur.next();
+		String data[][] = new String[selectCountJoueur.getInt(1)][5];
+		ResultSet selectJoueur = FonctionsSQL.select("saejoueur", "*", "NOM_EQUIPE = '" + nouvelleEquipe.getNomEquipe() + "' ORDER BY IDJOUEUR");
 		int i = 0;
-		while (res.next()) {
-			data[i][0] = res.getString(2);
-			data[i][1] = res.getString(3);
-			data[i][2] = getAge(res.getDate(4));
+		while (selectJoueur.next()) {
+			data[i][0] = selectJoueur.getString(2);
+			data[i][1] = selectJoueur.getString(3);
+			data[i][2] = getAge(selectJoueur.getDate(4));
 			data[i][3] = nouvelleEquipe.getNomEquipe();
 			i++;
 		}

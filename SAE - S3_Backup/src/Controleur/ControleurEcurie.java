@@ -52,9 +52,9 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 	// Retourne le nom de l'écurie sur laquelle on se trouve
 	public String getNomEcurie() {
 		try {
-			ResultSet nomEcurie = FonctionsSQL.select("saeecurie", "nom", "idcompte = " + ApplicationEsporter.idCompte);
-			nomEcurie.next();
-			return nomEcurie.getString(1);
+			ResultSet selectnomEcurie = FonctionsSQL.select("saeecurie", "nom", "idcompte = " + ApplicationEsporter.idCompte);
+			selectnomEcurie.next();
+			return selectnomEcurie.getString(1);
 		} catch(SQLException e) {
 			e.printStackTrace();
 			return null;
@@ -70,14 +70,14 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 		// Liens entre les équipes et les poules (insertion dans la table saeconcourir)
 		try {
 			// Sélection des équipes de celles avec le plus de points à celles avec le moins
-			ResultSet listeEquipe = FonctionsSQL.select("saeequipe e, CRJ3957A.saeparticiper p","e.nom"," e.nom=p.nom and p.idtournoi= " + ApplicationEsporter.idTournoi + " order by e.nbpoints desc,1");
+			ResultSet selectlisteEquipe = FonctionsSQL.select("saeequipe e, CRJ3957A.saeparticiper p","e.nom"," e.nom=p.nom and p.idtournoi= " + ApplicationEsporter.idTournoi + " order by e.nbpoints desc,1");
 			int pouleCounter = 1;
-			ResultSet IdPoule;
-			while (listeEquipe.next()) {
+			ResultSet selectIdPoule;
+			while (selectlisteEquipe.next()) {
 				// Récupération d'un id de poule avec le bon numéro
-				IdPoule = FonctionsSQL.select(NomTablesBDD.SAEPOULE, "idpoule", "numero = '" + pouleCounter + "' and idtournoi = " + ApplicationEsporter.idTournoi);
-				IdPoule.next();
-				String[] equipe = {"'" + listeEquipe.getString("nom") + "'", "" + IdPoule.getInt("Idpoule"), "'0'"};
+				selectIdPoule = FonctionsSQL.select(NomTablesBDD.SAEPOULE, "idpoule", "numero = '" + pouleCounter + "' and idtournoi = " + ApplicationEsporter.idTournoi);
+				selectIdPoule.next();
+				String[] equipe = {"'" + selectlisteEquipe.getString("nom") + "'", "" + selectIdPoule.getInt("Idpoule"), "'0'"};
 				FonctionsSQL.insert(NomTablesBDD.SAECONCOURIR, equipe);
 				pouleCounter = (pouleCounter % 4) + 1;
 			}

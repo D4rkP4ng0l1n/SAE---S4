@@ -151,16 +151,16 @@ public class Esporter_Tournois extends JPanel{
 			ResultSet selectCountTournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "count(*)", "");
 			selectCountTournoi.next();
 			String data[][] = new String[selectCountTournoi.getInt(1)][5];
-			ResultSet res = FonctionsSQL.select("saetournoi", "*", "");
+			ResultSet selectTournoi = FonctionsSQL.select("saetournoi", "*", "");
 			int i = 0;
 			String datadateduTournoi="";
 			String dateGalere;
-			while (res.next()) {
-				data[i][0] = res.getString(2);
-				char[] dateduTournoi=  res.getDate(3).toString().toCharArray();
+			while (selectTournoi.next()) {
+				data[i][0] = selectTournoi.getString(2);
+				char[] dateduTournoi=  selectTournoi.getDate(3).toString().toCharArray();
 				if (dateduTournoi[0]=='1') {
 					@SuppressWarnings("deprecation")
-					int dateOk = res.getDate(3).getYear();
+					int dateOk = selectTournoi.getDate(3).getYear();
 					dateOk = ((dateOk - 1977) * -1) + 2024;
 					dateGalere = "" + dateOk;
 					dateduTournoi[2]=dateGalere.charAt(2);

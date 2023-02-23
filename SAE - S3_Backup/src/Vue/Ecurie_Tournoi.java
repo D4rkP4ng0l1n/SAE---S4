@@ -176,9 +176,9 @@ public class Ecurie_Tournoi extends JPanel{
 
 	private int getNbInscrits(int id) {
 		try {
-			ResultSet select = FonctionsSQL.select(NomTablesBDD.SAEPARTICIPER, "count(*)", "IdTournoi = " + id);
-			select.next();
-			return 16 - select.getInt(1);
+			ResultSet selectParticiper = FonctionsSQL.select(NomTablesBDD.SAEPARTICIPER, "count(*)", "IdTournoi = " + id);
+			selectParticiper.next();
+			return 16 - selectParticiper.getInt(1);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return -1;

@@ -61,9 +61,9 @@ public class ControleurEsporter implements ActionListener {
 
 	// Retourne le nom de l'écurie pour l'équipe courante
 	public String getNomEcurie() throws SQLException { 
-		ResultSet nomEcurie = FonctionsSQL.select(NomTablesBDD.SAEEQUIPE, "nom_2", "nom = '" + ApplicationEsporter.equipe+"'");
-		nomEcurie.next();
-		return nomEcurie.getString(1);
+		ResultSet selectNomEcurie = FonctionsSQL.select(NomTablesBDD.SAEEQUIPE, "nom_2", "nom = '" + ApplicationEsporter.equipe+"'");
+		selectNomEcurie.next();
+		return selectNomEcurie.getString(1);
 	}
 
 	// Méthode pour aller sur les pages accessibles depuis n'importe où
@@ -140,10 +140,10 @@ public class ControleurEsporter implements ActionListener {
 					condition2 = Esporter_Tournois.getTable().getValueAt(Esporter_Tournois.getTable().getSelectedRow(), 1).toString();
 					try {
 						condition2=Esporter_ModifTournoi.formatDate(condition2);
-						ResultSet tournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "IDTOURNOI, IDPHASEFINALE", "LIEU = '" + condition + "' and TO_DATE(DATEETHEURE, 'YYYY-MM-DD') = TO_DATE('" + condition2 + "', 'YYYY-MM-DD')");
-						tournoi.next();
-						String idTournoi= tournoi.getString(1);
-						String idPhaseFinale= tournoi.getString(2);
+						ResultSet selectTournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "IDTOURNOI, IDPHASEFINALE", "LIEU = '" + condition + "' and TO_DATE(DATEETHEURE, 'YYYY-MM-DD') = TO_DATE('" + condition2 + "', 'YYYY-MM-DD')");
+						selectTournoi.next();
+						String idTournoi= selectTournoi.getString(1);
+						String idPhaseFinale= selectTournoi.getString(2);
 						int result = JOptionPane.showConfirmDialog(null,"Voulez vous vraiment supprimer le tournoi de " + condition+" prevu le "+condition2, "Supprimer le tournoi", JOptionPane.YES_NO_OPTION);
 						if (result == 0) {
 							FonctionsSQL.delete(NomTablesBDD.SAECONCERNER, "idtournoi = '" + idTournoi + "'");
@@ -161,10 +161,10 @@ public class ControleurEsporter implements ActionListener {
 						// Sélectionne les jeux du tournois où l'utilisateur a cliqué
 						ResultSet selectTournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "idtournoi", "Lieu = '" + Esporter_Tournois.getTable().getValueAt(Esporter_Tournois.getTable().getSelectedRow(), 0) + "'");
 						selectTournoi.next();
-						ResultSet jeux = FonctionsSQL.select(NomTablesBDD.SAECONCERNER, "nom", "idtournoi = " + selectTournoi.getInt(1));
+						ResultSet selectJeux = FonctionsSQL.select(NomTablesBDD.SAECONCERNER, "nom", "idtournoi = " + selectTournoi.getInt(1));
 						String afficherJeux = "Liste des jeux : \n";
-						while(jeux.next()) {
-							afficherJeux += "   - " + jeux.getString(1) + "\n";
+						while(selectJeux.next()) {
+							afficherJeux += "   - " + selectJeux.getString(1) + "\n";
 						}
 						// Affiche une pop-up sur laquelle se trouve la liste des jeux du tournoi sélectionné
 						JOptionPane.showMessageDialog(null, afficherJeux); 
@@ -180,10 +180,10 @@ public class ControleurEsporter implements ActionListener {
 					try {
 						condition2=Esporter_ModifTournoi.formatDate(condition2);
 						// Sélectionne dans la base de données le bon tournoi à l'aide des conditions
-						ResultSet tournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "IDTOURNOI", "LIEU = '" + condition + "' and TO_DATE(DATEETHEURE, 'YYYY-MM-DD') = TO_DATE('" + condition2 + "', 'YYYY-MM-DD')");
-						tournoi.next();
+						ResultSet selectTournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "IDTOURNOI", "LIEU = '" + condition + "' and TO_DATE(DATEETHEURE, 'YYYY-MM-DD') = TO_DATE('" + condition2 + "', 'YYYY-MM-DD')");
+						selectTournoi.next();
 						// On stocke l'id du tournoi sélectionné dans une "variable globale" pour pouvoir le modifier sur la page adéquate
-						ApplicationEsporter.idTournoi= tournoi.getString(1);
+						ApplicationEsporter.idTournoi= selectTournoi.getString(1);
 						// Changement de page
 						ApplicationEsporter.f.setContentPane(new Esporter_ModifTournoi());
 						ApplicationEsporter.f.validate();
@@ -316,9 +316,9 @@ public class ControleurEsporter implements ActionListener {
 				if (b.getText().equals("Acceder")) {
 					String condition = (String) Esporter_Ecuries.getTable().getValueAt(Esporter_Ecuries.getTable().getSelectedRow(), 0);
 					try {
-						ResultSet ecurie = FonctionsSQL.select(NomTablesBDD.SAEECURIE, "nom", "nom = '" + condition + "'");
-						ecurie.next();
-						ApplicationEsporter.nomEcurie = ecurie.getString(1);
+						ResultSet selectEcurie = FonctionsSQL.select(NomTablesBDD.SAEECURIE, "nom", "nom = '" + condition + "'");
+						selectEcurie.next();
+						ApplicationEsporter.nomEcurie = selectEcurie.getString(1);
 						ApplicationEsporter.f.setContentPane(new Esporter_Equipes());
 						ApplicationEsporter.f.validate();
 					} catch (SQLException e1) {
@@ -409,11 +409,11 @@ public class ControleurEsporter implements ActionListener {
 					if (Esporter_ModifEquipe.tousRempli()) {
 						try {
 							Esporter_ModifJoueur.setEquipe(new Equipe(getNomEcurie(), Esporter_ModifEquipe.getNomEquipe(), Esporter_ModifEquipe.getJeu(), ApplicationEsporter.logo_Path));
-							ResultSet jeu= FonctionsSQL.select(NomTablesBDD.SAEEQUIPE, "nom_1", "nom ='"+ApplicationEsporter.equipe+"'");
-							jeu.next();
+							ResultSet selectJeu= FonctionsSQL.select(NomTablesBDD.SAEEQUIPE, "nom_1", "nom ='"+ApplicationEsporter.equipe+"'");
+							selectJeu.next();
 							ResultSet equipeIsParticipe= FonctionsSQL.select(NomTablesBDD.SAEPARTICIPER, "count(nom)", "nom ='"+ApplicationEsporter.equipe+"'");
 							equipeIsParticipe.next();
-							if(equipeIsParticipe.getInt(1)==0 || jeu.getString(1).equals(Esporter_ModifEquipe.getJeu())) {
+							if(equipeIsParticipe.getInt(1)==0 || selectJeu.getString(1).equals(Esporter_ModifEquipe.getJeu())) {
 								Esporter_ModifJoueur.getEquipe().modifierEquipe();
 								ApplicationEsporter.f.setContentPane(new Esporter_ModifJoueur());
 								ApplicationEsporter.f.validate();
