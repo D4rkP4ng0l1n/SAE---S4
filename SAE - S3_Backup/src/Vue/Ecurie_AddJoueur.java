@@ -16,6 +16,7 @@ import org.jdatepicker.impl.SqlDateModel;
 
 import Controleur.ControleurEcurie;
 import Controleur.ControleurEcurie.EtatEcurie;
+import Modele.BDD.NomTablesBDD;
 import Modele.Equipe;
 import Modele.FonctionsSQL;
 import Modele.Joueur;
@@ -193,7 +194,7 @@ public class Ecurie_AddJoueur extends JPanel {
 	}
 
 	private void setCompteur() throws SQLException {
-		ResultSet compteur = FonctionsSQL.select("saejoueur", "count(*)", "NOM_EQUIPE = '" + nouvelleEquipe.getNomEquipe() + "'");
+		ResultSet compteur = FonctionsSQL.select(NomTablesBDD.SAEJOUEUR, "count(*)", "NOM_EQUIPE = '" + nouvelleEquipe.getNomEquipe() + "'");
 		compteur.next();
 		try {
 			compteurNbJoueurs.setText(compteur.getInt(1) + " / " + nouvelleEquipe.getJeu().getNbJoueursParEquipe());
@@ -204,10 +205,10 @@ public class Ecurie_AddJoueur extends JPanel {
 
 	private JTable setTable(JTable table) throws SQLException {
 		String columns[] = { "Nom Joueur(s)" , "Pseudo" , "Age" , "Equipe", " " };
-		ResultSet count = FonctionsSQL.select("saejoueur", "count(*)", "NOM_EQUIPE = '" + nouvelleEquipe.getNomEquipe() + "'");
+		ResultSet count = FonctionsSQL.select(NomTablesBDD.SAEJOUEUR, "count(*)", "NOM_EQUIPE = '" + nouvelleEquipe.getNomEquipe() + "'");
 		count.next();
 		String data[][] = new String[count.getInt(1)][5];
-		ResultSet res = FonctionsSQL.select("saejoueur", "*", "NOM_EQUIPE = '" + nouvelleEquipe.getNomEquipe() + "' ORDER BY IDJOUEUR");
+		ResultSet res = FonctionsSQL.select(NomTablesBDD.SAEJOUEUR, "*", "NOM_EQUIPE = '" + nouvelleEquipe.getNomEquipe() + "' ORDER BY IDJOUEUR");
 		int i = 0;
 		while (res.next()) {
 			data[i][0] = res.getString(2);

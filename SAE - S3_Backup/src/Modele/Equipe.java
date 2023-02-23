@@ -19,7 +19,7 @@ public class Equipe {
 		this.nomEcurie = nomEcurie;
 		this.nomEquipe = nomEquipe;
 		this.nomJeu = nomJeu;
-		ResultSet rs = FonctionsSQL.select("saejeu", "*", "nom = '" + this.nomJeu + "'");
+		ResultSet rs = FonctionsSQL.select(NomTablesBDD.SAEJEU, "*", "nom = '" + this.nomJeu + "'");
 		rs.next();
 		this.jeu = new Jeu(rs.getString(1), rs.getString(2));
 		this.pathLogo = pathLogo;
@@ -63,7 +63,7 @@ public class Equipe {
 				FonctionsSQL.update(NomTablesBDD.SAECONCOURIR, "nom", this.nomEquipe, "nom ='"+ApplicationEsporter.equipe+"'");
 				FonctionsSQL.update(NomTablesBDD.SAECOMPETITER, "nom", this.nomEquipe, "nom ='"+ApplicationEsporter.equipe+"'");
 				FonctionsSQL.update(NomTablesBDD.SAECOMPETITERPHASEFINALE, "nom", this.nomEquipe, "nom ='"+ApplicationEsporter.equipe+"'");
-				ResultSet rs = FonctionsSQL.select("saeequipe", "nbpoints", "nom ='"+ApplicationEsporter.equipe+"'");
+				ResultSet rs = FonctionsSQL.select(NomTablesBDD.SAEEQUIPE, "nbpoints", "nom ='"+ApplicationEsporter.equipe+"'");
 				rs.next();
 				FonctionsSQL.update(NomTablesBDD.SAEEQUIPE, "nbpoints", ""+rs.getInt(1), "nom ='"+this.nomEquipe+"'");
 				FonctionsSQL.delete(NomTablesBDD.SAEEQUIPE, "nom ='"+ApplicationEsporter.equipe+"'");

@@ -51,7 +51,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 
 	// Retourne le nom de l'écurie sur laquelle on se trouve
 	public String getNomEcurie() throws SQLException {
-		ResultSet nomEcurie = FonctionsSQL.select("saeecurie", "nom", "idcompte = " + ApplicationEsporter.idCompte);
+		ResultSet nomEcurie = FonctionsSQL.select(NomTablesBDD.SAEECURIE, "nom", "idcompte = " + ApplicationEsporter.idCompte);
 		nomEcurie.next();
 		return nomEcurie.getString(1);
 	}
@@ -59,12 +59,8 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 	// Génération des poules
 	private static void  genererPoules(String IdTournoi) {
 		for (int i = 1; i <= 4;i++) { 
-			try {
-				String[] poule = {"" + FonctionsSQL.newID(NomTablesBDD.SAEPOULE), "''", "" + i, "" + IdTournoi};
-				FonctionsSQL.insert(NomTablesBDD.SAEPOULE, poule);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			String[] poule = {"" + FonctionsSQL.newID(NomTablesBDD.SAEPOULE), "''", "" + i, "" + IdTournoi};
+			FonctionsSQL.insert(NomTablesBDD.SAEPOULE, poule);
 		}
 		// Liens entre les équipes et les poules (insertion dans la table saeconcourir)
 		try {
@@ -75,7 +71,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 			ResultSet IdPoule;
 			while (listeEquipe.next()) {
 				// Récupération d'un id de poule avec le bon numéro
-				IdPoule = FonctionsSQL.select("saepoule", "idpoule", "numero = '" + pouleCounter + "' and idtournoi = " + ApplicationEsporter.idTournoi);
+				IdPoule = FonctionsSQL.select(NomTablesBDD.SAEPOULE, "idpoule", "numero = '" + pouleCounter + "' and idtournoi = " + ApplicationEsporter.idTournoi);
 				IdPoule.next();
 				String[] equipe = {"'" + listeEquipe.getString("nom") + "'", "" + IdPoule.getInt("Idpoule"), "'0'"};
 				FonctionsSQL.insert(NomTablesBDD.SAECONCOURIR, equipe);
@@ -93,7 +89,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 
 	// Génère les matchs pour les phases de poules
 	private static void genererMatchs(String idTournoi) throws SQLException {
-		ResultSet idPoule = FonctionsSQL.select("SAEPoule", "IDPoule", "IDTournoi = " + idTournoi);
+		ResultSet idPoule = FonctionsSQL.select(NomTablesBDD.SAEPOULE, "IDPoule", "IDTournoi = " + idTournoi);
 		String[]idPoules = new String[100];
 		int numero = 0;
 		while(idPoule.next()) {
@@ -109,7 +105,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 		int j;
 		int id;
 		for (int numPoule = 0; numPoule < 4; numPoule++) {
-			ResultSet listeEquipe = FonctionsSQL.select("SAEConcourir", "nom", "IDPoule = " + idPoules[numPoule]);
+			ResultSet listeEquipe = FonctionsSQL.select(NomTablesBDD.SAECONCOURIR, "nom", "IDPoule = " + idPoules[numPoule]);
 			k = 0;
 			equipes = new String[4];
 			while (listeEquipe.next()) {
@@ -219,13 +215,9 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 				if(b.getText().equals("Valider")) {
 					if (! (Ecurie_CreerEcurie.labelsVide() && this.pathLogo == null)) {
 						String[] aInserer = {"'" + Ecurie_CreerEcurie.getNomEcurie() + "'", "'" + Ecurie_CreerEcurie.getNomCEO() + "'", "'" + this.pathLogo + "'", "" + ApplicationEsporter.idCompte};
-						try {
-							FonctionsSQL.insert(NomTablesBDD.SAEECURIE, aInserer);
-							ApplicationEsporter.f.setContentPane(new PageAccueil());
-							ApplicationEsporter.f.validate();
-						} catch (SQLException e1) {
-							e1.printStackTrace();
-						}
+						FonctionsSQL.insert(NomTablesBDD.SAEECURIE, aInserer);
+						ApplicationEsporter.f.setContentPane(new PageAccueil());
+						ApplicationEsporter.f.validate();
 					} else {
 						Ecurie_CreerEcurie.setMessage("Information(s) manquante(s)");
 					}
@@ -244,7 +236,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 				}
 				if(b.getText().equals("Voir le(s) jeu(x)")) {
 					try {
-						ResultSet jeux = FonctionsSQL.select("saeconcerner", "NOM", "IDTOURNOI = " + Ecurie_Inscription.getIdTournoiSelected());
+						ResultSet jeux = FonctionsSQL.select(NomTablesBDD.SAECONCERNER, "NOM", "IDTOURNOI = " + Ecurie_Inscription.getIdTournoiSelected());
 						String afficherJeux = "Liste des jeux : \n";
 						while(jeux.next()) {
 							afficherJeux += "   - " + jeux.getString(1) + "\n";
@@ -266,7 +258,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 			case PREINSCRIPTION_TOURNOI:
 				if(b.getText().equals("S'inscrire")) {
 					try {
-						ResultSet selectIDTournoi = FonctionsSQL.select("SAETournoi", "IDTournoi", "Lieu = '" + Ecurie_Tournoi.getTable().getValueAt(Ecurie_Tournoi.getTable().getSelectedRow(), 0)
+						ResultSet selectIDTournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "IDTournoi", "Lieu = '" + Ecurie_Tournoi.getTable().getValueAt(Ecurie_Tournoi.getTable().getSelectedRow(), 0)
 								+ "' AND DATEETHEURE LIKE TO_DATE('" + Ecurie_Tournoi.getTable().getValueAt(Ecurie_Tournoi.getTable().getSelectedRow(), 1) + "', 'YYYY-MM-DD')");
 						selectIDTournoi.next();
 						ApplicationEsporter.idTournoi = selectIDTournoi.getString(1);
@@ -285,7 +277,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 							String[]aInserer = { "'" + Ecurie_Inscription.getCombo() + "'", ApplicationEsporter.idTournoi, "0" }; 
 							FonctionsSQL.insert(NomTablesBDD.SAEPARTICIPER, aInserer);
 							JOptionPane.showMessageDialog(null, Ecurie_Inscription.getCombo() + " a bien été inscrite au tournoi !");
-							ResultSet countNbEquipesInscrites = FonctionsSQL.select("SAEparticiper", "count(*)", "IDTournoi = " + ApplicationEsporter.idTournoi);
+							ResultSet countNbEquipesInscrites = FonctionsSQL.select(NomTablesBDD.SAEPARTICIPER, "count(*)", "IDTournoi = " + ApplicationEsporter.idTournoi);
 							countNbEquipesInscrites.next();
 							if (countNbEquipesInscrites.getInt(1) >= 16) {
 								JOptionPane.showMessageDialog(null, "Vous êtes le dernier inscit, les poules sont en cours de création\nVeuillez patienter");
