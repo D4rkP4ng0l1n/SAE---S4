@@ -194,9 +194,9 @@ public class Esporter_ModifEcurie extends JPanel{
 	}
 
 	private void setCEO() throws SQLException {
-		ResultSet rs = FonctionsSQL.select("saeecurie", "CEO", "nom = '" + ApplicationEsporter.nomEcurie + "'");
-		rs.next();
-		nomCEO.setText(rs.getString(1));
+		ResultSet CEONom = FonctionsSQL.select("saeecurie", "CEO", "nom = '" + ApplicationEsporter.nomEcurie + "'");
+		CEONom.next();
+		nomCEO.setText(CEONom.getString(1));
 	}
 
 	private void setLogo() throws SQLException {
