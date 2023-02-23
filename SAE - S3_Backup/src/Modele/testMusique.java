@@ -18,7 +18,7 @@ public class testMusique {
                 clip.open(audio);
                 clip.start();
                 
-                clip.loop(clip.LOOP_CONTINUOUSLY);
+                clip.loop(Clip.LOOP_CONTINUOUSLY);
             } else {
                 System.out.println("pas de fic");
             }

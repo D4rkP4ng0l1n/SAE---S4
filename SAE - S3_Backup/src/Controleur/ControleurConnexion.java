@@ -48,7 +48,6 @@ public class ControleurConnexion implements ActionListener {
 		if (b.getText().equals("Pas de compte?")) {
 			ApplicationEsporter.changerDePage(new PageInscription());
 		} 
-
 		if (b.getText().equals("Retour")) {
 			ApplicationEsporter.changerDePage(new PageAccueil());
 		}
@@ -57,7 +56,7 @@ public class ControleurConnexion implements ActionListener {
 		} else {
 			if (b.getText().equals("Se connecter")) {
 				try {
-					if(Compte.compteExiste(this.vue.getNomUtilisateur())) {
+					if(Compte.compteEtMdpExistent(this.vue.getNomUtilisateur(), this.vue.getMdp())) {
 						Compte.chargerCompte(this.vue.getNomUtilisateur(), this.vue.getMdp());
 						switch(ApplicationEsporter.idTypeCompte) { // Selon le type de compte, on redirige l'utilisateur vers sa page accueil défini
 						case 1:
@@ -84,7 +83,5 @@ public class ControleurConnexion implements ActionListener {
 			}
 		}
 		
-	}
-	
-	
+	}	
 }

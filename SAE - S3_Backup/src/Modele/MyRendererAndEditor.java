@@ -15,8 +15,6 @@ import Controleur.ControleurEsporter;
 
 public class MyRendererAndEditor implements TableCellRenderer, TableCellEditor {
 	private JButton btn;
-	private int row;
-
 	public MyRendererAndEditor(JTable table, String choixBouton, ControleurEsporter controleur, ControleurEcurie controleurE, ControleurArbitre controleurA) {
 		btn = new JButton(choixBouton);
 		if (controleur == null && controleurE == null) {
@@ -35,7 +33,6 @@ public class MyRendererAndEditor implements TableCellRenderer, TableCellEditor {
 
 	@Override
 	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-		this.row = row;
 		return btn;
 	}
 

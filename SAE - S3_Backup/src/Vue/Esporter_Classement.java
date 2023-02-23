@@ -31,7 +31,6 @@ public class Esporter_Classement extends JPanel {
 	public Esporter_Classement(String nomJeu) {
 		setLayout(new BorderLayout(0, 0));
 
-
 		JPanel panel = new JPanel();
 		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		add(panel, BorderLayout.NORTH);
@@ -123,34 +122,33 @@ public class Esporter_Classement extends JPanel {
 		JScrollPane scrollPane = new JScrollPane();
 		panel_8.add(scrollPane, BorderLayout.CENTER);
 
-		try {
-			table = initialiseJTable(nomJeu);
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		}
+		table = initialiseJTable(nomJeu);
 		scrollPane.setViewportView(table);
 	}
 
-	public JTable initialiseJTable(String nomJeu) throws SQLException {
-		nomJeu = "'" + nomJeu + "'";
-		String columns[] = { "Ecurie" , "Equipe" , "Points", "Classement" };
-		ResultSet count = FonctionsSQL.select("saeequipe", "count(*)", "nom_1 = " + nomJeu + " order by NBPOINTS DESC");
-		count.next();
-		String data[][] = new String[count.getInt(1)][4];
-		ResultSet res = FonctionsSQL.select("saeequipe", "*", "nom_1 = " + nomJeu + " order by NBPOINTS DESC");
-
-		int i = 0;
-		while (res.next()) {
-			data[i][0] = res.getString(5);
-			data[i][1] = res.getString(1);
-			data[i][2] = res.getString(2);
-			data[i][3] = String.valueOf(i + 1);
-			i++;
+	public JTable initialiseJTable(String nomJeu) {
+		try {
+			nomJeu = "'" + nomJeu + "'";
+			String columns[] = { "Ecurie" , "Equipe" , "Points", "Classement" };
+			ResultSet count = FonctionsSQL.select("saeequipe", "count(*)", "nom_1 = " + nomJeu + " order by NBPOINTS DESC");
+			count.next();
+			String data[][] = new String[count.getInt(1)][4];
+			ResultSet res = FonctionsSQL.select("saeequipe", "*", "nom_1 = " + nomJeu + " order by NBPOINTS DESC");
+			int i = 0;
+			while (res.next()) {
+				data[i][0] = res.getString(5);
+				data[i][1] = res.getString(1);
+				data[i][2] = res.getString(2);
+				data[i][3] = String.valueOf(i + 1);
+				i++;
+			}
+			model = new DefaultTableModel(data, columns);
+			JTable returnTable =  new JTable(model);
+			return returnTable;
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return null;
 		}
-		model = new DefaultTableModel(data, columns);
-		JTable returnTable =  new JTable(model);
-		return returnTable;
-
 	}
 
 }

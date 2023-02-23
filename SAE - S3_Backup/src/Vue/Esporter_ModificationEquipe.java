@@ -20,6 +20,7 @@ import javax.swing.ImageIcon;
 
 import Controleur.ControleurEsporter;
 import Controleur.ControleurEsporter.EtatEsporter;
+import Modele.BDD.NomTablesBDD;
 import Modele.FonctionsSQL;
 import Modele.Jeu;
 
@@ -40,7 +41,7 @@ public class Esporter_ModificationEquipe extends JPanel{
 	private ControleurEsporter controleur = new ControleurEsporter(this, EtatEsporter.MODIF_EQUIPE);
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Esporter_ModificationEquipe() throws SQLException {
+	public Esporter_ModificationEquipe() {
 		setLayout(new BorderLayout(0,0));
 		
 		JPanel panel = new JPanel();
@@ -228,18 +229,23 @@ public class Esporter_ModificationEquipe extends JPanel{
         Image_placeholder.setIcon(imageAVisualiser);
     }
 	
-	private String[] listJeu() throws SQLException {
-		ResultSet rs = Jeu.getTousLesJeux();
-        ResultSet count = FonctionsSQL.select("SAEJeu", "count(nom)", "");
-        count.next();
-        listjeu = new String[count.getInt(1) + 1];
-        int i = 1;
-        listjeu[0] = "Choisir un Jeu";
-        while (rs.next()) {
-            listjeu[i]=rs.getString(1);
-            i++;
-        }
-        return listjeu;
+	private String[] listJeu() {
+		try {
+			ResultSet rs = Jeu.getTousLesJeux();
+	        ResultSet count = FonctionsSQL.select(NomTablesBDD.SAEJEU, "count(nom)", "");
+	        count.next();
+	        listjeu = new String[count.getInt(1) + 1];
+	        int i = 1;
+	        listjeu[0] = "Choisir un Jeu";
+	        while (rs.next()) {
+	            listjeu[i]=rs.getString(1);
+	            i++;
+	        }
+	        return listjeu;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
     }
 
 	public static Boolean tousRempli() {
@@ -258,11 +264,15 @@ public class Esporter_ModificationEquipe extends JPanel{
 		messageErreur.setText(message);
 	}
 	
-	public static void setLogo() throws SQLException {
-		ResultSet rs = FonctionsSQL.select("saeequipe", "logo", "nom = '" + ApplicationEsporter.equipe + "'");
-		rs.next();
-		setImage(rs.getString(1));
-		ApplicationEsporter.logo_Path=rs.getString(1);
+	public static void setLogo() {
+		try {
+			ResultSet rs = FonctionsSQL.select(NomTablesBDD.SAEEQUIPE, "logo", "nom = '" + ApplicationEsporter.equipe + "'");
+			rs.next();
+			setImage(rs.getString(1));
+			ApplicationEsporter.logo_Path=rs.getString(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

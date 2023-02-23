@@ -15,7 +15,7 @@ public class Jeu {
     }
 
     public boolean estNouveau() throws SQLException { // Vérifie que le jeu n'existe pas dans la bas de données
-        ResultSet rs = FonctionsSQL.select("saejeu", "*", "nom = '" + this.nom + "'");
+        ResultSet rs = FonctionsSQL.select(NomTablesBDD.SAEJEU, "*", "nom = '" + this.nom + "'");
         return !rs.next();
     }
 

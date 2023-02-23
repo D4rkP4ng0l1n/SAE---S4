@@ -25,12 +25,11 @@ public class ControleurChangerMdp implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		JButton b = (JButton) e.getSource();
 		if (b.getText().equals("Valider le mot de passe")) {
-			if(!this.vue.getNomUtilisateur().isEmpty() && !this.vue.getMdp().isEmpty() && !this.vue.getNouveauMdp().isEmpty()) {
+			if(tousRempli()) {
 				try {
-					if(Compte.compteExiste(this.vue.getNomUtilisateur()) && Compte.mdpOK(this.vue.getNomUtilisateur(), this.vue.getMdp())) {
+					if(Compte.compteEtMdpExistent(this.vue.getNomUtilisateur(), this.vue.getMdp())) {
 						Compte.changerMdp(this.vue.getNomUtilisateur(), this.vue.getMdp(), this.vue.getNouveauMdp());
-						ApplicationEsporter.f.setContentPane(new PageConnexion());
-						ApplicationEsporter.f.validate();
+						ApplicationEsporter.changerDePage(new PageConnexion());
 					} else {
 						// Message d'erreur en cas d'utilisateur ou de mot de passe incorrect
 						this.vue.setMessage("Nom d'utilisateur ou mot de passe incorrect");
@@ -45,10 +44,12 @@ public class ControleurChangerMdp implements ActionListener {
 			}
 		}
 		if (b.getText().equals("Déjà un compte?")) {
-			ApplicationEsporter.f.setContentPane(new PageConnexion()); // Change de page
-			ApplicationEsporter.f.validate();
+			ApplicationEsporter.changerDePage(new PageConnexion());
 		}
 		
 	}
 
+	public boolean tousRempli() {
+		return !this.vue.getNomUtilisateur().isEmpty() && !this.vue.getMdp().isEmpty() && !this.vue.getNouveauMdp().isEmpty();
+	}
 }

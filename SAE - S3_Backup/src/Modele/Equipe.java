@@ -15,38 +15,48 @@ public class Equipe {
 	private String pathLogo;
 	
 	// Constructeur de la classe " Equipe "
-	public Equipe(String nomEcurie, String nomEquipe, String nomJeu, String pathLogo) throws SQLException {
-		this.nomEcurie = nomEcurie;
-		this.nomEquipe = nomEquipe;
-		this.nomJeu = nomJeu;
-		ResultSet rs = FonctionsSQL.select(NomTablesBDD.SAEJEU, "*", "nom = '" + this.nomJeu + "'");
-		rs.next();
-		this.jeu = new Jeu(rs.getString(1), rs.getString(2));
-		this.pathLogo = pathLogo;
+	public Equipe(String nomEcurie, String nomEquipe, String nomJeu, String pathLogo) {
+		try {
+			this.nomEcurie = nomEcurie;
+			this.nomEquipe = nomEquipe;
+			this.nomJeu = nomJeu;
+			ResultSet rs = FonctionsSQL.select("saejeu", "*", "nom = '" + this.nomJeu + "'");
+			rs.next();
+			this.jeu = new Jeu(rs.getString(1), rs.getString(2));
+			this.pathLogo = pathLogo;
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
-	public String getNomEquipe() { // Récupère le nom de l'équipe
+	// Récupère le nom de l'équipe
+	public String getNomEquipe() { 
 		return this.nomEquipe;
 	}
 	
-	public String getNomJeu() { // Récupère le nom du jeu
+	// Récupère le nom du jeu
+	public String getNomJeu() { 
 		return this.nomJeu;
 	}
 	
-	public Jeu getJeu() { // Récupère le Jeu en tant que classe
+	// Récupère le Jeu en tant que classe
+	public Jeu getJeu() { 
 		return this.jeu;
 	}
 	
-	public String getPathLogo() { // Récupère le chemin du logo
+	// Récupère le chemin du logo
+	public String getPathLogo() { 
 		return this.pathLogo;
 	}
 	
-	public void ajouterEquipe() throws SQLException { // Ajoute une équipe dans la base de données
+	// Ajoute une équipe dans la base de données
+	public void ajouterEquipe() { 
 		String[]aInserer = {"'" + this.nomEquipe + "'", "0" , "'" + this.pathLogo + "'" , "'" + this.nomJeu + "'" , "'" + this.nomEcurie + "'"};
 		FonctionsSQL.insert(NomTablesBDD.SAEEQUIPE, aInserer);
 	}
 	
-	public void modifierEquipe() throws SQLException { // Modifie une équipe dans la base de données
+	// Modifie une équipe dans la base de données
+	public void modifierEquipe() { 
 		try {
 			try {
 				this.ajouterEquipe();
@@ -63,18 +73,18 @@ public class Equipe {
 				FonctionsSQL.update(NomTablesBDD.SAECONCOURIR, "nom", this.nomEquipe, "nom ='"+ApplicationEsporter.equipe+"'");
 				FonctionsSQL.update(NomTablesBDD.SAECOMPETITER, "nom", this.nomEquipe, "nom ='"+ApplicationEsporter.equipe+"'");
 				FonctionsSQL.update(NomTablesBDD.SAECOMPETITERPHASEFINALE, "nom", this.nomEquipe, "nom ='"+ApplicationEsporter.equipe+"'");
-				ResultSet rs = FonctionsSQL.select(NomTablesBDD.SAEEQUIPE, "nbpoints", "nom ='"+ApplicationEsporter.equipe+"'");
+				ResultSet rs = FonctionsSQL.select("saeequipe", "nbpoints", "nom ='"+ApplicationEsporter.equipe+"'");
 				rs.next();
 				FonctionsSQL.update(NomTablesBDD.SAEEQUIPE, "nbpoints", ""+rs.getInt(1), "nom ='"+this.nomEquipe+"'");
 				FonctionsSQL.delete(NomTablesBDD.SAEEQUIPE, "nom ='"+ApplicationEsporter.equipe+"'");
 			}
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void supprimerEquipe() throws SQLException { // Supprime une équipe dans la base de données
+	// Supprime une équipe dans la base de données
+	public void supprimerEquipe() { 
 		FonctionsSQL.delete(NomTablesBDD.SAEEQUIPE, "nom = '" + this.nomEquipe + "'");
 	}
 }

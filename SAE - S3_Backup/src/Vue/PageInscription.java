@@ -16,6 +16,7 @@ import javax.swing.border.LineBorder;
 
 import Controleur.ControleurInscription;
 
+@SuppressWarnings("serial")
 public class PageInscription extends JPanel {
 
 	private ControleurInscription controleur = new ControleurInscription(this);
