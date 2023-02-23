@@ -18,7 +18,7 @@ import java.awt.FlowLayout;
 @SuppressWarnings("serial")
 public class Ecurie_Accueil extends JPanel {
 	
-	private ControleurEcurie controleur = new ControleurEcurie(this, EtatEcurie.ACCUEIL);
+	private ControleurEcurie controleur = new ControleurEcurie(this, EtatEcurie.TOURNOI);
 	
 	public Ecurie_Accueil() {
 		setLayout(new BorderLayout(0,0));

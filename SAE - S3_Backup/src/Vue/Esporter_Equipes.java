@@ -18,6 +18,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
 import Controleur.ControleurEsporter;
+import Modele.BDD.NomTablesBDD;
 import Modele.FonctionsSQL;
 import Modele.MyRendererAndEditor;
 
@@ -130,10 +131,10 @@ public class Esporter_Equipes extends JPanel {
 	public JTable setTable(JTable table) {
 		try {
 			String columns[] = { "Nom de l'équipe" , "Nombre de points" , "Jeu" , " " , "  " };
-			ResultSet count = FonctionsSQL.select("saeequipe", "count(*)", "NOM_2 = '" + ApplicationEsporter.nomEcurie + "'");
+			ResultSet count = FonctionsSQL.select(NomTablesBDD.SAEEQUIPE, "count(*)", "NOM_2 = '" + ApplicationEsporter.nomEcurie + "'");
 			count.next();
 			String data[][] = new String[count.getInt(1)][5];
-			ResultSet res = FonctionsSQL.select("saeequipe", "Nom, nbpoints, nom_1", "NOM_2 = '" + ApplicationEsporter.nomEcurie + "'");
+			ResultSet res = FonctionsSQL.select(NomTablesBDD.SAEEQUIPE, "Nom, nbpoints, nom_1", "NOM_2 = '" + ApplicationEsporter.nomEcurie + "'");
 			int i = 0;
 			while (res.next()) {
 				data[i][0] = res.getString(1);

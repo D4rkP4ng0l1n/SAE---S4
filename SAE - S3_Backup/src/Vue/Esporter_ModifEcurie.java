@@ -17,6 +17,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
 import Controleur.ControleurEsporter;
+import Modele.BDD.NomTablesBDD;
 import Modele.FonctionsSQL;
 
 @SuppressWarnings("serial")
@@ -193,15 +194,23 @@ public class Esporter_ModifEcurie extends JPanel{
 		nomEcurie.setText(ApplicationEsporter.nomEcurie);
 	}
 
-	private void setCEO() throws SQLException {
-		ResultSet CEONom = FonctionsSQL.select("saeecurie", "CEO", "nom = '" + ApplicationEsporter.nomEcurie + "'");
-		CEONom.next();
-		nomCEO.setText(CEONom.getString(1));
+	private void setCEO() {
+		try {
+			ResultSet CEONom = FonctionsSQL.select(NomTablesBDD.SAEECURIE, "CEO", "nom = '" + ApplicationEsporter.nomEcurie + "'");
+			CEONom.next();
+			nomCEO.setText(CEONom.getString(1));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
-	private void setLogo() throws SQLException {
-		ResultSet rs = FonctionsSQL.select("saeecurie", "logo", "nom = '" + ApplicationEsporter.nomEcurie + "'");
-		rs.next();
-		setImage(rs.getString(1));
+	private void setLogo() {
+		try {
+			ResultSet rs = FonctionsSQL.select(NomTablesBDD.SAEECURIE, "logo", "nom = '" + ApplicationEsporter.nomEcurie + "'");
+			rs.next();
+			setImage(rs.getString(1));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -26,9 +26,4 @@ public class Connexion {
         }
 		return connexion;
 	}
-
-	public static void closeConnexion() throws SQLException { // Ferme la connexion
-		connexion.close();
-	}
-
 }

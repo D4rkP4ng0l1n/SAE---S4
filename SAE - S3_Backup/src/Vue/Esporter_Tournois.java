@@ -19,6 +19,7 @@ import javax.swing.table.DefaultTableModel;
 
 import Controleur.ControleurEsporter;
 import Controleur.ControleurEsporter.EtatEsporter;
+import Modele.BDD.NomTablesBDD;
 import Modele.FonctionsSQL;
 import Modele.MyRendererAndEditor;
 
@@ -30,7 +31,7 @@ public class Esporter_Tournois extends JPanel{
 
 	private ControleurEsporter controleur = new ControleurEsporter(this, EtatEsporter.TOURNOI);
 
-	public Esporter_Tournois() throws SQLException {
+	public Esporter_Tournois() {
 		setLayout(new BorderLayout(0, 0));
 
 		JPanel panel = new JPanel();
@@ -144,53 +145,59 @@ public class Esporter_Tournois extends JPanel{
 		scrollPane.setViewportView(tableTournois);
 	}
 
-	private JTable setTable(JTable table) throws SQLException {
-		String columns[] = { "Lieu" , "Date" , "Jeu(x)" , "Classement", " ", "  " };
-		ResultSet selectCountTournoi = FonctionsSQL.select("saetournoi", "count(*)", "");
-		selectCountTournoi.next();
-		String data[][] = new String[selectCountTournoi.getInt(1)][5];
-		ResultSet res = FonctionsSQL.select("saetournoi", "*", "");
-		int i = 0;
-		String datadateduTournoi="";
-		String dateGalere;
-		while (res.next()) {
-			data[i][0] = res.getString(2);
-			char[] dateduTournoi=  res.getDate(3).toString().toCharArray();
-			if (dateduTournoi[0]=='1') {
-				@SuppressWarnings("deprecation")
-				int dateOk = res.getDate(3).getYear();
-				dateOk = ((dateOk - 1977) * -1) + 2024;
-				dateGalere = "" + dateOk;
-				dateduTournoi[2]=dateGalere.charAt(2);
-				dateduTournoi[3]=dateGalere.charAt(3);
+	private JTable setTable(JTable table) {
+		try {
+			String columns[] = { "Lieu" , "Date" , "Jeu(x)" , "Classement", " ", "  " };
+			ResultSet selectCountTournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "count(*)", "");
+			selectCountTournoi.next();
+			String data[][] = new String[selectCountTournoi.getInt(1)][5];
+			ResultSet res = FonctionsSQL.select("saetournoi", "*", "");
+			int i = 0;
+			String datadateduTournoi="";
+			String dateGalere;
+			while (res.next()) {
+				data[i][0] = res.getString(2);
+				char[] dateduTournoi=  res.getDate(3).toString().toCharArray();
+				if (dateduTournoi[0]=='1') {
+					@SuppressWarnings("deprecation")
+					int dateOk = res.getDate(3).getYear();
+					dateOk = ((dateOk - 1977) * -1) + 2024;
+					dateGalere = "" + dateOk;
+					dateduTournoi[2]=dateGalere.charAt(2);
+					dateduTournoi[3]=dateGalere.charAt(3);
+				}
+				dateduTournoi[0]='2';
+				dateduTournoi[1]='0';
+				datadateduTournoi="";
+				for (char l: dateduTournoi) {
+					datadateduTournoi= datadateduTournoi+l;
+				}
+				data[i][1] = datadateduTournoi;
+				i++;
 			}
-			dateduTournoi[0]='2';
-			dateduTournoi[1]='0';
-			datadateduTournoi="";
-			for (char l: dateduTournoi) {
-				datadateduTournoi= datadateduTournoi+l;
-			}
-			data[i][1] = datadateduTournoi;
-			i++;
+			model = new DefaultTableModel(data, columns);
+			JTable returnTable = new JTable(model);
+			returnTable.getColumn("Jeu(x)").setCellRenderer(new MyRendererAndEditor(returnTable, "Voir le(s) jeu(x)", controleur, null, null));
+			returnTable.getColumn("Jeu(x)").setCellEditor(new MyRendererAndEditor(returnTable, "Voir le(s) jeu(x)", controleur, null, null));
+			returnTable.getColumn("Classement").setCellRenderer(new MyRendererAndEditor(returnTable, "Accéder", controleur, null, null));
+			returnTable.getColumn("Classement").setCellEditor(new MyRendererAndEditor(returnTable, "Accéder", controleur, null, null));
+			returnTable.getColumn(" ").setCellRenderer(new MyRendererAndEditor(returnTable, "Modifier", controleur, null, null));
+			returnTable.getColumn(" ").setCellEditor(new MyRendererAndEditor(returnTable, "Modifier", controleur, null, null));
+			returnTable.getColumn("  ").setCellRenderer(new MyRendererAndEditor(returnTable, "Supprimer", controleur, null, null));
+			returnTable.getColumn("  ").setCellEditor(new MyRendererAndEditor(returnTable, "Supprimer", controleur, null, null));
+			return returnTable;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
 		}
-		model = new DefaultTableModel(data, columns);
-		JTable returnTable = new JTable(model);
-		returnTable.getColumn("Jeu(x)").setCellRenderer(new MyRendererAndEditor(returnTable, "Voir le(s) jeu(x)", controleur, null, null));
-		returnTable.getColumn("Jeu(x)").setCellEditor(new MyRendererAndEditor(returnTable, "Voir le(s) jeu(x)", controleur, null, null));
-		returnTable.getColumn("Classement").setCellRenderer(new MyRendererAndEditor(returnTable, "Accéder", controleur, null, null));
-		returnTable.getColumn("Classement").setCellEditor(new MyRendererAndEditor(returnTable, "Accéder", controleur, null, null));
-		returnTable.getColumn(" ").setCellRenderer(new MyRendererAndEditor(returnTable, "Modifier", controleur, null, null));
-		returnTable.getColumn(" ").setCellEditor(new MyRendererAndEditor(returnTable, "Modifier", controleur, null, null));
-		returnTable.getColumn("  ").setCellRenderer(new MyRendererAndEditor(returnTable, "Supprimer", controleur, null, null));
-		returnTable.getColumn("  ").setCellEditor(new MyRendererAndEditor(returnTable, "Supprimer", controleur, null, null));
-		return returnTable;
 	}
 
 	public static JTable getTable() {
 		return tableTournois;
 	}
 	
-	public static void DelRow(int row) { // Supprime une ligne dans la table des tournois
+	// Supprime une ligne dans la table des tournois
+	public static void DelRow(int row) { 
 		model = (DefaultTableModel) tableTournois.getModel();
 		model.removeRow(row);
 	}

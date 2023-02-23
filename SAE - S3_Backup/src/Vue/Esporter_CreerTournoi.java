@@ -22,6 +22,7 @@ import org.jdatepicker.impl.SqlDateModel;
 
 import Controleur.ControleurEsporter;
 import Controleur.ControleurEsporter.EtatEsporter;
+import Modele.BDD.NomTablesBDD;
 import Modele.FonctionsSQL;
 
 import javax.swing.JComboBox;
@@ -229,45 +230,55 @@ public class Esporter_CreerTournoi extends JPanel{
         panel_15.add(am_pm);
     }
 	
-	public static String getLieu() { // Retourne le lieu d'un tournoi en cours de création
+	// Retourne le lieu d'un tournoi en cours de création
+	public static String getLieu() { 
 		return Lieu.getText();
 	}
 	
-	public static String getHeure() { // Retourne l'heure d'un tournoi en cours de création
+	// Retourne l'heure d'un tournoi en cours de création
+	public static String getHeure() { 
 		return (String) heure.getSelectedItem();
 	}
 	
-	public static String getMinute() { // Retourne les minutes d'un tournoi en cours de création
+	// Retourne les minutes d'un tournoi en cours de création
+	public static String getMinute() {
 		return (String) minute.getSelectedItem();
 	}
 	
-	public static String getAmPm() { // Retourne le "moment" (après-midi ou matin) d'un tournoi en cours de création
+	// Retourne le "moment" (après-midi ou matin) d'un tournoi en cours de création
+	public static String getAmPm() { 
 		return (String) am_pm.getSelectedItem();
 	}
 	
-	public static boolean DLMIsVide() { // Retourne true si la liste des jeux est vide
+	// Retourne true si la liste des jeux est vide
+	public static boolean DLMIsVide() { 
 		return DLM.isEmpty();
 	}
 	
-	public static String getJeu() { // Retourne un String du jeu sélectionné dans la combobox
+	// Retourne un String du jeu sélectionné dans la combobox
+	public static String getJeu() { 
 		return (String) Jeu.getSelectedItem();
 	}
 	
-	public static Date getDate() { // Retourne la date sélectionnée
+	// Retourne la date sélectionnée
+	public static Date getDate() { 
 		model.setYear(model.getYear()-2000);
 		return model.getValue();
 	}
 	
+	// Retourne la liste de tous les jeux du tournoi
 	@SuppressWarnings("rawtypes")
-	public static JList getJeux() { // Retourne la liste de tous les jeux du tournoi
+	public static JList getJeux() { 
 		return Jeux;
 	}
 	
-	public static boolean DateEstVide() { // Retourne true si la date n'est pas sélectionnée
+	// Retourne true si la date n'est pas sélectionnée
+	public static boolean DateEstVide() { 
 		return  model.getValue() == null;
 	}
 	
-	public static boolean datePassee() { // Retourne true si la date sélectionnée est antérieure à la date actuelle
+	// Retourne true si la date sélectionnée est antérieure à la date actuelle
+	public static boolean datePassee() { 
 		if ((model.getYear() > LocalDate.now().getYear()) || (model.getMonth()+1 > LocalDate.now().getMonthValue() &&  model.getYear() == LocalDate.now().getYear()) || (model.getDay() > LocalDate.now().getDayOfMonth() && model.getMonth()+1 == LocalDate.now().getMonthValue() &&  model.getYear() == LocalDate.now().getYear())) {
 			return false;
 		} else {
@@ -275,7 +286,8 @@ public class Esporter_CreerTournoi extends JPanel{
 		}
 	}
 	
-	public static void addList() { // Ajoute le jeu sélectionné sur le combobox dans la liste de jeux du tournoi
+	// Ajoute le jeu sélectionné sur le combobox dans la liste de jeux du tournoi
+	public static void addList() {
 		if (erreur==0) {
 			erreur=1;
 			if(getJeu().equals("Choisir un Jeu")) {
@@ -298,29 +310,38 @@ public class Esporter_CreerTournoi extends JPanel{
 		
 	}
 	
-	public static void setMessage(String texte) { // Set un message d'erreur
+	// Set un message d'erreur
+	public static void setMessage(String texte) { 
 		message.setText(texte);
 	}
 	
-	public static void DLMVide() { // Retire tous les éléments de la liste des jeux du tournoi
+	// Retire tous les éléments de la liste des jeux du tournoi
+	public static void DLMVide() { 
 		DLM.removeAllElements();
 	}
 	
-	private String[] listJeu(ResultSet rs) throws SQLException { // Retourne la liste de tous les jeux de la base de données pour les mettre dans la combobox
-		ResultSet rss = FonctionsSQL.select("SAEJeu", "count(nom)", "");
-		rss.next();
-		int count = rss.getInt(1);
-		String[]listJeu= new String[count+1];
-		int i = 1;
-		listJeu[0]="Choisir un Jeu";
-		while (rs.next()) {
-			listJeu[i]=rs.getString(1);
-			i++;
+	// Retourne la liste de tous les jeux de la base de données pour les mettre dans la combobox
+	private String[] listJeu(ResultSet rs) { 
+		try {
+			ResultSet rss = FonctionsSQL.select(NomTablesBDD.SAEJEU, "count(nom)", "");
+			rss.next();
+			int count = rss.getInt(1);
+			String[]listJeu= new String[count+1];
+			int i = 1;
+			listJeu[0]="Choisir un Jeu";
+			while (rs.next()) {
+				listJeu[i]=rs.getString(1);
+				i++;
+			}
+			return listJeu;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
 		}
-		return listJeu;
 	}
 	
-	public static boolean lieuEstVide() { // Retourne true si il n'y a pas de lieu pour le tournoi en cours de création
+	// Retourne true si il n'y a pas de lieu pour le tournoi en cours de création
+	public static boolean lieuEstVide() { 
 		return Lieu.getText().isEmpty();
 	}
 }
