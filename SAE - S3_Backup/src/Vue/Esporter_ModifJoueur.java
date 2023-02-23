@@ -36,7 +36,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 @SuppressWarnings("serial")
-public class Esporter_ModifierJoueur extends JPanel {
+public class Esporter_ModifJoueur extends JPanel {
 
 	private static JTable tableJoueurs;
 	private static DefaultTableModel model;
@@ -53,7 +53,7 @@ public class Esporter_ModifierJoueur extends JPanel {
 	
 	public enum Erreurs{ERREURDATE,ERREURNOMNUL,ERREURPSEUDONUL,ERRERUJOUEUREXISTANT};
 
-	public Esporter_ModifierJoueur() throws SQLException{
+	public Esporter_ModifJoueur() throws SQLException{
 		setBorder(new EmptyBorder(5, 5, 5, 5));
 		setLayout(new BorderLayout(0, 0));
 
@@ -273,8 +273,8 @@ public class Esporter_ModifierJoueur extends JPanel {
 	}
 
 	public static boolean joueurExiste() throws SQLException {
-		ResultSet rs = FonctionsSQL.select("saejeu", "*", "nom = '" + textFieldName.getText() + "'");
-		return rs.next();
+		ResultSet selectJeu = FonctionsSQL.select("saejeu", "*", "nom = '" + textFieldName.getText() + "'");
+		return selectJeu.next();
 	}
 	
 	public static void supprimerJoueur(String pseudo) {

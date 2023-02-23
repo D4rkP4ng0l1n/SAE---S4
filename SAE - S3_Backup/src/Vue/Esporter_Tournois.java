@@ -146,9 +146,9 @@ public class Esporter_Tournois extends JPanel{
 
 	private JTable setTable(JTable table) throws SQLException {
 		String columns[] = { "Lieu" , "Date" , "Jeu(x)" , "Classement", " ", "  " };
-		ResultSet count = FonctionsSQL.select("saetournoi", "count(*)", "");
-		count.next();
-		String data[][] = new String[count.getInt(1)][5];
+		ResultSet selectCountTournoi = FonctionsSQL.select("saetournoi", "count(*)", "");
+		selectCountTournoi.next();
+		String data[][] = new String[selectCountTournoi.getInt(1)][5];
 		ResultSet res = FonctionsSQL.select("saetournoi", "*", "");
 		int i = 0;
 		String datadateduTournoi="";

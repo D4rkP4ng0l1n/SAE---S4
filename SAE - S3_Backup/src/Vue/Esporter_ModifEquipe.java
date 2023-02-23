@@ -27,7 +27,7 @@ import javax.swing.JTextField;
 import javax.swing.JComboBox;
 
 @SuppressWarnings("serial")
-public class Esporter_ModificationEquipe extends JPanel{
+public class Esporter_ModifEquipe extends JPanel{
 	
 	private static JTextField NomEquipe;
 	private static JLabel Image_placeholder;
@@ -40,7 +40,7 @@ public class Esporter_ModificationEquipe extends JPanel{
 	private ControleurEsporter controleur = new ControleurEsporter(this, EtatEsporter.MODIF_EQUIPE);
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Esporter_ModificationEquipe() throws SQLException {
+	public Esporter_ModifEquipe() throws SQLException {
 		setLayout(new BorderLayout(0,0));
 		
 		JPanel panel = new JPanel();
@@ -205,10 +205,10 @@ public class Esporter_ModificationEquipe extends JPanel{
 	public void setPage() {
 		NomEquipe.setText(ApplicationEsporter.equipe);
 		try {
-			ResultSet rs=FonctionsSQL.select("saeequipe", "nom_1", "nom = '"+ApplicationEsporter.equipe+"'");
-			rs.next();
+			ResultSet nomJeu=FonctionsSQL.select("saeequipe", "nom_1", "nom = '"+ApplicationEsporter.equipe+"'");
+			nomJeu.next();
 			for(int i=0; i<comboBox.getItemCount(); i++) {
-				if(comboBox.getItemAt(i).equals(rs.getString(1))) {
+				if(comboBox.getItemAt(i).equals(nomJeu.getString(1))) {
 					comboBox.setSelectedIndex(i);
 				}
 			}
@@ -259,10 +259,10 @@ public class Esporter_ModificationEquipe extends JPanel{
 	}
 	
 	public static void setLogo() throws SQLException {
-		ResultSet rs = FonctionsSQL.select("saeequipe", "logo", "nom = '" + ApplicationEsporter.equipe + "'");
-		rs.next();
-		setImage(rs.getString(1));
-		ApplicationEsporter.logo_Path=rs.getString(1);
+		ResultSet unLogo = FonctionsSQL.select("saeequipe", "logo", "nom = '" + ApplicationEsporter.equipe + "'");
+		unLogo.next();
+		setImage(unLogo.getString(1));
+		ApplicationEsporter.logo_Path=unLogo.getString(1);
 	}
 
 }

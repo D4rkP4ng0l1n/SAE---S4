@@ -20,9 +20,9 @@ public class Equipe {
 			this.nomEcurie = nomEcurie;
 			this.nomEquipe = nomEquipe;
 			this.nomJeu = nomJeu;
-			ResultSet rs = FonctionsSQL.select("saejeu", "*", "nom = '" + this.nomJeu + "'");
-			rs.next();
-			this.jeu = new Jeu(rs.getString(1), rs.getString(2));
+			ResultSet jeuEquipe = FonctionsSQL.select("saejeu", "*", "nom = '" + this.nomJeu + "'");
+			jeuEquipe.next();
+			this.jeu = new Jeu(jeuEquipe.getString(1), jeuEquipe.getString(2));
 			this.pathLogo = pathLogo;
 		} catch(SQLException e) {
 			e.printStackTrace();

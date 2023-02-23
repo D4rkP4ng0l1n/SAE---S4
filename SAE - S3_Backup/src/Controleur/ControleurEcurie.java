@@ -27,7 +27,7 @@ import Vue.Ecurie_AddJoueur.Erreurs;
 import Vue.Ecurie_CreationEquipe;
 import Vue.Ecurie_CreerEcurie;
 import Vue.Ecurie_Equipes;
-import Vue.Ecurie_GestionEquipe;
+import Vue.Ecurie_VueEquipe;
 import Vue.Ecurie_InfoTournoi;
 import Vue.Ecurie_Inscription;
 import Vue.Ecurie_PreInscription;
@@ -225,9 +225,9 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 							String[]aInserer = { "'" + Ecurie_Inscription.getCombo() + "'", ApplicationEsporter.idTournoi, "0" }; 
 							FonctionsSQL.insert(NomTablesBDD.SAEPARTICIPER, aInserer);
 							JOptionPane.showMessageDialog(null, Ecurie_Inscription.getCombo() + " a bien été inscrite au tournoi !");
-							ResultSet countNbEquipesInscrites = FonctionsSQL.select(NomTablesBDD.SAEPARTICIPER, "count(*)", "IDTournoi = " + ApplicationEsporter.idTournoi);
-							countNbEquipesInscrites.next();
-							if (countNbEquipesInscrites.getInt(1) >= 16) {
+							ResultSet nbEquipesInscrites = FonctionsSQL.select(NomTablesBDD.SAEPARTICIPER, "count(*)", "IDTournoi = " + ApplicationEsporter.idTournoi);
+							nbEquipesInscrites.next();
+							if (nbEquipesInscrites.getInt(1) >= 16) {
 								JOptionPane.showMessageDialog(null, "Vous êtes le dernier inscit, les poules sont en cours de création\nVeuillez patienter");
 								genererPoules(ApplicationEsporter.idTournoi);
 							}
@@ -246,7 +246,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 					ApplicationEsporter.changerDePage(new Ecurie_CreationEquipe());
 				}
 				if(b.getText().equals("Acceder")) {
-					ApplicationEsporter.changerDePage(new Ecurie_GestionEquipe());
+					ApplicationEsporter.changerDePage(new Ecurie_VueEquipe());
 				}
 				if(b.getText().equals("Valider")) {
 					ApplicationEsporter.changerDePage(new Ecurie_Equipes());

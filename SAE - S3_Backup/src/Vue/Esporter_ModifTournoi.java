@@ -315,9 +315,9 @@ public class Esporter_ModifTournoi extends JPanel{
 	}
 
 	private String[] listJeu(ResultSet rs) throws SQLException {
-		ResultSet rss = FonctionsSQL.select("SAEJeu", "count(nom)", "");
-		rss.next();
-		int count = rss.getInt(1);
+		ResultSet selectCountJeu = FonctionsSQL.select("SAEJeu", "count(nom)", "");
+		selectCountJeu.next();
+		int count = selectCountJeu.getInt(1);
 		String[]listJeu= new String[count+1];
 		int i = 1;
 		listJeu[0]="Choisir un Jeu";
@@ -400,15 +400,15 @@ public class Esporter_ModifTournoi extends JPanel{
 	}
 
 	public static void formatAncienneDate() {
-		ResultSet res;
+		ResultSet selectDateTournoi;
 		try {
-			res = FonctionsSQL.select("saetournoi", "DATEETHEURE", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
+			selectDateTournoi = FonctionsSQL.select("saetournoi", "DATEETHEURE", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
 			String datadateduTournoi="";
-			res.next();
-			char[] dateduTournoi=  res.getDate(3).toString().toCharArray();
+			selectDateTournoi.next();
+			char[] dateduTournoi=  selectDateTournoi.getDate(3).toString().toCharArray();
 			if (dateduTournoi[0]=='1') {
 				@SuppressWarnings("deprecation")
-				int dateOk=res.getDate(3).getYear();
+				int dateOk=selectDateTournoi.getDate(3).getYear();
 				dateOk = (((dateOk - 1977) * -1) + 2024);
 				String dateGalere = "" + dateOk;
 				dateduTournoi[2]=dateGalere.charAt(2);
