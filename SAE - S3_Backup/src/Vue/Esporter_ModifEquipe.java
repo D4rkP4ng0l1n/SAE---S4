@@ -40,7 +40,7 @@ public class Esporter_ModifEquipe extends JPanel{
 	private ControleurEsporter controleur = new ControleurEsporter(this, EtatEsporter.MODIF_EQUIPE);
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Esporter_ModifEquipe() throws SQLException {
+	public Esporter_ModifEquipe() {
 		setLayout(new BorderLayout(0,0));
 		
 		JPanel panel = new JPanel();
@@ -160,7 +160,11 @@ public class Esporter_ModifEquipe extends JPanel{
 		panel_15.add(panel_19);
 		
 		comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(listJeu()));
+		try {
+			comboBox.setModel(new DefaultComboBoxModel(listJeu()));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		panel_19.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		panel_19.add(comboBox);
 		

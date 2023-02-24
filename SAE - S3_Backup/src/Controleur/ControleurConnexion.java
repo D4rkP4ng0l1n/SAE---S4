@@ -57,14 +57,14 @@ public class ControleurConnexion implements ActionListener {
 				try {
 					if(Compte.compteEtMdpExistent(this.vue.getNomUtilisateur(), this.vue.getMdp())) {
 						Compte.chargerCompte(this.vue.getNomUtilisateur(), this.vue.getMdp());
-						switch(ApplicationEsporter.idTypeCompte) { // Selon le type de compte, on redirige l'utilisateur vers sa page accueil défini
-						case 1:
+						switch(ApplicationEsporter.typeCompte) { // Selon le type de compte, on redirige l'utilisateur vers sa page accueil défini
+						case "ESPORTER":
 							ApplicationEsporter.changerDePage(new Esporter_Accueil());
 							break;
-						case 2:
+						case "ARBITRE":
 							ApplicationEsporter.changerDePage(new Arbitre_Accueil());
 							break;
-						case 3:
+						case "ECURIE":
 							if (verifEcurie()) {
 								ApplicationEsporter.changerDePage(new Ecurie_Accueil());
 							} else {
