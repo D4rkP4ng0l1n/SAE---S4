@@ -4,6 +4,7 @@ import java.awt.GridLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import Modele.Compte;
 import Modele.testMusique;
 
 
@@ -11,7 +12,7 @@ public class ApplicationEsporter {
 
 	public static JFrame f;
 	public static String nomEcurie;
-	public static int idTypeCompte;
+	public static String typeCompte;
 	public static int idCompte;
 	public static String idTournoi;
 	public static String equipe;
