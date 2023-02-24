@@ -10,7 +10,6 @@ import java.nio.file.Paths;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -19,7 +18,6 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import Modele.BDD.NomTablesBDD;
-import Modele.Equipe;
 import Modele.FonctionsSQL;
 import Modele.Joueur;
 import Vue.ApplicationEsporter;
@@ -29,7 +27,7 @@ import Vue.Ecurie_AddJoueur.Erreurs;
 import Vue.Ecurie_CreationEquipe;
 import Vue.Ecurie_CreerEcurie;
 import Vue.Ecurie_Equipes;
-import Vue.Ecurie_GestionEquipe;
+import Vue.Ecurie_VueEquipe;
 import Vue.Ecurie_InfoTournoi;
 import Vue.Ecurie_Inscription;
 import Vue.Ecurie_PreInscription;
@@ -38,7 +36,7 @@ import Vue.PageAccueil;
 
 public class ControleurEcurie extends FocusAdapter implements ActionListener {
 
-	public enum EtatEcurie{CREATION, ACCUEIL, TOURNOI, PREINSCRIPTION_TOURNOI, INSCRIPTION_TOURNOI, EQUIPES, CREATIONEQUIPE, GESTIONEQUIPE, AJOUTERJOUEUR};
+	public enum EtatEcurie{CREATION, TOURNOI, PREINSCRIPTION_TOURNOI, INSCRIPTION_TOURNOI, EQUIPES, CREATIONEQUIPE, GESTIONEQUIPE, AJOUTERJOUEUR};
 
 	private JPanel vue;
 	private EtatEcurie etat;
@@ -54,9 +52,9 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 	// Retourne le nom de l'écurie sur laquelle on se trouve
 	public String getNomEcurie() {
 		try {
-			ResultSet nomEcurie = FonctionsSQL.select("saeecurie", "nom", "idcompte = " + ApplicationEsporter.idCompte);
-			nomEcurie.next();
-			return nomEcurie.getString(1);
+			ResultSet selectnomEcurie = FonctionsSQL.select("saeecurie", "nom", "idcompte = " + ApplicationEsporter.idCompte);
+			selectnomEcurie.next();
+			return selectnomEcurie.getString(1);
 		} catch(SQLException e) {
 			e.printStackTrace();
 			return null;
@@ -72,14 +70,14 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 		// Liens entre les équipes et les poules (insertion dans la table saeconcourir)
 		try {
 			// Sélection des équipes de celles avec le plus de points à celles avec le moins
-			ResultSet listeEquipe = FonctionsSQL.select("saeequipe e, CRJ3957A.saeparticiper p","e.nom"," e.nom=p.nom and p.idtournoi= " + ApplicationEsporter.idTournoi + " order by e.nbpoints desc,1");
+			ResultSet selectlisteEquipe = FonctionsSQL.select("saeequipe e, CRJ3957A.saeparticiper p","e.nom"," e.nom=p.nom and p.idtournoi= " + ApplicationEsporter.idTournoi + " order by e.nbpoints desc,1");
 			int pouleCounter = 1;
-			ResultSet IdPoule;
-			while (listeEquipe.next()) {
+			ResultSet selectIdPoule;
+			while (selectlisteEquipe.next()) {
 				// Récupération d'un id de poule avec le bon numéro
-				IdPoule = FonctionsSQL.select(NomTablesBDD.SAEPOULE, "idpoule", "numero = '" + pouleCounter + "' and idtournoi = " + ApplicationEsporter.idTournoi);
-				IdPoule.next();
-				String[] equipe = {"'" + listeEquipe.getString("nom") + "'", "" + IdPoule.getInt("Idpoule"), "'0'"};
+				selectIdPoule = FonctionsSQL.select(NomTablesBDD.SAEPOULE, "idpoule", "numero = '" + pouleCounter + "' and idtournoi = " + ApplicationEsporter.idTournoi);
+				selectIdPoule.next();
+				String[] equipe = {"'" + selectlisteEquipe.getString("nom") + "'", "" + selectIdPoule.getInt("Idpoule"), "'0'"};
 				FonctionsSQL.insert(NomTablesBDD.SAECONCOURIR, equipe);
 				pouleCounter = (pouleCounter % 4) + 1;
 			}
@@ -158,57 +156,18 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 			switch(this.etat) {
 			case CREATION :
 				if(b.getText().equals("Ajouter un logo")) {
-					JFileChooser j = new JFileChooser();
-					j.setCurrentDirectory(new File("Images"));
-					j.setFileFilter(new FileNameExtensionFilter("PNG, JPG, GIF", "png", "jpg", "gif"));
-					j.showOpenDialog(this.vue);
-					try {
-						String fileName = j.getSelectedFile().getName();
-						File src = new File("src/images/" + fileName);
-						if(! src.isFile()) {
-							Files.copy(Paths.get(j.getSelectedFile().getAbsolutePath()), Paths.get("src/images/" + fileName));
-						}
-						Ecurie_CreerEcurie.setImage("src/images/" + fileName);
-						this.pathLogo = "src/images/" + fileName;
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
+					ajoutImage();
 				}
 				if(b.getText().equals("Valider")) {
-					if(! Ecurie_CreerEcurie.getNomEcurie().isEmpty()) {
-						if(! Ecurie_CreerEcurie.getNomCEO().isEmpty()) {
-							if(! this.pathLogo.equals("PasDeLogo")) {
-								String[] aInserer = {"'" + Ecurie_CreerEcurie.getNomEcurie() + "'", "'" + Ecurie_CreerEcurie.getNomCEO() + "'", "'" + this.pathLogo + "'", "" + ApplicationEsporter.idCompte};
-								FonctionsSQL.insert(NomTablesBDD.SAEECURIE, aInserer);
-								ApplicationEsporter.changerDePage(new PageAccueil());
-							} else {
-								Ecurie_CreerEcurie.setMessage("Pas de logo !");
-							}
-						} else {
-							Ecurie_CreerEcurie.setMessage("Nom du CEO vide !");
-						}
-					} else {
-						Ecurie_CreerEcurie.setMessage("Nom de l'écurie vide !");
-					}
+					creationEcurie();
 				}
-				break;
-			case ACCUEIL:
 				break;
 			case TOURNOI:
 				if(b.getText().equals("S'inscrire")) {
 					ApplicationEsporter.changerDePage(new Ecurie_PreInscription());
 				}
 				if(b.getText().equals("Voir le(s) jeu(x)")) {
-					try {
-						ResultSet jeux = FonctionsSQL.select(NomTablesBDD.SAECONCERNER, "NOM", "IDTOURNOI = " + Ecurie_Inscription.getIdTournoiSelected());
-						String afficherJeux = "Liste des jeux : \n";
-						while(jeux.next()) {
-							afficherJeux += "   - " + jeux.getString(1) + "\n";
-						}
-						JOptionPane.showMessageDialog(null, afficherJeux);
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
+					afficherJeu();
 				}
 				if(b.getText().equals("Accéder")) {
 					ApplicationEsporter.changerDePage(new Ecurie_InfoTournoi());
@@ -217,10 +176,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 			case PREINSCRIPTION_TOURNOI:
 				if(b.getText().equals("S'inscrire")) {
 					try {
-						ResultSet selectIDTournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "IDTournoi", "Lieu = '" + Ecurie_Tournoi.getTable().getValueAt(Ecurie_Tournoi.getTable().getSelectedRow(), 0)
-								+ "' AND DATEETHEURE LIKE TO_DATE('" + Ecurie_Tournoi.getTable().getValueAt(Ecurie_Tournoi.getTable().getSelectedRow(), 1) + "', 'YYYY-MM-DD')");
-						selectIDTournoi.next();
-						ApplicationEsporter.idTournoi = selectIDTournoi.getString(1);
+						stockageIdTournoi();
 						ApplicationEsporter.changerDePage(new Ecurie_Inscription());
 					} catch (SQLException e1) {
 						e1.printStackTrace();
@@ -231,20 +187,8 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 				if(b.getText().equals("S'inscrire")) {
 					int result = JOptionPane.showConfirmDialog(null,"Attention, l'inscription est définitive\n Confirmer l'inscription ?", "Confirmer l'inscription", JOptionPane.YES_NO_OPTION);
 					if (result == 0) {
-						try {
-							String[]aInserer = { "'" + Ecurie_Inscription.getCombo() + "'", ApplicationEsporter.idTournoi, "0" }; 
-							FonctionsSQL.insert(NomTablesBDD.SAEPARTICIPER, aInserer);
-							JOptionPane.showMessageDialog(null, Ecurie_Inscription.getCombo() + " a bien été inscrite au tournoi !");
-							ResultSet countNbEquipesInscrites = FonctionsSQL.select(NomTablesBDD.SAEPARTICIPER, "count(*)", "IDTournoi = " + ApplicationEsporter.idTournoi);
-							countNbEquipesInscrites.next();
-							if (countNbEquipesInscrites.getInt(1) >= 16) {
-								JOptionPane.showMessageDialog(null, "Vous êtes le dernier inscit, les poules sont en cours de création\nVeuillez patienter");
-								genererPoules(ApplicationEsporter.idTournoi);
-							}
-							ApplicationEsporter.changerDePage(new Ecurie_Tournoi());
-						} catch (SQLException e1) {
-							e1.printStackTrace();
-						}
+						inscription();
+						ApplicationEsporter.changerDePage(new Ecurie_Tournoi());
 					}
 				}
 				if(b.getText().equals("Pas encore d'équipe ?")) {
@@ -256,7 +200,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 					ApplicationEsporter.changerDePage(new Ecurie_CreationEquipe());
 				}
 				if(b.getText().equals("Acceder")) {
-					ApplicationEsporter.changerDePage(new Ecurie_GestionEquipe());
+					ApplicationEsporter.changerDePage(new Ecurie_VueEquipe());
 				}
 				if(b.getText().equals("Valider")) {
 					ApplicationEsporter.changerDePage(new Ecurie_Equipes());
@@ -272,21 +216,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 				break;
 			case CREATIONEQUIPE:
 				if(b.getText().equals("Ajouter un Logo")) {
-					JFileChooser j = new JFileChooser();
-					j.setCurrentDirectory(new File("Images"));
-					j.setFileFilter(new FileNameExtensionFilter("PNG, JPG, GIF", "png", "jpg", "gif"));
-					j.showOpenDialog(this.vue);
-					try {
-						String fileName = j.getSelectedFile().getName();
-						File src = new File("src/images/" + fileName);
-						if(! src.isFile()) {
-							Files.copy(Paths.get(j.getSelectedFile().getAbsolutePath()), Paths.get("src/images/" + fileName));
-						}
-						Ecurie_CreationEquipe.setImage("src/images/" + fileName);
-						this.pathLogo = "src/images/" + fileName;
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
+					ajoutImageEquipe();
 				}
 				if(b.getText().equals("Annuler")) {
 					ApplicationEsporter.changerDePage(new Ecurie_Equipes());
@@ -309,42 +239,141 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 					} else if(Ecurie_AddJoueur.isPseudoNull()) {
 						Ecurie_AddJoueur.setErreur(Erreurs.ERREURPSEUDONUL);
 					}
-					try {
-						if(!Ecurie_AddJoueur.joueurExiste()) {
-							Ecurie_AddJoueur.addJoueur(new Joueur(Ecurie_AddJoueur.getNomJoueur(), Ecurie_AddJoueur.getPseudoJoueur(), Ecurie_AddJoueur.getModel(), Ecurie_AddJoueur.getEquipe()));
-							if(Ecurie_AddJoueur.getLastJoueur().calculAge() >= 16) {
-								Ecurie_AddJoueur.getLastJoueur().ajouterJoueur();
-								ApplicationEsporter.changerDePage(new Ecurie_AddJoueur(Ecurie_AddJoueur.getEquipe(), Ecurie_AddJoueur.getJoueurs()));
-							} else {
-								Ecurie_AddJoueur.setErreur(Erreurs.ERREURDATE);
-							}		
-						} else {
-							Ecurie_AddJoueur.setErreur(Erreurs.ERRERUJOUEUREXISTANT);
-						}
-					} catch(Exception e1) {
-						e1.printStackTrace();
-					}
+					ajoutJoueur();
 				}
 				if(b.getText().equals("Supprimer")) {
-					String aSupprimerPseudo = (String) Ecurie_AddJoueur.getTable().getValueAt(Ecurie_AddJoueur.getTable().getSelectedRow(), 1);
-					String aSupprimerEquipe = (String) Ecurie_AddJoueur.getTable().getValueAt(Ecurie_AddJoueur.getTable().getSelectedRow(), 3);
-					try {
-						int result = JOptionPane.showConfirmDialog(null,"Voulez vous vraiment supprimer " + aSupprimerPseudo, "Supprimer le joueur", JOptionPane.YES_NO_OPTION);
-						if (result == 0) {
-							Ecurie_AddJoueur.supprimerJoueur(aSupprimerPseudo);
-							FonctionsSQL.delete(NomTablesBDD.SAEJOUEUR, "NOM_EQUIPE = '" + aSupprimerEquipe + "' and PSEUDONYME = '" + aSupprimerPseudo + "'");
-							ApplicationEsporter.changerDePage(new Ecurie_AddJoueur(Ecurie_AddJoueur.getEquipe(), Ecurie_AddJoueur.getJoueurs()));
-						} 
-					} catch(Exception e1) {
-						JOptionPane.showMessageDialog(null,"Echec de la suppression");
-						e1.printStackTrace();
-					}
+					supprimerJoueur();
 				}
 				if(b.getText().equals("Valider")) {
 					ApplicationEsporter.changerDePage(new Ecurie_Equipes());
 				}
 				break;
 			}
+		}
+	}
+
+	private void supprimerJoueur() {
+		String aSupprimerPseudo = (String) Ecurie_AddJoueur.getTable().getValueAt(Ecurie_AddJoueur.getTable().getSelectedRow(), 1);
+		String aSupprimerEquipe = (String) Ecurie_AddJoueur.getTable().getValueAt(Ecurie_AddJoueur.getTable().getSelectedRow(), 3);
+		try {
+			int result = JOptionPane.showConfirmDialog(null,"Voulez vous vraiment supprimer " + aSupprimerPseudo, "Supprimer le joueur", JOptionPane.YES_NO_OPTION);
+			if (result == 0) {
+				Ecurie_AddJoueur.supprimerJoueur(aSupprimerPseudo);
+				FonctionsSQL.delete(NomTablesBDD.SAEJOUEUR, "NOM_EQUIPE = '" + aSupprimerEquipe + "' and PSEUDONYME = '" + aSupprimerPseudo + "'");
+				ApplicationEsporter.changerDePage(new Ecurie_AddJoueur(Ecurie_AddJoueur.getEquipe(), Ecurie_AddJoueur.getJoueurs()));
+			} 
+		} catch(Exception e1) {
+			JOptionPane.showMessageDialog(null,"Echec de la suppression");
+			e1.printStackTrace();
+		}
+	}
+
+	private void ajoutJoueur() {
+		try {
+			if(!Ecurie_AddJoueur.joueurExiste()) {
+				Ecurie_AddJoueur.addJoueur(new Joueur(Ecurie_AddJoueur.getNomJoueur(), Ecurie_AddJoueur.getPseudoJoueur(), Ecurie_AddJoueur.getModel(), Ecurie_AddJoueur.getEquipe()));
+				if(Ecurie_AddJoueur.getLastJoueur().calculAge() >= 16) {
+					Ecurie_AddJoueur.getLastJoueur().ajouterJoueur();
+					ApplicationEsporter.changerDePage(new Ecurie_AddJoueur(Ecurie_AddJoueur.getEquipe(), Ecurie_AddJoueur.getJoueurs()));
+				} else {
+					Ecurie_AddJoueur.setErreur(Erreurs.ERREURDATE);
+				}		
+			} else {
+				Ecurie_AddJoueur.setErreur(Erreurs.ERRERUJOUEUREXISTANT);
+			}
+		} catch(Exception e1) {
+			e1.printStackTrace();
+		}
+	}
+
+	private void ajoutImageEquipe() {
+		JFileChooser j = new JFileChooser();
+		j.setCurrentDirectory(new File("Images"));
+		j.setFileFilter(new FileNameExtensionFilter("PNG, JPG, GIF", "png", "jpg", "gif"));
+		j.showOpenDialog(this.vue);
+		try {
+			String fileName = j.getSelectedFile().getName();
+			File src = new File("src/images/" + fileName);
+			if(! src.isFile()) {
+				Files.copy(Paths.get(j.getSelectedFile().getAbsolutePath()), Paths.get("src/images/" + fileName));
+			}
+			Ecurie_CreationEquipe.setImage("src/images/" + fileName);
+			this.pathLogo = "src/images/" + fileName;
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	}
+
+	//inscrit l'équipe et génère les poules si le tournoi est rempli suite à l'inscription
+	private void inscription() {
+		try {
+			String[]aInserer = { "'" + Ecurie_Inscription.getCombo() + "'", ApplicationEsporter.idTournoi, "0" }; 
+			FonctionsSQL.insert(NomTablesBDD.SAEPARTICIPER, aInserer);
+			JOptionPane.showMessageDialog(null, Ecurie_Inscription.getCombo() + " a bien été inscrite au tournoi !");
+			ResultSet countNbEquipesInscrites = FonctionsSQL.select("SAEparticiper", "count(*)", "IDTournoi = " + ApplicationEsporter.idTournoi);
+			countNbEquipesInscrites.next();
+			if (countNbEquipesInscrites.getInt(1) >= 16) {
+				JOptionPane.showMessageDialog(null, "Vous êtes le dernier inscit, les poules sont en cours de création\nVeuillez patienter");
+				genererPoules(ApplicationEsporter.idTournoi);
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+	}
+
+	private void stockageIdTournoi() throws SQLException {
+		ResultSet selectIDTournoi = FonctionsSQL.select("SAETournoi", "IDTournoi", "Lieu = '" + Ecurie_Tournoi.getTable().getValueAt(Ecurie_Tournoi.getTable().getSelectedRow(), 0)
+				+ "' AND DATEETHEURE LIKE TO_DATE('" + Ecurie_Tournoi.getTable().getValueAt(Ecurie_Tournoi.getTable().getSelectedRow(), 1) + "', 'YYYY-MM-DD')");
+		selectIDTournoi.next();
+		ApplicationEsporter.idTournoi = selectIDTournoi.getString(1);
+	}
+
+	private void afficherJeu() {
+		try {
+			ResultSet jeux = FonctionsSQL.select("saeconcerner", "NOM", "IDTOURNOI = " + Ecurie_Inscription.getIdTournoiSelected());
+			String afficherJeux = "Liste des jeux : \n";
+			while(jeux.next()) {
+				afficherJeux += "   - " + jeux.getString(1) + "\n";
+			}
+			JOptionPane.showMessageDialog(null, afficherJeux);
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+	}
+
+	private void creationEcurie() {
+		if(! Ecurie_CreerEcurie.getNomEcurie().isEmpty()) {
+			if(! Ecurie_CreerEcurie.getNomCEO().isEmpty()) {
+				if(! this.pathLogo.equals("PasDeLogo")) {
+					String[] aInserer = {"'" + Ecurie_CreerEcurie.getNomEcurie() + "'", "'" + Ecurie_CreerEcurie.getNomCEO() + "'", "'" + this.pathLogo + "'", "" + ApplicationEsporter.idCompte};
+					FonctionsSQL.insert(NomTablesBDD.SAEECURIE, aInserer);
+					ApplicationEsporter.changerDePage(new PageAccueil());
+				} else {
+					Ecurie_CreerEcurie.setMessage("Pas de logo !");
+				}
+			} else {
+				Ecurie_CreerEcurie.setMessage("Nom du CEO vide !");
+			}
+		} else {
+			Ecurie_CreerEcurie.setMessage("Nom de l'écurie vide !");
+		}
+	}
+
+	private void ajoutImage() {
+		JFileChooser j = new JFileChooser();
+		j.setCurrentDirectory(new File("Images"));
+		j.setFileFilter(new FileNameExtensionFilter("PNG, JPG, GIF", "png", "jpg", "gif"));
+		j.showOpenDialog(this.vue);
+		try {
+			String fileName = j.getSelectedFile().getName();
+			File src = new File("src/images/" + fileName);
+			if(! src.isFile()) {
+				Files.copy(Paths.get(j.getSelectedFile().getAbsolutePath()), Paths.get("src/images/" + fileName));
+			}
+			Ecurie_CreerEcurie.setImage("src/images/" + fileName);
+			this.pathLogo = "src/images/" + fileName;
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
 	}
 }

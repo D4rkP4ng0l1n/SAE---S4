@@ -327,9 +327,9 @@ public class Esporter_CreerTournoi extends JPanel{
 	// Retourne la liste de tous les jeux de la base de données pour les mettre dans la combobox
 	private String[] listJeu(ResultSet rs) { 
 		try {
-			ResultSet rss = FonctionsSQL.select(NomTablesBDD.SAEJEU, "count(nom)", "");
-			rss.next();
-			int count = rss.getInt(1);
+			ResultSet selectCountJeu = FonctionsSQL.select(NomTablesBDD.SAEJEU, "count(nom)", "");
+			selectCountJeu.next();
+			int count = selectCountJeu.getInt(1);
 			String[]listJeu= new String[count+1];
 			int i = 1;
 			listJeu[0]="Choisir un Jeu";

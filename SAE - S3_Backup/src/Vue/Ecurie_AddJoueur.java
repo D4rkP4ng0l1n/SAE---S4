@@ -28,7 +28,6 @@ import javax.swing.JTextField;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import javax.swing.JScrollPane;
@@ -270,8 +269,8 @@ public class Ecurie_AddJoueur extends JPanel {
 
 	public static boolean joueurExiste() {
 		try {
-			ResultSet rs = FonctionsSQL.select(NomTablesBDD.SAEJEU, "*", "nom = '" + textFieldName.getText() + "'");
-			return rs.next();
+			ResultSet selectJeu = FonctionsSQL.select(NomTablesBDD.SAEJEU, "*", "nom = '" + textFieldName.getText() + "'");
+			return selectJeu.next();
 		} catch(SQLException e) {
 			e.printStackTrace();
 			return false;

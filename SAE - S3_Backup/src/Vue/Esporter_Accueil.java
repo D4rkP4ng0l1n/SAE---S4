@@ -18,7 +18,7 @@ import Controleur.ControleurEsporter.EtatEsporter;
 @SuppressWarnings("serial")
 public class Esporter_Accueil extends JPanel {
 
-	private ControleurEsporter controleur = new ControleurEsporter(this, EtatEsporter.ACCUEIL);
+	private ControleurEsporter controleur = new ControleurEsporter(this, EtatEsporter.TOURNOI);
 	
 	public Esporter_Accueil() {
 		setLayout(new BorderLayout(0, 0));

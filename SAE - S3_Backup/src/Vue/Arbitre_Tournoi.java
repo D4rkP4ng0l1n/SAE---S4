@@ -137,17 +137,17 @@ public class Arbitre_Tournoi extends JPanel {
 	public JTable setTable(JTable table) {
 		try {
 			String columns[] = { "Lieu" , "Date" , "Jeu(x)" , "Classement"};
-			ResultSet count = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "count(*)", "");
-			count.next();
-			String data[][] = new String[count.getInt(1)][5];
-			ResultSet res = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "*", "");
+			ResultSet selectCountTournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "count(*)", "");
+			selectCountTournoi.next();
+			String data[][] = new String[selectCountTournoi.getInt(1)][5];
+			ResultSet selectTournois = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "*", "");
 			int i = 0;
-			while (res.next()) {
-				data[i][0] = res.getString(2);
-				char[]date = res.getDate(3).toString().toCharArray();
-				data[i][1] = res.getDate(3).toString();
+			while (selectTournois.next()) {
+				data[i][0] = selectTournois.getString(2);
+				char[]date = selectTournois.getDate(3).toString().toCharArray();
+				data[i][1] = selectTournois.getDate(3).toString();
 				if (date[0]=='0') {
-					@SuppressWarnings("deprecation") int dateOK = res.getDate(3).getYear();
+					@SuppressWarnings("deprecation") int dateOK = selectTournois.getDate(3).getYear();
 					dateOK = (dateOK - 1977) * (-1) + 2024;
 					data[i][1] = "" + dateOK;
 					date[0] = '2';

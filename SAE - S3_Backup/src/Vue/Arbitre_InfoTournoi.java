@@ -241,9 +241,9 @@ public class Arbitre_InfoTournoi extends JPanel {
 	private JTable setTable() {
 		try {
 			String columns[] = {"Ecuries", "Equipes", "Points"};
-	        ResultSet countParticipant = FonctionsSQL.select(NomTablesBDD.SAEPARTICIPER, "count(*)", "IDTOURNOI = " + getIdTournoiSelected());
-	        countParticipant.next();
-	        String data[][] = new String[countParticipant.getInt(1)][3];
+	        ResultSet selectCountParticipant = FonctionsSQL.select(NomTablesBDD.SAEPARTICIPER, "count(*)", "IDTOURNOI = " + getIdTournoiSelected());
+	        selectCountParticipant.next();
+	        String data[][] = new String[selectCountParticipant.getInt(1)][3];
 	        ResultSet res = FonctionsSQL.select("saeparticiper, saeequipe", "saeequipe.NOM, saeequipe.NOM_2, saeparticiper.classementFinal", 
 	                                            "saeparticiper.IDTOURNOI = " + getIdTournoiSelected() + " AND saeparticiper.NOM = saeequipe.NOM ORDER BY saeparticiper.classementFinal DESC");
 	        int i = 0;

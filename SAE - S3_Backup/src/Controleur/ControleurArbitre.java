@@ -231,20 +231,20 @@ public class ControleurArbitre implements ActionListener {
 			nomEquipeGagante = nomEquipe2;
 		}
 		try {
-			ResultSet rsIdMatch = FonctionsSQL.select("saecompetiterphasefinale", "id_partiephasefinale", "nom = '" + nomEquipe1 + "' INTERSECT select id_partiephasefinale from saecompetiterphasefinale where nom = '" + nomEquipe2 + "'");
-			rsIdMatch.next();
-			int idMatch = rsIdMatch.getInt(1);
+			ResultSet selectIdMatch = FonctionsSQL.select("saecompetiterphasefinale", "id_partiephasefinale", "nom = '" + nomEquipe1 + "' INTERSECT select id_partiephasefinale from saecompetiterphasefinale where nom = '" + nomEquipe2 + "'");
+			selectIdMatch.next();
+			int idMatch = selectIdMatch.getInt(1);
 			//insertion du nom de l'équipe gagante dans la table partiepoule
 			FonctionsSQL.update(NomTablesBDD.SAEPARTIEPHASEFINALE, "resultat", "'" + nomEquipeGagante + "'", "id_partiephasefinale = " + idMatch);
 
 			//ajout du score dans les tables concourir et participer
 			String equipeVictorieuse = (String) Arbitre_Match.getTable().getValueAt(Arbitre_Match.getTable().getSelectedRow(), 4);
-			ResultSet rsIdPoule = FonctionsSQL.select("saepartiephasefinale", "idphasefinale", "id_partiephasefinale = " + idMatch);
-			rsIdPoule.next();
-			int idPoule = rsIdPoule.getInt(1);
-			ResultSet rsIdTournoi = FonctionsSQL.select("saephasefinale f, saepartiephasefinale pf, saetournoi t", "t.idtournoi", "f.idphasefinale = " + idPoule + " and pf.idphasefinale = f.idphasefinale and f.idphasefinale = t.idphasefinale and pf.id_partiephasefinale = " + idMatch);
-			rsIdTournoi.next();
-			int idTournoi = rsIdTournoi.getInt(1);
+			ResultSet selectIdPoule = FonctionsSQL.select("saepartiephasefinale", "idphasefinale", "id_partiephasefinale = " + idMatch);
+			selectIdPoule.next();
+			int idPoule = selectIdPoule.getInt(1);
+			ResultSet selectIdTournoi = FonctionsSQL.select("saephasefinale f, saepartiephasefinale pf, saetournoi t", "t.idtournoi", "f.idphasefinale = " + idPoule + " and pf.idphasefinale = f.idphasefinale and f.idphasefinale = t.idphasefinale and pf.id_partiephasefinale = " + idMatch);
+			selectIdTournoi.next();
+			int idTournoi = selectIdTournoi.getInt(1);
 			if(equipeVictorieuse != "aucune") {
 				FonctionsSQL.update(NomTablesBDD.SAEPARTICIPER, "classementfinal", "classementfinal - 2", "nom = '" + equipeVictorieuse + "' and idtournoi = " + idTournoi);
 				FonctionsSQL.update(NomTablesBDD.SAESEQUALIFIER, "classementphasefinale", "classementphasefinale - 2", "nom = '" + equipeVictorieuse + "' and idphasefinale = " + idPoule);
@@ -264,20 +264,20 @@ public class ControleurArbitre implements ActionListener {
 			nomEquipeGagante = nomEquipe2;
 		}
 		try {
-			ResultSet rsIdMatch = FonctionsSQL.select("saecompetiter", "id_partiepoule", "nom = '" + nomEquipe1 + "' INTERSECT select id_partiepoule from saecompetiter where nom = '" + nomEquipe2 + "'");
-			rsIdMatch.next();
-			int idMatch = rsIdMatch.getInt(1);
+			ResultSet selectIdMatch = FonctionsSQL.select("saecompetiter", "id_partiepoule", "nom = '" + nomEquipe1 + "' INTERSECT select id_partiepoule from saecompetiter where nom = '" + nomEquipe2 + "'");
+			selectIdMatch.next();
+			int idMatch = selectIdMatch.getInt(1);
 			//insertion du nom de l'équipe gagante dans la table partiepoule
 			FonctionsSQL.update(NomTablesBDD.SAEPARTIEPOULE, "resultat", "'" + nomEquipeGagante + "'", "id_partiepoule = " + idMatch);
 
 			//ajout du score dans les tables concourir et participer
 			String equipeVictorieuse = (String) Arbitre_Match.getTable().getValueAt(Arbitre_Match.getTable().getSelectedRow(), 4);
-			ResultSet rsIdPoule = FonctionsSQL.select("saepartiepoule", "idpoule", "id_partiepoule = " + idMatch);
-			rsIdPoule.next();
-			int idPoule = rsIdPoule.getInt(1);
-			ResultSet rsIdTournoi = FonctionsSQL.select("saepoule p, saepartiepoule pp", "p.idtournoi", "p.idpoule = " + idPoule + " and pp.idpoule = p.idpoule and pp.id_partiepoule = " + idMatch);
-			rsIdTournoi.next();
-			int idTournoi = rsIdTournoi.getInt(1);
+			ResultSet selectIdPoule = FonctionsSQL.select("saepartiepoule", "idpoule", "id_partiepoule = " + idMatch);
+			selectIdPoule.next();
+			int idPoule = selectIdPoule.getInt(1);
+			ResultSet selectIdTournoi = FonctionsSQL.select("saepoule p, saepartiepoule pp", "p.idtournoi", "p.idpoule = " + idPoule + " and pp.idpoule = p.idpoule and pp.id_partiepoule = " + idMatch);
+			selectIdTournoi.next();
+			int idTournoi = selectIdTournoi.getInt(1);
 			if(equipeVictorieuse != "aucune") {
 				FonctionsSQL.update(NomTablesBDD.SAEPARTICIPER, "classementfinal", "classementfinal - 1", "nom = '" + equipeVictorieuse + "' and idtournoi = " + idTournoi);
 				FonctionsSQL.update(NomTablesBDD.SAECONCOURIR, "classementpoule", "classementpoule - 1", "nom = '" + equipeVictorieuse + "' and idpoule = " + idPoule);

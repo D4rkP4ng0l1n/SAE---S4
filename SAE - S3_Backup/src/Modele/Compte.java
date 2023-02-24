@@ -16,25 +16,12 @@ public class Compte {
 	private static final NomTablesBDD NOM_TABLE = NomTablesBDD.SAECOMPTE; 
 	
 	private String nomUtilisateur, mdp;
-	private int idType;
-	
+	private Type type;
 	// Constructeur de la classe " Compte"
 	private Compte(String nomUtilisateur, String mdp, Type type) { 
 		this.nomUtilisateur = nomUtilisateur;
-
 		this.mdp = crypterMdp(mdp);
-		
-		switch(type) {
-			case ESPORTER:
-				this.idType = 1;
-				break;
-			case ARBITRE:
-				this.idType = 2;
-				break;
-			case ECURIE:
-				this.idType = 3;
-				break;
-		}
+		this.type = type;
 	}
 	
 	// Crée un nouveau compte
@@ -44,8 +31,8 @@ public class Compte {
 		}
 		Compte compte = new Compte(nomUtilisateur, mdp, type);
 		String[] compteACreer = new String[1];
-		compteACreer[0] = FonctionsSQL.newID(NOM_TABLE) + ", '" + compte.nomUtilisateur + "', '" + compte.mdp + "', " + compte.idType  ;
-		if (!compteExiste(nomUtilisateur)) { // Effectue l'ajout uniquement si le nom d'utilisateur n'existe pas
+		compteACreer[0] = FonctionsSQL.newID(NOM_TABLE) + ", '" + compte.nomUtilisateur + "', '" + compte.mdp + "', '" + compte.type +"'";
+		if (!compteEtMdpExistent(nomUtilisateur, mdp)) { // Effectue l'ajout uniquement si le compte n'existe pas
             FonctionsSQL.insert(NOM_TABLE, compteACreer);
             return 1;
         }
@@ -55,31 +42,20 @@ public class Compte {
 	// Permet de se connecter si le compte existe et que le mot de passe est bon
 	public static void chargerCompte(String login, String mdp) {
 		try {
-			ResultSet rsCompte = FonctionsSQL.select(NOM_TABLE, "type, idcompte", "utilisateur = '" + login + "' AND mdp = '" + crypterMdp(mdp) + "'");
-			rsCompte.next();
-			ApplicationEsporter.idCompte = rsCompte.getInt("idcompte");
-			ApplicationEsporter.idTypeCompte = rsCompte.getInt("type");
+			ResultSet selectCompte = FonctionsSQL.select(NOM_TABLE, "type, idcompte", "utilisateur = '" + login + "' AND mdp = '" + crypterMdp(mdp) + "'");
+			selectCompte.next();
+			ApplicationEsporter.idCompte = selectCompte.getInt("idcompte");
+			ApplicationEsporter.typeCompte = selectCompte.getString("type");
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	// Vérifie si le compte existe
-	public static boolean compteExiste(String login) {
-		try {
-			ResultSet rsCompte = FonctionsSQL.select(NOM_TABLE, "utilisateur", "utilisateur = '" + login + "'");
-	        return(rsCompte.next());
-		} catch(SQLException e) {
-			e.printStackTrace();
-		}
-        return false;
-    }
-	
 	// Vérifie si le mot de passe est bon
-	public static boolean mdpOK(String login, String mdp) {
+	public static boolean compteEtMdpExistent(String login, String mdp) {
 		try {
-			ResultSet rsCompte = FonctionsSQL.select(NOM_TABLE, "idcompte" , "utilisateur = '" + login + "' AND mdp = '" + crypterMdp(mdp) + "'");
-			return(rsCompte.next());
+			ResultSet selectCompte = FonctionsSQL.select(NOM_TABLE, "idcompte" , "utilisateur = '" + login + "' AND mdp = '" + crypterMdp(mdp) + "'");
+			return(selectCompte.next());
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}

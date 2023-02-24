@@ -236,16 +236,16 @@ public class Arbitre_Match extends JPanel {
 		try {
 			String columns[] = {" ", "Equipe 1", "Equipe 2", "  ", "Equipe victorieuse"};
 			String data[][] = new String[6][5];
-			ResultSet idMatchs = FonctionsSQL.select("saepartiepoule pp, saepoule p", "pp.id_partiepoule", "p.idtournoi = " + getIdTournoiSelected() + " and p.idpoule = pp.idpoule and p.numero = " + numPoule);
+			ResultSet selectIdMatchs = FonctionsSQL.select("saepartiepoule pp, saepoule p", "pp.id_partiepoule", "p.idtournoi = " + getIdTournoiSelected() + " and p.idpoule = pp.idpoule and p.numero = " + numPoule);
 			int i = 0;
-			while (idMatchs.next()) {
-				ResultSet equipeVictorieuse = FonctionsSQL.select(NomTablesBDD.SAEPARTIEPOULE, "resultat", "id_partiepoule = " + idMatchs.getInt(1));
-				equipeVictorieuse.next();
-				data[i][4] = equipeVictorieuse.getString(1);
-				ResultSet equipes = FonctionsSQL.select("saecompetiter", "nom", "id_partiepoule = " + idMatchs.getInt("id_partiepoule"));
+			while (selectIdMatchs.next()) {
+				ResultSet selectEquipeVictorieuse = FonctionsSQL.select(NomTablesBDD.SAEPARTIEPOULE, "resultat", "id_partiepoule = " + selectIdMatchs.getInt(1));
+				selectEquipeVictorieuse.next();
+				data[i][4] = selectEquipeVictorieuse.getString(1);
+				ResultSet selectEquipes = FonctionsSQL.select("saecompetiter", "nom", "id_partiepoule = " + selectIdMatchs.getInt("id_partiepoule"));
 				int j = 1;
-				while (equipes.next()) {
-					data[i][j] = equipes.getString("nom"); 
+				while (selectEquipes.next()) {
+					data[i][j] = selectEquipes.getString("nom"); 
 					j = 2;
 				}
 				i++;
@@ -267,16 +267,16 @@ public class Arbitre_Match extends JPanel {
 		try {
 			String columns[] = {" ", "Equipe 1", "Equipe 2", "  ", "Equipe victorieuse"};
 	        String data[][] = new String[6][5];
-	        ResultSet idMatchs = FonctionsSQL.select("saepartiephasefinale pf, saephasefinale f, saetournoi t", "pf.id_partiephasefinale", "t.idtournoi = " + getIdTournoiSelected() + " and t.idphasefinale = f.idphasefinale and f.idphasefinale = pf.idphasefinale");
+	        ResultSet selectIdMatchs = FonctionsSQL.select("saepartiephasefinale pf, saephasefinale f, saetournoi t", "pf.id_partiephasefinale", "t.idtournoi = " + getIdTournoiSelected() + " and t.idphasefinale = f.idphasefinale and f.idphasefinale = pf.idphasefinale");
 	        int i = 0;
-	        while (idMatchs.next()) {
-	            ResultSet equipeVictorieuse = FonctionsSQL.select(NomTablesBDD.SAEPARTIEPHASEFINALE, "resultat", "id_partiephasefinale = " + idMatchs.getInt(1));
-	            equipeVictorieuse.next();
-	            data[i][4] = equipeVictorieuse.getString(1);
-	            ResultSet equipes = FonctionsSQL.select(NomTablesBDD.SAECOMPETITERPHASEFINALE, "nom", "id_partiephasefinale = " + idMatchs.getInt("id_partiephasefinale"));
+	        while (selectIdMatchs.next()) {
+	            ResultSet selectEquipeVictorieuse = FonctionsSQL.select(NomTablesBDD.SAEPARTIEPHASEFINALE, "resultat", "id_partiephasefinale = " + selectIdMatchs.getInt(1));
+	            selectEquipeVictorieuse.next();
+	            data[i][4] = selectEquipeVictorieuse.getString(1);
+	            ResultSet selectEquipes = FonctionsSQL.select(NomTablesBDD.SAECOMPETITERPHASEFINALE, "nom", "id_partiephasefinale = " + selectIdMatchs.getInt("id_partiephasefinale"));
 	            int j = 1;
-	            while (equipes.next()) {
-	                data[i][j] = equipes.getString("nom"); 
+	            while (selectEquipes.next()) {
+	                data[i][j] = selectEquipes.getString("nom"); 
 	                j = 2;
 	            }
 	            i++;
