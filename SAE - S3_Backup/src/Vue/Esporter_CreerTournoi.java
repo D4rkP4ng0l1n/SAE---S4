@@ -173,7 +173,7 @@ public class Esporter_CreerTournoi extends JPanel{
         
         this.setUpCombo= FonctionsSQL.select("SAEJeu", "nom", "");
         Esporter_CreerTournoi.Jeu = new JComboBox();
-        Esporter_CreerTournoi.Jeu.setModel(new DefaultComboBoxModel(listJeu(setUpCombo)));
+        Esporter_CreerTournoi.Jeu.setModel(new DefaultComboBoxModel(listJeu()));
         panel_14.add(Esporter_CreerTournoi.Jeu);
         
         JButton btnAjouterJeu = new JButton("Ajouter le jeu");
@@ -321,7 +321,7 @@ public class Esporter_CreerTournoi extends JPanel{
 	}
 	
 	// Retourne la liste de tous les jeux de la base de données pour les mettre dans la combobox
-	private String[] listJeu(ResultSet rs) { 
+	private String[] listJeu() { 
 		try {
 			ResultSet selectCountJeu = FonctionsSQL.select(NomTablesBDD.SAEJEU, "count(nom)", "");
 			selectCountJeu.next();
@@ -329,8 +329,8 @@ public class Esporter_CreerTournoi extends JPanel{
 			String[]listJeu= new String[count+1];
 			int i = 1;
 			listJeu[0]="Choisir un Jeu";
-			while (rs.next()) {
-				listJeu[i]=rs.getString(1);
+			while (this.setUpCombo.next()) {
+				listJeu[i]=this.setUpCombo.getString(1);
 				i++;
 			}
 			return listJeu;
