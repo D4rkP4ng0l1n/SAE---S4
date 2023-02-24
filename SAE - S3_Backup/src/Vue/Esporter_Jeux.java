@@ -151,11 +151,11 @@ public class Esporter_Jeux extends JPanel{
 			ResultSet count = FonctionsSQL.select("saejeu", "count(*)", "");
 			count.next();
 			String data[][] = new String[count.getInt(1)][2];
-			ResultSet res = FonctionsSQL.select("saejeu", "*", "");
+			ResultSet selectJeu = FonctionsSQL.select("saejeu", "*", "");
 			int i = 0;
-			while (res.next()) {
-				data[i][0] = res.getString(1);
-				data[i][1] = res.getString(2);
+			while (selectJeu.next()) {
+				data[i][0] = selectJeu.getString(1);
+				data[i][1] = selectJeu.getString(2);
 				i++;
 			}
 			model = new DefaultTableModel(data, columns);

@@ -20,7 +20,6 @@ import javax.swing.ImageIcon;
 
 import Controleur.ControleurEsporter;
 import Controleur.ControleurEsporter.EtatEsporter;
-import Modele.BDD.NomTablesBDD;
 import Modele.FonctionsSQL;
 import Modele.Jeu;
 
@@ -28,7 +27,7 @@ import javax.swing.JTextField;
 import javax.swing.JComboBox;
 
 @SuppressWarnings("serial")
-public class Esporter_ModificationEquipe extends JPanel{
+public class Esporter_ModifEquipe extends JPanel{
 	
 	private static JTextField NomEquipe;
 	private static JLabel Image_placeholder;
@@ -41,7 +40,7 @@ public class Esporter_ModificationEquipe extends JPanel{
 	private ControleurEsporter controleur = new ControleurEsporter(this, EtatEsporter.MODIF_EQUIPE);
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Esporter_ModificationEquipe() {
+	public Esporter_ModifEquipe() {
 		setLayout(new BorderLayout(0,0));
 		
 		JPanel panel = new JPanel();
@@ -161,7 +160,11 @@ public class Esporter_ModificationEquipe extends JPanel{
 		panel_15.add(panel_19);
 		
 		comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(listJeu()));
+		try {
+			comboBox.setModel(new DefaultComboBoxModel(listJeu()));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		panel_19.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		panel_19.add(comboBox);
 		
@@ -206,10 +209,10 @@ public class Esporter_ModificationEquipe extends JPanel{
 	public void setPage() {
 		NomEquipe.setText(ApplicationEsporter.equipe);
 		try {
-			ResultSet rs=FonctionsSQL.select("saeequipe", "nom_1", "nom = '"+ApplicationEsporter.equipe+"'");
-			rs.next();
+			ResultSet selectNomJeu=FonctionsSQL.select("saeequipe", "nom_1", "nom = '"+ApplicationEsporter.equipe+"'");
+			selectNomJeu.next();
 			for(int i=0; i<comboBox.getItemCount(); i++) {
-				if(comboBox.getItemAt(i).equals(rs.getString(1))) {
+				if(comboBox.getItemAt(i).equals(selectNomJeu.getString(1))) {
 					comboBox.setSelectedIndex(i);
 				}
 			}
@@ -229,23 +232,18 @@ public class Esporter_ModificationEquipe extends JPanel{
         Image_placeholder.setIcon(imageAVisualiser);
     }
 	
-	private String[] listJeu() {
-		try {
-			ResultSet rs = Jeu.getTousLesJeux();
-	        ResultSet count = FonctionsSQL.select(NomTablesBDD.SAEJEU, "count(nom)", "");
-	        count.next();
-	        listjeu = new String[count.getInt(1) + 1];
-	        int i = 1;
-	        listjeu[0] = "Choisir un Jeu";
-	        while (rs.next()) {
-	            listjeu[i]=rs.getString(1);
-	            i++;
-	        }
-	        return listjeu;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
+	private String[] listJeu() throws SQLException {
+		ResultSet rs = Jeu.getTousLesJeux();
+        ResultSet selectCountJeu = FonctionsSQL.select("SAEJeu", "count(nom)", "");
+        selectCountJeu.next();
+        listjeu = new String[selectCountJeu.getInt(1) + 1];
+        int i = 1;
+        listjeu[0] = "Choisir un Jeu";
+        while (rs.next()) {
+            listjeu[i]=rs.getString(1);
+            i++;
+        }
+        return listjeu;
     }
 
 	public static Boolean tousRempli() {
@@ -264,15 +262,11 @@ public class Esporter_ModificationEquipe extends JPanel{
 		messageErreur.setText(message);
 	}
 	
-	public static void setLogo() {
-		try {
-			ResultSet rs = FonctionsSQL.select(NomTablesBDD.SAEEQUIPE, "logo", "nom = '" + ApplicationEsporter.equipe + "'");
-			rs.next();
-			setImage(rs.getString(1));
-			ApplicationEsporter.logo_Path=rs.getString(1);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public static void setLogo() throws SQLException {
+		ResultSet selectLogo = FonctionsSQL.select("saeequipe", "logo", "nom = '" + ApplicationEsporter.equipe + "'");
+		selectLogo.next();
+		setImage(selectLogo.getString(1));
+		ApplicationEsporter.logo_Path=selectLogo.getString(1);
 	}
 
 }

@@ -133,12 +133,12 @@ public class Esporter_Classement extends JPanel {
 			ResultSet count = FonctionsSQL.select("saeequipe", "count(*)", "nom_1 = " + nomJeu + " order by NBPOINTS DESC");
 			count.next();
 			String data[][] = new String[count.getInt(1)][4];
-			ResultSet res = FonctionsSQL.select("saeequipe", "*", "nom_1 = " + nomJeu + " order by NBPOINTS DESC");
+			ResultSet selectEquipe = FonctionsSQL.select("saeequipe", "*", "nom_1 = " + nomJeu + " order by NBPOINTS DESC");
 			int i = 0;
-			while (res.next()) {
-				data[i][0] = res.getString(5);
-				data[i][1] = res.getString(1);
-				data[i][2] = res.getString(2);
+			while (selectEquipe.next()) {
+				data[i][0] = selectEquipe.getString(5);
+				data[i][1] = selectEquipe.getString(1);
+				data[i][2] = selectEquipe.getString(2);
 				data[i][3] = String.valueOf(i + 1);
 				i++;
 			}

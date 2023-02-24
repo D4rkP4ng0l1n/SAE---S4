@@ -206,14 +206,14 @@ public class Ecurie_AddJoueur extends JPanel {
 	private JTable setTable(JTable table) {
 		try {
 			String columns[] = { "Nom Joueur(s)" , "Pseudo" , "Age" , "Equipe", " " };
-			ResultSet count = FonctionsSQL.select(NomTablesBDD.SAEJOUEUR, "count(*)", "NOM_EQUIPE = '" + nouvelleEquipe.getNomEquipe() + "'");
-			count.next();
-			String data[][] = new String[count.getInt(1)][5];
-			ResultSet res = FonctionsSQL.select(NomTablesBDD.SAEJOUEUR, "*", "NOM_EQUIPE = '" + nouvelleEquipe.getNomEquipe() + "' ORDER BY IDJOUEUR");
+			ResultSet selectCountJoueurs = FonctionsSQL.select(NomTablesBDD.SAEJOUEUR, "count(*)", "NOM_EQUIPE = '" + nouvelleEquipe.getNomEquipe() + "'");
+			selectCountJoueurs.next();
+			String data[][] = new String[selectCountJoueurs.getInt(1)][5];
+			ResultSet selectJoueurs = FonctionsSQL.select(NomTablesBDD.SAEJOUEUR, "*", "NOM_EQUIPE = '" + nouvelleEquipe.getNomEquipe() + "' ORDER BY IDJOUEUR");
 			int i = 0;
-			while (res.next()) {
-				data[i][0] = res.getString(2);
-				data[i][1] = res.getString(3);
+			while (selectJoueurs.next()) {
+				data[i][0] = selectJoueurs.getString(2);
+				data[i][1] = selectJoueurs.getString(3);
 				data[i][2] = "";
 				data[i][3] = nouvelleEquipe.getNomEquipe();
 				i++;
@@ -288,8 +288,8 @@ public class Ecurie_AddJoueur extends JPanel {
 
 	public static boolean joueurExiste() {
 		try {
-			ResultSet rs = FonctionsSQL.select(NomTablesBDD.SAEJEU, "*", "nom = '" + textFieldName.getText() + "'");
-			return rs.next();
+			ResultSet selectJeu = FonctionsSQL.select(NomTablesBDD.SAEJEU, "*", "nom = '" + textFieldName.getText() + "'");
+			return selectJeu.next();
 		} catch(SQLException e) {
 			e.printStackTrace();
 			return false;

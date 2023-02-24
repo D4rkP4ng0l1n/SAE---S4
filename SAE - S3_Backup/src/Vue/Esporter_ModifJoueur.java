@@ -16,7 +16,6 @@ import org.jdatepicker.impl.SqlDateModel;
 
 import Controleur.ControleurEsporter;
 import Controleur.ControleurEsporter.EtatEsporter;
-import Modele.BDD.NomTablesBDD;
 import Modele.Equipe;
 import Modele.FonctionsSQL;
 import Modele.Joueur;
@@ -37,7 +36,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 @SuppressWarnings("serial")
-public class Esporter_ModifierJoueur extends JPanel {
+public class Esporter_ModifJoueur extends JPanel {
 
 	private static JTable tableJoueurs;
 	private static DefaultTableModel model;
@@ -54,7 +53,7 @@ public class Esporter_ModifierJoueur extends JPanel {
 	
 	public enum Erreurs{ERREURDATE,ERREURNOMNUL,ERREURPSEUDONUL,ERRERUJOUEUREXISTANT};
 
-	public Esporter_ModifierJoueur() throws SQLException{
+	public Esporter_ModifJoueur() throws SQLException{
 		setBorder(new EmptyBorder(5, 5, 5, 5));
 		setLayout(new BorderLayout(0, 0));
 
@@ -188,40 +187,35 @@ public class Esporter_ModifierJoueur extends JPanel {
 		return index - 1;
 	}
 	
-	private void setCompteur() {
+	private void setCompteur() throws SQLException {
+		ResultSet compteur = FonctionsSQL.select("saejoueur", "count(*)", "NOM_EQUIPE = '" + nouvelleEquipe.getNomEquipe() + "'");
+		compteur.next();
 		try {
-			ResultSet compteur = FonctionsSQL.select(NomTablesBDD.SAEJOUEUR, "count(*)", "NOM_EQUIPE = '" + nouvelleEquipe.getNomEquipe() + "'");
-			compteur.next();
 			compteurNbJoueurs.setText(compteur.getInt(1) + " / " + nouvelleEquipe.getJeu().getNbJoueursParEquipe());
 		} catch(Exception e) {
 			compteurNbJoueurs.setText("0 / " + nouvelleEquipe.getJeu().getNbJoueursParEquipe());
 		}
 	}
 	
-	public JTable setTable(JTable table) {
-		try {
-			String columns[] = { "Nom Joueur(s)" , "Pseudo" , "Age" , "Equipe", " " };
-			ResultSet count = FonctionsSQL.select(NomTablesBDD.SAEJOUEUR, "count(*)", "NOM_EQUIPE = '" + nouvelleEquipe.getNomEquipe() + "'");
-			count.next();
-			String data[][] = new String[count.getInt(1)][5];
-			ResultSet res = FonctionsSQL.select(NomTablesBDD.SAEJOUEUR, "*", "NOM_EQUIPE = '" + nouvelleEquipe.getNomEquipe() + "' ORDER BY IDJOUEUR");
-			int i = 0;
-			while (res.next()) {
-				data[i][0] = res.getString(2);
-				data[i][1] = res.getString(3);
-				data[i][2] = getAge(res.getDate(4));
-				data[i][3] = nouvelleEquipe.getNomEquipe();
-				i++;
-			}
-			model = new DefaultTableModel(data, columns);
-			JTable returnTable = new JTable(model);
-			returnTable.getColumn(" ").setCellRenderer(new MyRendererAndEditor(returnTable, "Supprimer", controleur, null, null));
-			returnTable.getColumn(" ").setCellEditor(new MyRendererAndEditor(returnTable, "Supprimer", controleur, null, null));
-			return returnTable;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
+	public JTable setTable(JTable table) throws SQLException {
+		String columns[] = { "Nom Joueur(s)" , "Pseudo" , "Age" , "Equipe", " " };
+		ResultSet selectCountJoueur = FonctionsSQL.select("saejoueur", "count(*)", "NOM_EQUIPE = '" + nouvelleEquipe.getNomEquipe() + "'");
+		selectCountJoueur.next();
+		String data[][] = new String[selectCountJoueur.getInt(1)][5];
+		ResultSet selectJoueur = FonctionsSQL.select("saejoueur", "*", "NOM_EQUIPE = '" + nouvelleEquipe.getNomEquipe() + "' ORDER BY IDJOUEUR");
+		int i = 0;
+		while (selectJoueur.next()) {
+			data[i][0] = selectJoueur.getString(2);
+			data[i][1] = selectJoueur.getString(3);
+			data[i][2] = getAge(selectJoueur.getDate(4));
+			data[i][3] = nouvelleEquipe.getNomEquipe();
+			i++;
 		}
+		model = new DefaultTableModel(data, columns);
+		JTable returnTable = new JTable(model);
+		returnTable.getColumn(" ").setCellRenderer(new MyRendererAndEditor(returnTable, "Supprimer", controleur, null, null));
+		returnTable.getColumn(" ").setCellEditor(new MyRendererAndEditor(returnTable, "Supprimer", controleur, null, null));
+		return returnTable;
 	}
 	
 	public static JTable getTable() {
@@ -278,14 +272,9 @@ public class Esporter_ModifierJoueur extends JPanel {
 		return textFieldPseudo.getText().isEmpty();
 	}
 
-	public static boolean joueurExiste() {
-		try {
-			ResultSet rs = FonctionsSQL.select(NomTablesBDD.SAEJEU, "*", "nom = '" + textFieldName.getText() + "'");
-			return rs.next();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
+	public static boolean joueurExiste() throws SQLException {
+		ResultSet selectJeu = FonctionsSQL.select("saejeu", "*", "nom = '" + textFieldName.getText() + "'");
+		return selectJeu.next();
 	}
 	
 	public static void supprimerJoueur(String pseudo) {
@@ -296,17 +285,17 @@ public class Esporter_ModifierJoueur extends JPanel {
 		}
 	}
 	
-	public static void annuler() {
+	public static void annuler() throws SQLException {
 		for(Joueur j : joueurs) {
 			j.supprimerJoueur();
 		}
 		nouvelleEquipe.supprimerEquipe();
 	}
 
-	private boolean nbJoueurSuffisant() {
+	private boolean nbJoueurSuffisant() throws SQLException {
+		ResultSet compteur = FonctionsSQL.select("saejoueur", "count(*)", "NOM_EQUIPE = '" + nouvelleEquipe.getNomEquipe() + "'");
+		compteur.next();
 		try {
-			ResultSet compteur = FonctionsSQL.select(NomTablesBDD.SAEJOUEUR, "count(*)", "NOM_EQUIPE = '" + nouvelleEquipe.getNomEquipe() + "'");
-			compteur.next();
 			return compteur.getInt(1) == Integer.parseInt(nouvelleEquipe.getJeu().getNbJoueursParEquipe());
 		} catch(Exception e) {
 			return false;

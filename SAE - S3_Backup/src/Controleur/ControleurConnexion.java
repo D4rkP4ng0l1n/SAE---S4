@@ -30,9 +30,8 @@ public class ControleurConnexion implements ActionListener {
 	
 	// Retourne True si l'écurie existe
 	public boolean verifEcurie() { 
-		ResultSet verifEcurie;
 		try {
-			verifEcurie = FonctionsSQL.select("saecompte, CRJ3957A.saeecurie", "count(nom)" , ApplicationEsporter.idCompte + " = saeecurie.idcompte");
+			ResultSet verifEcurie = FonctionsSQL.select("saecompte, CRJ3957A.saeecurie", "count(nom)" , ApplicationEsporter.idCompte + " = saeecurie.idcompte");
 			verifEcurie.next();
 			return(verifEcurie.getInt(1) > 0);
 		} catch (SQLException e) {

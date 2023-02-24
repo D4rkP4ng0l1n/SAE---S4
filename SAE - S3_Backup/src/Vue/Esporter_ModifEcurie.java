@@ -196,9 +196,9 @@ public class Esporter_ModifEcurie extends JPanel{
 
 	private void setCEO() {
 		try {
-			ResultSet rs = FonctionsSQL.select(NomTablesBDD.SAEECURIE, "CEO", "nom = '" + ApplicationEsporter.nomEcurie + "'");
-			rs.next();
-			nomCEO.setText(rs.getString(1));
+			ResultSet selectCEONom = FonctionsSQL.select(NomTablesBDD.SAEECURIE, "CEO", "nom = '" + ApplicationEsporter.nomEcurie + "'");
+			selectCEONom.next();
+			nomCEO.setText(selectCEONom.getString(1));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -206,9 +206,9 @@ public class Esporter_ModifEcurie extends JPanel{
 
 	private void setLogo() {
 		try {
-			ResultSet rs = FonctionsSQL.select(NomTablesBDD.SAEECURIE, "logo", "nom = '" + ApplicationEsporter.nomEcurie + "'");
-			rs.next();
-			setImage(rs.getString(1));
+			ResultSet selectLogo = FonctionsSQL.select(NomTablesBDD.SAEECURIE, "logo", "nom = '" + ApplicationEsporter.nomEcurie + "'");
+			selectLogo.next();
+			setImage(selectLogo.getString(1));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

@@ -166,11 +166,11 @@ public class Ecurie_Equipes extends JPanel {
 			ResultSet count = FonctionsSQL.select(NomTablesBDD.SAEEQUIPE, "count(*)", "Nom_2 = '" + controleur.getNomEcurie() + "'");
 			count.next();
 			String data[][] = new String[count.getInt(1)][4];
-			ResultSet res = FonctionsSQL.select(NomTablesBDD.SAEEQUIPE, "*", "Nom_2 = '" + controleur.getNomEcurie() + "'");
+			ResultSet selectEquipes = FonctionsSQL.select(NomTablesBDD.SAEEQUIPE, "*", "Nom_2 = '" + controleur.getNomEcurie() + "'");
 			int i = 0;
-			while (res.next()) {
-				data[i][0] = res.getString(1);
-				data[i][1] = res.getString(4);
+			while (selectEquipes.next()) {
+				data[i][0] = selectEquipes.getString(1);
+				data[i][1] = selectEquipes.getString(4);
 				i++;
 			}
 			model = new DefaultTableModel(data, columns);

@@ -317,9 +317,9 @@ public class Esporter_ModifTournoi extends JPanel{
 
 	private String[] listJeu(ResultSet rs) {
 		try {
-			ResultSet rss = FonctionsSQL.select(NomTablesBDD.SAEJEU, "count(nom)", "");
-			rss.next();
-			int count = rss.getInt(1);
+			ResultSet selectCountJeu = FonctionsSQL.select(NomTablesBDD.SAEJEU, "count(nom)", "");
+			selectCountJeu.next();
+			int count = selectCountJeu.getInt(1);
 			String[]listJeu= new String[count+1];
 			int i = 1;
 			listJeu[0]="Choisir un Jeu";
@@ -344,44 +344,44 @@ public class Esporter_ModifTournoi extends JPanel{
 
 	private static void setPage() {
 		try {
-			ResultSet tournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "lieu", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
-			tournoi.next();
-			setLieu(tournoi.getString(1));
+			ResultSet selectLieuTournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "lieu", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
+			selectLieuTournoi.next();
+			setLieu(selectLieuTournoi.getString(1));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		try {
-			ResultSet tournoi = FonctionsSQL.select(NomTablesBDD.SAECONCERNER, "nom", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
-			while(tournoi.next()) {
-				DLM.addElement(tournoi.getString(1));
+			ResultSet selectNomTournoi = FonctionsSQL.select(NomTablesBDD.SAECONCERNER, "nom", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
+			while(selectNomTournoi.next()) {
+				DLM.addElement(selectNomTournoi.getString(1));
 				Jeux.setModel(DLM);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		try {
-			ResultSet tournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "DATEETHEURE", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
-			tournoi.next();
-			String heureTournoi = tournoi.getString(1);
+			ResultSet selectDateTournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "DATEETHEURE", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
+			selectDateTournoi.next();
+			String heureTournoi = selectDateTournoi.getString(1);
 			char[] ancienneHeureTournoi= heureTournoi.toCharArray();
 			ancienneHeureTournoi[0]='2';
 			heureTournoi = "";
 			for(char c:  ancienneHeureTournoi) {
 				heureTournoi=heureTournoi+c;
 			}
-			tournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "AM_PM", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
-			tournoi.next();
-			heureTournoi= heureTournoi+" "+tournoi.getString(1);
+			selectDateTournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "AM_PM", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
+			selectDateTournoi.next();
+			heureTournoi= heureTournoi+" "+selectDateTournoi.getString(1);
 			setHeure(heureTournoi);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		try {
-			ResultSet tournoi = FonctionsSQL.select(NomTablesBDD.SAECONCERNER, "nom", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
-			while(tournoi.next()) {
-				if (DLM.contains(tournoi.getString(1))) {
+			ResultSet selectNomTournoi = FonctionsSQL.select(NomTablesBDD.SAECONCERNER, "nom", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
+			while(selectNomTournoi.next()) {
+				if (DLM.contains(selectNomTournoi.getString(1))) {
 				} else {
-					DLM.addElement(tournoi.getString(1));
+					DLM.addElement(selectNomTournoi.getString(1));
 					Jeux.setModel(DLM);
 				}
 			}
@@ -406,15 +406,15 @@ public class Esporter_ModifTournoi extends JPanel{
 	}
 
 	public static void formatAncienneDate() {
-		ResultSet res;
+		ResultSet selectDateTournoi;
 		try {
-			res = FonctionsSQL.select("saetournoi", "DATEETHEURE", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
+			selectDateTournoi = FonctionsSQL.select("saetournoi", "DATEETHEURE", "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
 			String datadateduTournoi="";
-			res.next();
-			char[] dateduTournoi=  res.getDate(3).toString().toCharArray();
+			selectDateTournoi.next();
+			char[] dateduTournoi=  selectDateTournoi.getDate(3).toString().toCharArray();
 			if (dateduTournoi[0]=='1') {
 				@SuppressWarnings("deprecation")
-				int dateOk=res.getDate(3).getYear();
+				int dateOk=selectDateTournoi.getDate(3).getYear();
 				dateOk = (((dateOk - 1977) * -1) + 2024);
 				String dateGalere = "" + dateOk;
 				dateduTournoi[2]=dateGalere.charAt(2);
