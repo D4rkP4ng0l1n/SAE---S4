@@ -23,7 +23,6 @@ import Modele.FonctionsSQL;
 import Modele.Jeu;
 import Modele.Joueur;
 import Vue.ApplicationEsporter;
-import Vue.Ecurie_AddJoueur;
 import Vue.Esporter_Accueil;
 import Vue.Esporter_AjouterJeu;
 import Vue.Esporter_Classement;
@@ -149,8 +148,9 @@ public class ControleurEsporter implements ActionListener {
 						tournoi.next();
 						String idTournoi= tournoi.getString(1);
 						String idPhaseFinale= tournoi.getString(2);
-						int result = JOptionPane.showConfirmDialog(null,"Voulez vous vraiment supprimer le tournoi de " + condition+" prevu le "+condition2, "Supprimer le tournoi", JOptionPane.YES_NO_OPTION);
+						int result = JOptionPane.showConfirmDialog(null,"Voulez vous vraiment supprimer le tournoi de " + condition + " prevu le "+condition2, "Supprimer le tournoi", JOptionPane.YES_NO_OPTION);
 						if (result == 0) {
+							FonctionsSQL.delete(NomTablesBDD.SAEPARTICIPER, "idtournoi = '" + idTournoi + "'");
 							FonctionsSQL.delete(NomTablesBDD.SAECONCERNER, "idtournoi = '" + idTournoi + "'");
 							FonctionsSQL.delete(NomTablesBDD.SAETOURNOI, "idtournoi = '" + idTournoi + "'");
 							FonctionsSQL.delete(NomTablesBDD.SAEPHASEFINALE, "idphasefinale = '" + idPhaseFinale + "'");
@@ -195,9 +195,15 @@ public class ControleurEsporter implements ActionListener {
 						tournoi.next();
 						// On stocke l'id du tournoi sélectionné dans une "variable globale" pour pouvoir le modifier sur la page adéquate
 						ApplicationEsporter.idTournoi= tournoi.getString(1);
-						// Changement de page
-						ApplicationEsporter.f.setContentPane(new Esporter_ModifTournoi());
-						ApplicationEsporter.f.validate();
+						// On regarde si au moins une équipe est inscrite au tournoi
+						ResultSet nbParticipant = FonctionsSQL.select(NomTablesBDD.SAEPARTICIPER, "count(*)", "idtournoi = " + ApplicationEsporter.idTournoi);
+						nbParticipant.next();
+						if(nbParticipant.getInt(1) > 0) {
+							JOptionPane.showMessageDialog(null, "Modifications impossibles, il y a " + nbParticipant.getInt(1) + " équipe(s) inscrite(s) au tournoi."); 
+						} else {
+							// Changement de page
+							ApplicationEsporter.changerDePage(new Esporter_ModifTournoi());
+						}
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}
@@ -279,15 +285,7 @@ public class ControleurEsporter implements ActionListener {
 						tournoiData[2] = "'" + Esporter_ModifTournoi.getAmPm() + "'";
 						try {
 							FonctionsSQL.update(NomTablesBDD.SAETOURNOI, "Lieu", tournoiData[0], "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
-						} catch (Exception e1) {
-							e1.printStackTrace();
-						}
-						try {
 							FonctionsSQL.update(NomTablesBDD.SAETOURNOI, "DATEETHEURE", tournoiData[1], "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
-						} catch (Exception e1) {
-							e1.printStackTrace();
-						}
-						try {
 							FonctionsSQL.update(NomTablesBDD.SAETOURNOI, "AM_PM", tournoiData[2], "IDTOURNOI = '" + ApplicationEsporter.idTournoi+"'");
 						} catch (Exception e1) {
 							e1.printStackTrace();
@@ -453,7 +451,6 @@ public class ControleurEsporter implements ActionListener {
 				break;
 			case MODIFIER_JOUEUR:
 				if(b.getText().equals("Annuler")) {
-					Ecurie_AddJoueur.annuler();
 					ApplicationEsporter.f.setContentPane(new Esporter_Equipes());
 					ApplicationEsporter.f.validate();
 				}

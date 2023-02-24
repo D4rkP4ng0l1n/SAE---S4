@@ -22,12 +22,13 @@ import Controleur.ControleurEcurie.EtatEcurie;
 import Modele.FonctionsSQL;
 import Modele.Jeu;
 import Modele.BDD.NomTablesBDD;
+import Modele.Equipe;
 
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 
 @SuppressWarnings("serial")
-public class Ecurie_CreationEquipe extends JPanel{
+public class Ecurie_CreationEquipe extends JPanel {
 
 	private static JTextField NomEquipe;
 	private static JLabel Image_placeholder;
@@ -35,7 +36,9 @@ public class Ecurie_CreationEquipe extends JPanel{
 	private String[] listjeu;
 	private static JComboBox<String> comboBox;
 	private static JLabel messageErreur;
-
+	private static String pathImage;
+	private static String nomEcurie;
+	
 	private ControleurEcurie controleur = new ControleurEcurie(this, EtatEcurie.CREATIONEQUIPE);
 
 	public Ecurie_CreationEquipe() {
@@ -67,6 +70,7 @@ public class Ecurie_CreationEquipe extends JPanel{
 		panel_1.add(panel_2);
 
 		JLabel lblNewLabel_1 = new JLabel(controleur.getNomEcurie());
+		nomEcurie = controleur.getNomEcurie();
 		panel_2.add(lblNewLabel_1);
 
 		JButton btnNewButton = new JButton("D\u00E9connexion");
@@ -194,12 +198,13 @@ public class Ecurie_CreationEquipe extends JPanel{
 		btnNewButton_1.addActionListener(controleur);
 		panel_10.add(btnNewButton_1);
 
-		JButton btnNewButton_3 = new JButton("Cr\u00E9er Equipe");
+		JButton btnNewButton_3 = new JButton("Ajouter les joueurs");
 		btnNewButton_3.addActionListener(controleur);
 		panel_10.add(btnNewButton_3);
 	}
 
 	public static void setImage(String path) {
+		pathImage = path;
 		ImageIcon image = new ImageIcon(path);
 		Image img = image.getImage();
 		img = img.getScaledInstance(200, 356, Image.SCALE_DEFAULT);
@@ -243,4 +248,7 @@ public class Ecurie_CreationEquipe extends JPanel{
 		messageErreur.setText(message);
 	}
 
+	public static Equipe getEquipe() {
+		return new Equipe(nomEcurie, getNomEquipe(), getJeu(), pathImage);
+	}
 }

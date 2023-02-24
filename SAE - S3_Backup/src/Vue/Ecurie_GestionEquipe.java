@@ -28,7 +28,7 @@ import Modele.Joueur;
 import Modele.BDD.NomTablesBDD;
 
 @SuppressWarnings("serial")
-public class Ecurie_GestionEquipe extends JPanel{
+public class Ecurie_GestionEquipe extends JPanel {
 
 	private static JTable tableJoueurs;
 	private static DefaultTableModel model;

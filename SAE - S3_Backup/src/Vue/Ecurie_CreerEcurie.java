@@ -19,7 +19,7 @@ import Controleur.ControleurEcurie;
 import Controleur.ControleurEcurie.EtatEcurie;
 
 @SuppressWarnings("serial")
-public class Ecurie_CreerEcurie extends JPanel{
+public class Ecurie_CreerEcurie extends JPanel {
 
 	private ControleurEcurie controleur = new ControleurEcurie(this, EtatEcurie.CREATION);
 
@@ -148,10 +148,6 @@ public class Ecurie_CreerEcurie extends JPanel{
 		messageErreur = new JLabel("");
 		panel_11.add(messageErreur, BorderLayout.SOUTH);
 		ajouterLogo.addActionListener(controleur);
-	}
-
-	public static boolean labelsVide() {
-		return nomEcurie.getText().isEmpty() && nomCEO.getText().isEmpty();
 	}
 	
 	public static String getNomEcurie() {

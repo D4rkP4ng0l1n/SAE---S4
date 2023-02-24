@@ -29,7 +29,8 @@ import Modele.MyRendererAndEditor;
 
 
 @SuppressWarnings("serial")
-public class Arbitre_Match extends JPanel{
+public class Arbitre_Match extends JPanel {
+	
 	private static JTable table;
 	private DefaultTableModel model;
 	private ControleurArbitre controleur = new ControleurArbitre(this, EtatArbitre.MATCHS);

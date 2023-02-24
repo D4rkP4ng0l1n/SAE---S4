@@ -61,6 +61,7 @@ public class Equipe {
 			try {
 				this.ajouterEquipe();
 			}catch(Exception e) {
+				e.printStackTrace();
 			}
 			if(this.nomEquipe.equals(ApplicationEsporter.equipe)) { // Modifie l'équipe dans la base de données si le nom de l'équipe ne change pas
 				FonctionsSQL.update(NomTablesBDD.SAEEQUIPE, "logo", "'"+this.pathLogo+"'", "nom ='"+ApplicationEsporter.equipe+"'");

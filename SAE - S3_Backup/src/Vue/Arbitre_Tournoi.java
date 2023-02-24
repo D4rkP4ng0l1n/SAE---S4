@@ -24,7 +24,7 @@ import Modele.MyRendererAndEditor;
 import javax.swing.JScrollPane;
 
 @SuppressWarnings("serial")
-public class Arbitre_Tournoi extends JPanel{
+public class Arbitre_Tournoi extends JPanel {
 
 	private static DefaultTableModel model;
 	private static JTable tableTournois;

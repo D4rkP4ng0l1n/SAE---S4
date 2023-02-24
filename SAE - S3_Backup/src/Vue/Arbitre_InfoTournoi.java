@@ -27,7 +27,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 @SuppressWarnings("serial")
-public class Arbitre_InfoTournoi extends JPanel{
+public class Arbitre_InfoTournoi extends JPanel {
 
 	private JTable table;
 	private DefaultTableModel model;
