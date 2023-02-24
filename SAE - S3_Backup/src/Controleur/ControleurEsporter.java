@@ -23,7 +23,6 @@ import Modele.FonctionsSQL;
 import Modele.Jeu;
 import Modele.Joueur;
 import Vue.ApplicationEsporter;
-import Vue.Ecurie_AddJoueur;
 import Vue.Esporter_Accueil;
 import Vue.Esporter_AjouterJeu;
 import Vue.Esporter_Classement;
@@ -198,7 +197,6 @@ public class ControleurEsporter implements ActionListener {
 				break;
 			case MODIFIER_JOUEUR:
 				if(b.getText().equals("Annuler")) {
-					Ecurie_AddJoueur.annuler();
 					ApplicationEsporter.changerDePage(new Esporter_Equipes());
 				}
 				if(b.getText().equals("Ajouter le joueur")) {

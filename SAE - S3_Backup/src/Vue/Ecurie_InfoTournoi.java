@@ -27,7 +27,7 @@ import Modele.FonctionsSQL;
 import Modele.BDD.NomTablesBDD;
 
 @SuppressWarnings("serial")
-public class Ecurie_InfoTournoi extends JPanel{
+public class Ecurie_InfoTournoi extends JPanel {
 	
 	private JTable table;
 	private DefaultTableModel model;

@@ -178,8 +178,7 @@ public class ControleurArbitre implements ActionListener {
 			case TOURNOI:
 				if (b.getText().equals("Voir le(s) jeu(x)")) {
 					afficherJeux();
-				}
-				if(b.getText().equals("Accéder")) {
+				} else if(b.getText().equals("Accéder")) {
 					stockageIdTournoi();
 					ApplicationEsporter.changerDePage(new Arbitre_InfoTournoi());
 				}
@@ -193,8 +192,7 @@ public class ControleurArbitre implements ActionListener {
 				if(b.getText().equals("Victoire équipe 1") || b.getText().equals("Victoire équipe 2")) {
 					if(b.getText().equals("Victoire équipe 1")) {
 						victoireMatchPouleEquipe(1);
-					}
-					if(b.getText().equals("Victoire équipe 2")) {
+					} else if(b.getText().equals("Victoire équipe 2")) {
 						victoireMatchPouleEquipe(2);
 					}
 					setMessagePouleFiniDemisFinPasFini(); 
@@ -203,8 +201,7 @@ public class ControleurArbitre implements ActionListener {
 				if(b.getText().equals("Victoire équipe 1") || b.getText().equals("Victoire équipe 2")) {
 					if(b.getText().equals("Victoire équipe 1 ")) {
 						victoireMatchPhaseFinaleEquipe(1);
-					}
-					if(b.getText().equals("Victoire équipe 2 ")) {
+					} else if(b.getText().equals("Victoire équipe 2 ")) {
 						victoireMatchPhaseFinaleEquipe(2);
 					}
 					vueMatch.updateTableFinale();
