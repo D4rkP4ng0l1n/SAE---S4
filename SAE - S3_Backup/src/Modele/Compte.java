@@ -18,6 +18,7 @@ public class Compte {
 	private String nomUtilisateur, mdp;
 	private int idType;
 	
+	// in : String, String, Type
 	// Constructeur de la classe " Compte"
 	private Compte(String nomUtilisateur, String mdp, Type type) { 
 		this.nomUtilisateur = nomUtilisateur;
@@ -37,6 +38,8 @@ public class Compte {
 		}
 	}
 	
+	// in : String, String ,Type
+	// return int
 	// Crée un nouveau compte
 	public static int creerCompte(String nomUtilisateur, String mdp, Type type) throws Exception { 
 		if (nomUtilisateur.isEmpty() || mdp.isEmpty()) { // Lève l'exception si le champ d'utilisateur ou si le champ du mot de passe est vide
@@ -51,7 +54,7 @@ public class Compte {
         }
 		return -1;
 	}
-	
+	// in : String, String
 	// Permet de se connecter si le compte existe et que le mot de passe est bon
 	public static void chargerCompte(String login, String mdp) {
 		try {
@@ -63,11 +66,13 @@ public class Compte {
 			e.printStackTrace();
 		}
 	}
-	
+	//return boolean
+	//in: String, String
 	// Vérifie si le mot de passe est bon
 	public static boolean compteEtMdpExistent(String login, String mdp) {
 		try {
-			ResultSet rsCompte = FonctionsSQL.select(NOM_TABLE, "idcompte" , "utilisateur = '" + login + "' AND mdp = '" + crypterMdp(mdp) + "'");
+			ResultSet rsCompte = FonctionsSQL.select(NOM_TABLE, "idcompte" , "utilisateur = '" 
+		+ login + "' AND mdp = '" + crypterMdp(mdp) + "'");
 			return(rsCompte.next());
 		} catch(SQLException e) {
 			e.printStackTrace();
@@ -75,12 +80,16 @@ public class Compte {
 		return false;
 	}
 	
+	// in : String, String, String
 	// Permet de changer le mot de passe pour un utilisateur
 	public static void changerMdp(String login, String mdp, String nouveauMdp) { 
-		FonctionsSQL.update(NOM_TABLE, "mdp", "'" + Compte.crypterMdp(nouveauMdp) + "'", "utilisateur = " + "'" + login + "'" + "AND mdp = '" + Compte.crypterMdp(mdp) + "'");
+		FonctionsSQL.update(NOM_TABLE, "mdp", "'" + Compte.crypterMdp(nouveauMdp) + "'", "utilisateur = " + "'" 
+	+login + "'" + "AND mdp = '" + Compte.crypterMdp(mdp) + "'");
 	}
 	
-	public static String crypterMdp(String mdp) { // Chiffre le mot de passe
+	// in : String
+	// Chiffre le mot de passe
+	public static String crypterMdp(String mdp) {
 		try {
 			MessageDigest msg = MessageDigest.getInstance("SHA-256");
 	        byte[] hash = msg.digest(mdp.getBytes(StandardCharsets.UTF_8));
