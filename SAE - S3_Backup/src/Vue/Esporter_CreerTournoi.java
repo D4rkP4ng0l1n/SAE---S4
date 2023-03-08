@@ -296,9 +296,13 @@ public class Esporter_CreerTournoi extends JPanel{
 				if(DLM.contains(getJeu())) {
 					setMessage("Selectionner un Nouveau jeu ou bien Valider la selection");
 				} else {
-					DLM.addElement(getJeu());
-					Jeux.setModel(DLM);
-					setMessage("");
+					if(DLM.size() == 1) {
+						setMessage("Il ne peut y avoir qu'un seul jeu par tournoi");
+					} else {
+						DLM.addElement(getJeu());
+						Jeux.setModel(DLM);
+						setMessage("");
+					}
 				}
 			}
 		}else {

@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -17,7 +18,6 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import Modele.BDD.NomTablesBDD;
-import Modele.Equipe;
 import Modele.FonctionsSQL;
 import Modele.Joueur;
 import Vue.ApplicationEsporter;
@@ -41,7 +41,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 	private JPanel vue;
 	private EtatEcurie etat;
 
-	private String pathLogo;
+	private String pathLogo = "PasDeLogo";
 
 	// Controleur de la classe Ecurie
 	public ControleurEcurie(JPanel vue, EtatEcurie etat) {
@@ -221,9 +221,9 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 				if(b.getText().equals("Annuler")) {
 					ApplicationEsporter.changerDePage(new Ecurie_Equipes());
 				}
-				if(b.getText().equals("Créer Equipe")) {
+				if(b.getText().equals("Ajouter les joueurs")) {
 					if (Ecurie_CreationEquipe.tousRempli()) {
-						creationEquipe();
+						ApplicationEsporter.changerDePage(new Ecurie_AddJoueur(Ecurie_CreationEquipe.getEquipe(), new ArrayList<Joueur>()));
 					} else {
 						Ecurie_CreationEquipe.setMessageErreur("Information(s) manquante(s)");
 					}
@@ -231,7 +231,6 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 				break;
 			case AJOUTERJOUEUR:
 				if(b.getText().equals("Annuler")) {
-					Ecurie_AddJoueur.annuler();
 					ApplicationEsporter.changerDePage(new Ecurie_Equipes());
 				}
 				if(b.getText().equals("Ajouter le joueur")) {
@@ -261,8 +260,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 			if (result == 0) {
 				Ecurie_AddJoueur.supprimerJoueur(aSupprimerPseudo);
 				FonctionsSQL.delete(NomTablesBDD.SAEJOUEUR, "NOM_EQUIPE = '" + aSupprimerEquipe + "' and PSEUDONYME = '" + aSupprimerPseudo + "'");
-				ApplicationEsporter.f.setContentPane(new Ecurie_AddJoueur());
-				ApplicationEsporter.f.validate();
+				ApplicationEsporter.changerDePage(new Ecurie_AddJoueur(Ecurie_AddJoueur.getEquipe(), Ecurie_AddJoueur.getJoueurs()));
 			} 
 		} catch(Exception e1) {
 			JOptionPane.showMessageDialog(null,"Echec de la suppression");
@@ -276,8 +274,7 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 				Ecurie_AddJoueur.addJoueur(new Joueur(Ecurie_AddJoueur.getNomJoueur(), Ecurie_AddJoueur.getPseudoJoueur(), Ecurie_AddJoueur.getModel(), Ecurie_AddJoueur.getEquipe()));
 				if(Ecurie_AddJoueur.getLastJoueur().calculAge() >= 16) {
 					Ecurie_AddJoueur.getLastJoueur().ajouterJoueur();
-					ApplicationEsporter.f.setContentPane(new Ecurie_AddJoueur());
-					ApplicationEsporter.f.validate();
+					ApplicationEsporter.changerDePage(new Ecurie_AddJoueur(Ecurie_AddJoueur.getEquipe(), Ecurie_AddJoueur.getJoueurs()));
 				} else {
 					Ecurie_AddJoueur.setErreur(Erreurs.ERREURDATE);
 				}		
@@ -287,13 +284,6 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 		} catch(Exception e1) {
 			e1.printStackTrace();
 		}
-	}
-
-	private void creationEquipe() {
-		Ecurie_AddJoueur.setEquipe(new Equipe(getNomEcurie(), Ecurie_CreationEquipe.getNomEquipe(), Ecurie_CreationEquipe.getJeu(), this.pathLogo));
-		Ecurie_AddJoueur.getEquipe().ajouterEquipe();
-		ApplicationEsporter.f.setContentPane(new Ecurie_AddJoueur());
-		ApplicationEsporter.f.validate();
 	}
 
 	private void ajoutImageEquipe() {
@@ -352,13 +342,20 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 	}
 
 	private void creationEcurie() {
-		if (! (Ecurie_CreerEcurie.labelsVide() && this.pathLogo == null)) {
-			String[] aInserer = {"'" + Ecurie_CreerEcurie.getNomEcurie() + "'", "'" + Ecurie_CreerEcurie.getNomCEO() + "'", "'" + this.pathLogo + "'", "" + ApplicationEsporter.idCompte};
-			FonctionsSQL.insert(NomTablesBDD.SAEECURIE, aInserer);
-			ApplicationEsporter.f.setContentPane(new PageAccueil());
-			ApplicationEsporter.f.validate();
+		if(! Ecurie_CreerEcurie.getNomEcurie().isEmpty()) {
+			if(! Ecurie_CreerEcurie.getNomCEO().isEmpty()) {
+				if(! this.pathLogo.equals("PasDeLogo")) {
+					String[] aInserer = {"'" + Ecurie_CreerEcurie.getNomEcurie() + "'", "'" + Ecurie_CreerEcurie.getNomCEO() + "'", "'" + this.pathLogo + "'", "" + ApplicationEsporter.idCompte};
+					FonctionsSQL.insert(NomTablesBDD.SAEECURIE, aInserer);
+					ApplicationEsporter.changerDePage(new PageAccueil());
+				} else {
+					Ecurie_CreerEcurie.setMessage("Pas de logo !");
+				}
+			} else {
+				Ecurie_CreerEcurie.setMessage("Nom du CEO vide !");
+			}
 		} else {
-			Ecurie_CreerEcurie.setMessage("Information(s) manquante(s)");
+			Ecurie_CreerEcurie.setMessage("Nom de l'écurie vide !");
 		}
 	}
 

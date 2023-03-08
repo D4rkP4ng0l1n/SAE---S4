@@ -16,7 +16,7 @@ import Controleur.ControleurArbitre.EtatArbitre;
 import java.awt.Color;
 
 @SuppressWarnings("serial")
-public class Arbitre_Accueil extends JPanel{
+public class Arbitre_Accueil extends JPanel {
 
 	private ControleurArbitre controleur = new ControleurArbitre(this, EtatArbitre.TOURNOI);
 

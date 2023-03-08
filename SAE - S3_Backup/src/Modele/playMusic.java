@@ -6,9 +6,9 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
-public class testMusique {
+public class playMusic {
 
-    public void playMusic(String path) {
+    public playMusic(String path) {
         
         try {
             File musicPath = new File(path);
