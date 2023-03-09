@@ -235,7 +235,7 @@ public class ControleurEsporter implements ActionListener {
 	}
 
 	private void ajoutJeu() {
-		if (Esporter_AjouterJeu.nomJeuEstVide() || Esporter_AjouterJeu.nbJoueursParEquipeEstVide()) {
+		if (Esporter_AjouterJeu.isNomJeuEstVide() || Esporter_AjouterJeu.nbJoueursParEquipeEstVide()) {
 			Esporter_AjouterJeu.setLabelErreur("Veuillez remplir les champs textuels");
 		} else {
 			this.jeu = new Jeu(Esporter_AjouterJeu.getNomJeu(), Esporter_AjouterJeu.getNbJoueursParEquipe());
@@ -440,7 +440,7 @@ public class ControleurEsporter implements ActionListener {
 
 	private void creationTournoi() {
 		// Mise en place des messages d'erreurs au cas où un label est vide
-		if(Esporter_CreerTournoi.lieuEstVide()) {
+		if(Esporter_CreerTournoi.isLieuEstVide()) {
 			Esporter_CreerTournoi.setMessage("Veuillez entrer un Lieu");
 		}else if(Esporter_CreerTournoi.DateEstVide()) {
 			Esporter_CreerTournoi.setMessage("Veuillez entrer une Date");

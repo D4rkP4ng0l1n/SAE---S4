@@ -51,8 +51,8 @@ public class Ecurie_AddJoueur extends JPanel {
 	public enum Erreurs{ERREURDATE,ERREURNOMNUL,ERREURPSEUDONUL,ERRERUJOUEUREXISTANT};
 
 	public Ecurie_AddJoueur(Equipe equipeEnCours, List<Joueur> joueurs) {
-		this.equipeEnCours = equipeEnCours;
-		this.joueurs = joueurs;
+		Ecurie_AddJoueur.equipeEnCours = equipeEnCours;
+		Ecurie_AddJoueur.joueurs = joueurs;
 		setBorder(new EmptyBorder(5, 5, 5, 5));
 		setLayout(new BorderLayout(0, 0));
 
