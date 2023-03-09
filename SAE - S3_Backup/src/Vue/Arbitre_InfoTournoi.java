@@ -228,7 +228,10 @@ public class Arbitre_InfoTournoi extends JPanel {
 	//retourn l'id du tournoi sélectionné dans la page arbitre tournoi
 	private int getIdTournoiSelected() {
 		try {
-	        ResultSet selectTournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "IDTOURNOI", "LIEU = '" + (String) Arbitre_Tournoi.getTable().getValueAt(Arbitre_Tournoi.getTable().getSelectedRow(), 0) + "' AND DATEETHEURE LIKE TO_DATE('" + (String) Arbitre_Tournoi.getTable().getValueAt(Arbitre_Tournoi.getTable().getSelectedRow(), 1) + "', 'YYYY-MM-DD')");
+	        ResultSet selectTournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "IDTOURNOI", "LIEU = '" 
+	        		+ (String) Arbitre_Tournoi.getTable().getValueAt(Arbitre_Tournoi.getTable().getSelectedRow()
+	        		, 0) + "' AND DATEETHEURE LIKE TO_DATE('" + (String) Arbitre_Tournoi.getTable().
+	        		getValueAt(Arbitre_Tournoi.getTable().getSelectedRow(), 1) + "', 'YYYY-MM-DD')");
 	        selectTournoi.next();
 	        return selectTournoi.getInt(1);
 		} catch (SQLException e) {
@@ -245,7 +248,8 @@ public class Arbitre_InfoTournoi extends JPanel {
 	        selectCountParticipant.next();
 	        String data[][] = new String[selectCountParticipant.getInt(1)][3];
 	        ResultSet res = FonctionsSQL.select("saeparticiper, saeequipe", "saeequipe.NOM, saeequipe.NOM_2, saeparticiper.classementFinal", 
-	                                            "saeparticiper.IDTOURNOI = " + getIdTournoiSelected() + " AND saeparticiper.NOM = saeequipe.NOM ORDER BY saeparticiper.classementFinal DESC");
+	                                            "saeparticiper.IDTOURNOI = " + getIdTournoiSelected() + 
+	                                            " AND saeparticiper.NOM = saeequipe.NOM ORDER BY saeparticiper.classementFinal DESC");
 	        int i = 0;
 	        while (res.next()) {
 	            data[i][0] = res.getString(2);
@@ -268,7 +272,9 @@ public class Arbitre_InfoTournoi extends JPanel {
 	        String columns[] = {"Ecuries", "Equipes", "Points"};
 	        String data[][] = new String[4][3];
 	        ResultSet res = FonctionsSQL.select("saeconcourir, saepoule, saeequipe", "saeequipe.NOM, saeequipe.NOM_2, saeconcourir.classementpoule", 
-	                                            "saepoule.IDTOURNOI = " + getIdTournoiSelected() + " AND saepoule.numero = " + numPoule + " AND saepoule.idpoule = saeconcourir.idpoule AND saeconcourir.NOM = saeequipe.NOM ORDER BY saeconcourir.classementpoule desc");
+	                                            "saepoule.IDTOURNOI = " + getIdTournoiSelected() + " AND saepoule.numero = " 
+	                                            + numPoule + " AND saepoule.idpoule = saeconcourir.idpoule AND saeconcourir.NOM"
+	                                            		+ " = saeequipe.NOM ORDER BY saeconcourir.classementpoule desc");
 	        int i = 0;
 	        while (res.next()) {
 	            data[i][0] = res.getString(2);
@@ -290,8 +296,10 @@ public class Arbitre_InfoTournoi extends JPanel {
 		try {
 			String columns[] = {"Ecuries", "Equipes", "Points"};
 			String data[][] = new String[4][3];
-			ResultSet res = FonctionsSQL.select("saesequalifier, saephasefinale, saeequipe, saetournoi", "saeequipe.NOM, saeequipe.NOM_2, saesequalifier.classementphasefinale", 
-	                "saetournoi.IDTOURNOI = " + getIdTournoiSelected() + " AND saephasefinale.idphasefinale = saesequalifier.idphasefinale AND saesequalifier.NOM = saeequipe.NOM ORDER BY saesequalifier.classementphasefinale desc");
+			ResultSet res = FonctionsSQL.select("saesequalifier, saephasefinale, saeequipe, saetournoi", "saeequipe.NOM, "
+					+ "saeequipe.NOM_2, saesequalifier.classementphasefinale", 
+	                "saetournoi.IDTOURNOI = " + getIdTournoiSelected() + " AND saephasefinale.idphasefinale = "
+	                		+ "saesequalifier.idphasefinale AND saesequalifier.NOM = saeequipe.NOM ORDER BY saesequalifier.classementphasefinale desc");
 			int i = 0;
 			while (res.next()) {
 				data[i][0] = res.getString(2);
@@ -311,7 +319,9 @@ public class Arbitre_InfoTournoi extends JPanel {
 	//Renvoie un String contenant la date et l'heure d'un tournoi
 	private String getDateEtHeureTournoi() {
 		try {
-			ResultSet selectTournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "DATEETHEURE", "LIEU = '" + (String) Arbitre_Tournoi.getTable().getValueAt(Arbitre_Tournoi.getTable().getSelectedRow(), 0) + "' AND DATEETHEURE LIKE TO_DATE('" + (String) Arbitre_Tournoi.getTable().getValueAt(Arbitre_Tournoi.getTable().getSelectedRow(), 1) + "', 'YYYY-MM-DD')");
+			ResultSet selectTournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "DATEETHEURE", "LIEU = '" 
+		+ (String) Arbitre_Tournoi.getTable().getValueAt(Arbitre_Tournoi.getTable().getSelectedRow(), 0) + "' AND DATEETHEURE LIKE TO_DATE('" 
+					+ (String) Arbitre_Tournoi.getTable().getValueAt(Arbitre_Tournoi.getTable().getSelectedRow(), 1) + "', 'YYYY-MM-DD')");
 	        selectTournoi.next();
 	        return selectTournoi.getString(1);
 		} catch(SQLException e) {
@@ -323,9 +333,11 @@ public class Arbitre_InfoTournoi extends JPanel {
 	//retourne un string contenant le nom d'un jeu et le lieu du tournoi de ce jeu
 	private String getJeuEtLieu() {
 		try {
-			ResultSet selectJeu = FonctionsSQL.select("saejeu, saetournoi, saeconcerner", "saejeu.nom", "saetournoi.idtournoi = '" + getIdTournoiSelected() + "' AND saetournoi.idtournoi = saeconcerner.idtournoi AND saejeu.nom = saeconcerner.nom");
+			ResultSet selectJeu = FonctionsSQL.select("saejeu, saetournoi, saeconcerner", "saejeu.nom", "saetournoi.idtournoi = '"
+		+ getIdTournoiSelected() + "' AND saetournoi.idtournoi = saeconcerner.idtournoi AND saejeu.nom = saeconcerner.nom");
 	        selectJeu.next();
-	        ResultSet selectLieu = FonctionsSQL.select("saejeu, saetournoi, saeconcerner", "saetournoi.lieu", "saetournoi.idtournoi = '" + getIdTournoiSelected() + "'");
+	        ResultSet selectLieu = FonctionsSQL.select("saejeu, saetournoi, saeconcerner", "saetournoi.lieu"
+	        		, "saetournoi.idtournoi = '" + getIdTournoiSelected() + "'");
 	        selectLieu.next();
 	        return selectJeu.getString(1) + " - " + selectLieu.getString(1);
 		} catch (SQLException e) {

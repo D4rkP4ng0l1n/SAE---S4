@@ -162,7 +162,7 @@ public class Ecurie_CreationEquipe extends JPanel {
 		panel_15.add(panel_19);
 
 		comboBox = new JComboBox<String>();
-		comboBox.setModel(new DefaultComboBoxModel<String>(listJeu()));
+		comboBox.setModel(new DefaultComboBoxModel<String>(getListJeu()));
 		panel_19.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		panel_19.add(comboBox);
 
@@ -203,6 +203,7 @@ public class Ecurie_CreationEquipe extends JPanel {
 		panel_10.add(btnNewButton_3);
 	}
 
+	//Set le chemin menant a l'image
 	public static void setImage(String path) {
 		pathImage = path;
 		ImageIcon image = new ImageIcon(path);
@@ -213,7 +214,8 @@ public class Ecurie_CreationEquipe extends JPanel {
 		Image_placeholder.setIcon(imageAVisualiser);
 	}
 
-	private String[] listJeu() {
+	//Récupère la liste de nom de jeu de la base de données
+	private String[] getListJeu() {
 		try {
 			ResultSet rs = Jeu.getTousLesJeux();
 			ResultSet count = FonctionsSQL.select(NomTablesBDD.SAEJEU, "count(nom)", "");
@@ -232,22 +234,27 @@ public class Ecurie_CreationEquipe extends JPanel {
 		}
 	}
 
+	//Vérifie que tout les champs de la page sont remplis
 	public static Boolean tousRempli() {
 		return (!NomEquipe.getText().isEmpty() && getJeu() != "Choisir un Jeu" && imageSet);
 	}
 
+	//Récupère le nom de l'équipe
 	public static String getNomEquipe() {
 		return NomEquipe.getText();
 	}
 
+	//Récupère le nom du jeu de la comboBox
 	public static String getJeu() {
 		return (String) comboBox.getSelectedItem();
 	}
 
+	//Affiche un message d'erreur pour connaître d'où il provient
 	public static void setMessageErreur(String message) {
 		messageErreur.setText(message);
 	}
 
+	//Récupère l'équipe
 	public static Equipe getEquipe() {
 		return new Equipe(nomEcurie, getNomEquipe(), getJeu(), pathImage);
 	}

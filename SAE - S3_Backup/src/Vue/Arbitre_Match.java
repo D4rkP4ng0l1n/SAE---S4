@@ -223,7 +223,10 @@ public class Arbitre_Match extends JPanel {
 
 	private int getIdTournoiSelected() {
 		try {
-			ResultSet selectTournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "IDTOURNOI", "LIEU = '" + (String) Arbitre_Tournoi.getTable().getValueAt(Arbitre_Tournoi.getTable().getSelectedRow(), 0) + "' AND DATEETHEURE LIKE TO_DATE('" + (String) Arbitre_Tournoi.getTable().getValueAt(Arbitre_Tournoi.getTable().getSelectedRow(), 1) + "', 'YYYY-MM-DD')");
+			ResultSet selectTournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "IDTOURNOI", "LIEU = '" 
+					+ (String) Arbitre_Tournoi.getTable().getValueAt(Arbitre_Tournoi.getTable().getSelectedRow(), 0) 
+					+ "' AND DATEETHEURE LIKE TO_DATE('" + (String) Arbitre_Tournoi.getTable().getValueAt
+					(Arbitre_Tournoi.getTable().getSelectedRow(), 1) + "', 'YYYY-MM-DD')");
 			selectTournoi.next();
 			return selectTournoi.getInt(1);
 		} catch (SQLException e) {
@@ -236,13 +239,17 @@ public class Arbitre_Match extends JPanel {
 		try {
 			String columns[] = {" ", "Equipe 1", "Equipe 2", "  ", "Equipe victorieuse"};
 			String data[][] = new String[6][5];
-			ResultSet selectIdMatchs = FonctionsSQL.select("saepartiepoule pp, saepoule p", "pp.id_partiepoule", "p.idtournoi = " + getIdTournoiSelected() + " and p.idpoule = pp.idpoule and p.numero = " + numPoule);
+			ResultSet selectIdMatchs = FonctionsSQL.select("saepartiepoule pp"
+					+ ", saepoule p", "pp.id_partiepoule", "p.idtournoi = " + getIdTournoiSelected() 
+					+ " and p.idpoule = pp.idpoule and p.numero = " + numPoule);
 			int i = 0;
 			while (selectIdMatchs.next()) {
-				ResultSet selectEquipeVictorieuse = FonctionsSQL.select(NomTablesBDD.SAEPARTIEPOULE, "resultat", "id_partiepoule = " + selectIdMatchs.getInt(1));
+				ResultSet selectEquipeVictorieuse = FonctionsSQL.select(NomTablesBDD.SAEPARTIEPOULE, 
+						"resultat", "id_partiepoule = " + selectIdMatchs.getInt(1));
 				selectEquipeVictorieuse.next();
 				data[i][4] = selectEquipeVictorieuse.getString(1);
-				ResultSet selectEquipes = FonctionsSQL.select("saecompetiter", "nom", "id_partiepoule = " + selectIdMatchs.getInt("id_partiepoule"));
+				ResultSet selectEquipes = FonctionsSQL.select("saecompetiter", "nom"
+						, "id_partiepoule = " + selectIdMatchs.getInt("id_partiepoule"));
 				int j = 1;
 				while (selectEquipes.next()) {
 					data[i][j] = selectEquipes.getString("nom"); 
@@ -252,10 +259,14 @@ public class Arbitre_Match extends JPanel {
 			}
 			model = new DefaultTableModel(data, columns);
 			JTable returnTable = new JTable(model);
-			returnTable.getColumn(" ").setCellRenderer(new MyRendererAndEditor(new JTable(), "Victoire équipe 1", null, null, controleur));
-			returnTable.getColumn(" ").setCellEditor(new MyRendererAndEditor(new JTable(), "Victoire équipe 1", null, null, controleur));
-			returnTable.getColumn("  ").setCellRenderer(new MyRendererAndEditor(new JTable(), "Victoire équipe 2", null, null, controleur));
-			returnTable.getColumn("  ").setCellEditor(new MyRendererAndEditor(new JTable(), "Victoire équipe 2", null, null, controleur));
+			returnTable.getColumn(" ").setCellRenderer(new MyRendererAndEditor(new JTable()
+					, "Victoire équipe 1", null, null, controleur));
+			returnTable.getColumn(" ").setCellEditor(new MyRendererAndEditor(new JTable()
+					, "Victoire équipe 1", null, null, controleur));
+			returnTable.getColumn("  ").setCellRenderer(new MyRendererAndEditor(new JTable()
+					, "Victoire équipe 2", null, null, controleur));
+			returnTable.getColumn("  ").setCellEditor(new MyRendererAndEditor(new JTable()
+					, "Victoire équipe 2", null, null, controleur));
 			return returnTable;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -267,13 +278,17 @@ public class Arbitre_Match extends JPanel {
 		try {
 			String columns[] = {" ", "Equipe 1", "Equipe 2", "  ", "Equipe victorieuse"};
 	        String data[][] = new String[6][5];
-	        ResultSet selectIdMatchs = FonctionsSQL.select("saepartiephasefinale pf, saephasefinale f, saetournoi t", "pf.id_partiephasefinale", "t.idtournoi = " + getIdTournoiSelected() + " and t.idphasefinale = f.idphasefinale and f.idphasefinale = pf.idphasefinale");
+	        ResultSet selectIdMatchs = FonctionsSQL.select("saepartiephasefinale pf, saephasefinale f"
+	        		+ ", saetournoi t", "pf.id_partiephasefinale", "t.idtournoi = " + getIdTournoiSelected() 
+	        		+ " and t.idphasefinale = f.idphasefinale and f.idphasefinale = pf.idphasefinale");
 	        int i = 0;
 	        while (selectIdMatchs.next()) {
-	            ResultSet selectEquipeVictorieuse = FonctionsSQL.select(NomTablesBDD.SAEPARTIEPHASEFINALE, "resultat", "id_partiephasefinale = " + selectIdMatchs.getInt(1));
+	            ResultSet selectEquipeVictorieuse = FonctionsSQL.select(NomTablesBDD.SAEPARTIEPHASEFINALE
+	            		, "resultat", "id_partiephasefinale = " + selectIdMatchs.getInt(1));
 	            selectEquipeVictorieuse.next();
 	            data[i][4] = selectEquipeVictorieuse.getString(1);
-	            ResultSet selectEquipes = FonctionsSQL.select(NomTablesBDD.SAECOMPETITERPHASEFINALE, "nom", "id_partiephasefinale = " + selectIdMatchs.getInt("id_partiephasefinale"));
+	            ResultSet selectEquipes = FonctionsSQL.select(NomTablesBDD.SAECOMPETITERPHASEFINALE
+	            		, "nom", "id_partiephasefinale = " + selectIdMatchs.getInt("id_partiephasefinale"));
 	            int j = 1;
 	            while (selectEquipes.next()) {
 	                data[i][j] = selectEquipes.getString("nom"); 
@@ -283,10 +298,14 @@ public class Arbitre_Match extends JPanel {
 	        }
 	        model = new DefaultTableModel(data, columns);
 	        JTable returnTable = new JTable(model);
-	        returnTable.getColumn(" ").setCellRenderer(new MyRendererAndEditor(new JTable(), "Victoire équipe 1 ", null, null, controleur));
-	        returnTable.getColumn(" ").setCellEditor(new MyRendererAndEditor(new JTable(), "Victoire équipe 1 ", null, null, controleur));
-	        returnTable.getColumn("  ").setCellRenderer(new MyRendererAndEditor(new JTable(), "Victoire équipe 2 ", null, null, controleur));
-	        returnTable.getColumn("  ").setCellEditor(new MyRendererAndEditor(new JTable(), "Victoire équipe 2 ", null, null, controleur));
+	        returnTable.getColumn(" ").setCellRenderer(new MyRendererAndEditor(new JTable()
+	        		, "Victoire équipe 1 ", null, null, controleur));
+	        returnTable.getColumn(" ").setCellEditor(new MyRendererAndEditor(new JTable()
+	        		, "Victoire équipe 1 ", null, null, controleur));
+	        returnTable.getColumn("  ").setCellRenderer(new MyRendererAndEditor(new JTable()
+	        		, "Victoire équipe 2 ", null, null, controleur));
+	        returnTable.getColumn("  ").setCellEditor(new MyRendererAndEditor(new JTable()
+	        		, "Victoire équipe 2 ", null, null, controleur));
 	        return returnTable;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -296,7 +315,10 @@ public class Arbitre_Match extends JPanel {
 
 	private String getDateEtHeureTournoi() {
 		try {
-			ResultSet selectTournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "DATEETHEURE", "LIEU = '" + (String) Arbitre_Tournoi.getTable().getValueAt(Arbitre_Tournoi.getTable().getSelectedRow(), 0) + "' AND DATEETHEURE LIKE TO_DATE('" + (String) Arbitre_Tournoi.getTable().getValueAt(Arbitre_Tournoi.getTable().getSelectedRow(), 1) + "', 'YYYY-MM-DD')");
+			ResultSet selectTournoi = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "DATEETHEURE", "LIEU = '" 
+					+ (String) Arbitre_Tournoi.getTable().getValueAt(Arbitre_Tournoi.getTable().getSelectedRow(), 0) 
+					+ "' AND DATEETHEURE LIKE TO_DATE('" + (String) Arbitre_Tournoi.getTable().getValueAt(Arbitre_Tournoi.getTable()
+							.getSelectedRow(), 1) + "', 'YYYY-MM-DD')");
 			selectTournoi.next();
 			return selectTournoi.getString(1);
 		} catch (SQLException e) {
@@ -307,9 +329,13 @@ public class Arbitre_Match extends JPanel {
 
 	private String getJeuEtLieu() {
 		try {
-			ResultSet selectJeu = FonctionsSQL.select("saejeu, saetournoi, saeconcerner", "saejeu.nom", "saetournoi.idtournoi = '" + getIdTournoiSelected() + "' AND saetournoi.idtournoi = saeconcerner.idtournoi AND saejeu.nom = saeconcerner.nom");
+			ResultSet selectJeu = FonctionsSQL.select("saejeu, saetournoi, saeconcerner", "saejeu.nom"
+					, "saetournoi.idtournoi = '" + getIdTournoiSelected() + "' AND saetournoi.idtournoi "
+							+ "= saeconcerner.idtournoi AND saejeu.nom = saeconcerner.nom");
 			selectJeu.next();
-			ResultSet selectLieu = FonctionsSQL.select("saejeu, saetournoi, saeconcerner", "saetournoi.lieu", "saetournoi.idtournoi = '" + getIdTournoiSelected() + "'");
+			ResultSet selectLieu = FonctionsSQL.select("saejeu, saetournoi, saeconcerner"
+					, "saetournoi.lieu", "saetournoi.idtournoi = '" 
+					+ getIdTournoiSelected() + "'");
 			selectLieu.next();
 			return selectJeu.getString(1) + " - " + selectLieu.getString(1);
 		} catch (SQLException e) {

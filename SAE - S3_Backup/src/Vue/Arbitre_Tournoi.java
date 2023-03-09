@@ -134,6 +134,7 @@ public class Arbitre_Tournoi extends JPanel {
         scrollPane.setViewportView(tableTournois);
     }
 	
+	//Initialise le tableau de la page
 	public JTable setTable(JTable table) {
 		try {
 			String columns[] = { "Lieu" , "Date" , "Jeu(x)" , "Classement"};
@@ -172,6 +173,7 @@ public class Arbitre_Tournoi extends JPanel {
 		}
 	}
 
+	//
 	public static JTable getTable() {
 		return tableTournois;
 	}
