@@ -48,11 +48,11 @@ public class Ecurie_AddJoueur extends JPanel {
 	private static List<Joueur>joueurs;
 	private ControleurEcurie controleur = new ControleurEcurie(this,EtatEcurie.AJOUTERJOUEUR);
 
-	public enum Erreurs{ERREURDATE,ERREURNOMNUL,ERREURPSEUDONUL,ERRERUJOUEUREXISTANT};
+	public enum Erreurs{ERREURDATE,ERREURNOMNUL,ERREURPSEUDONUL,ERRERUJOUEUREXISTANT, EQUIPECOMPLETE};
 
-	public Ecurie_AddJoueur(Equipe equipeEnCours, List<Joueur> joueurs) {
-		this.equipeEnCours = equipeEnCours;
-		this.joueurs = joueurs;
+	public Ecurie_AddJoueur(Equipe equipe, List<Joueur> listJoueurs) {
+		equipeEnCours = equipe;
+		joueurs = listJoueurs;
 		setBorder(new EmptyBorder(5, 5, 5, 5));
 		setLayout(new BorderLayout(0, 0));
 
@@ -178,6 +178,10 @@ public class Ecurie_AddJoueur extends JPanel {
 		joueurs.add(joueur);
 	}
 
+	public static void delLastJoueur() {
+		joueurs.remove(lastIndex());
+	}
+
 	public static Equipe getEquipe() {
 		return equipeEnCours;
 	}
@@ -194,13 +198,13 @@ public class Ecurie_AddJoueur extends JPanel {
 	}
 
 	private void setCompteur() {
-		compteurNbJoueurs.setText(lastIndex() + " / " + equipeEnCours.getJeu().getNbJoueursParEquipe());
+		compteurNbJoueurs.setText(joueurs.size() + " / " + equipeEnCours.getJeu().getNbJoueursParEquipe());
 	}
 
 	private JTable setTable(JTable table) {
 		String columns[] = { "Nom Joueur(s)" , "Pseudo" , "Age" , "Equipe", " " };
-		String data[][] = new String[lastIndex()][5];
-		for(int i = 0; i < lastIndex(); i++) {
+		String data[][] = new String[lastIndex() + 1][5];
+		for(int i = 0; i < joueurs.size(); i++) {
 			data[i][0] = joueurs.get(i).getNom();
 			data[i][1] = joueurs.get(i).getPseudo();
 			data[i][2] = "" + joueurs.get(i).calculAge();
@@ -255,16 +259,10 @@ public class Ecurie_AddJoueur extends JPanel {
 		case ERRERUJOUEUREXISTANT:
 			LabelErreur.setText("Le joueur existe déjà");
 			break;
+		case EQUIPECOMPLETE:
+			LabelErreur.setText("L'equipe est déjà complète !");
 		}
 
-	}
-
-	public static boolean isNomNull() {
-		return textFieldName.getText().isEmpty();
-	}
-
-	public static boolean isPseudoNull() {
-		return textFieldPseudo.getText().isEmpty();
 	}
 
 	public static boolean joueurExiste() {
@@ -285,7 +283,7 @@ public class Ecurie_AddJoueur extends JPanel {
 		}
 	}
 
-	private boolean nbJoueurSuffisant() {
-		return ("" + lastIndex()).equals(equipeEnCours.getJeu().getNbJoueursParEquipe());
+	public static boolean nbJoueurSuffisant() {
+		return ("" + joueurs.size()).equals(equipeEnCours.getJeu().getNbJoueursParEquipe());
 	}
 }

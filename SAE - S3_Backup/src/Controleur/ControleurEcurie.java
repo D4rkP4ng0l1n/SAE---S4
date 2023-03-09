@@ -234,17 +234,19 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 					ApplicationEsporter.changerDePage(new Ecurie_Equipes());
 				}
 				if(b.getText().equals("Ajouter le joueur")) {
-					if(Ecurie_AddJoueur.isNomNull()) {
+					if(Ecurie_AddJoueur.getNomJoueur().isEmpty()) {
 						Ecurie_AddJoueur.setErreur(Erreurs.ERREURNOMNUL);
-					} else if(Ecurie_AddJoueur.isPseudoNull()) {
+					} else if(Ecurie_AddJoueur.getPseudoJoueur().isEmpty()) {
 						Ecurie_AddJoueur.setErreur(Erreurs.ERREURPSEUDONUL);
+					} else {
+						ajoutJoueur();
 					}
-					ajoutJoueur();
 				}
 				if(b.getText().equals("Supprimer")) {
 					supprimerJoueur();
 				}
 				if(b.getText().equals("Valider")) {
+					validerEquipe();
 					ApplicationEsporter.changerDePage(new Ecurie_Equipes());
 				}
 				break;
@@ -269,23 +271,38 @@ public class ControleurEcurie extends FocusAdapter implements ActionListener {
 	}
 
 	private void ajoutJoueur() {
-		try {
-			if(!Ecurie_AddJoueur.joueurExiste()) {
-				Ecurie_AddJoueur.addJoueur(new Joueur(Ecurie_AddJoueur.getNomJoueur(), Ecurie_AddJoueur.getPseudoJoueur(), Ecurie_AddJoueur.getModel(), Ecurie_AddJoueur.getEquipe()));
-				if(Ecurie_AddJoueur.getLastJoueur().calculAge() >= 16) {
-					Ecurie_AddJoueur.getLastJoueur().ajouterJoueur();
-					ApplicationEsporter.changerDePage(new Ecurie_AddJoueur(Ecurie_AddJoueur.getEquipe(), Ecurie_AddJoueur.getJoueurs()));
+		if(Ecurie_AddJoueur.nbJoueurSuffisant()) {
+			Ecurie_AddJoueur.setErreur(Erreurs.EQUIPECOMPLETE);
+		} else {
+			try {
+				if(!Ecurie_AddJoueur.joueurExiste()) {
+					Ecurie_AddJoueur.addJoueur(new Joueur(Ecurie_AddJoueur.getNomJoueur(), Ecurie_AddJoueur.getPseudoJoueur(), Ecurie_AddJoueur.getModel(), Ecurie_AddJoueur.getEquipe()));
+					if(Ecurie_AddJoueur.getLastJoueur().calculAge() >= 16) {
+						ApplicationEsporter.changerDePage(new Ecurie_AddJoueur(Ecurie_AddJoueur.getEquipe(), Ecurie_AddJoueur.getJoueurs()));
+					} else {
+						Ecurie_AddJoueur.delLastJoueur();
+						Ecurie_AddJoueur.setErreur(Erreurs.ERREURDATE);
+					}		
 				} else {
-					Ecurie_AddJoueur.setErreur(Erreurs.ERREURDATE);
-				}		
-			} else {
-				Ecurie_AddJoueur.setErreur(Erreurs.ERRERUJOUEUREXISTANT);
+					Ecurie_AddJoueur.setErreur(Erreurs.ERRERUJOUEUREXISTANT);
+				}
+			} catch(Exception e1) {
+				e1.printStackTrace();
 			}
-		} catch(Exception e1) {
-			e1.printStackTrace();
 		}
+
 	}
 
+	private void validerEquipe() {
+		Ecurie_AddJoueur.getEquipe().ajouterEquipe();
+		int id = Ecurie_AddJoueur.getLastJoueur().getId();
+		for(Joueur j : Ecurie_AddJoueur.getJoueurs()) {
+			j.setId(id);
+			j.ajouterJoueur();
+			id++;
+		}
+	}
+	
 	private void ajoutImageEquipe() {
 		JFileChooser j = new JFileChooser();
 		j.setCurrentDirectory(new File("Images"));

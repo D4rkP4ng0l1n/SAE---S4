@@ -162,7 +162,7 @@ public class Ecurie_Equipes extends JPanel {
 	
 	public JTable setTable(JTable table) {
 		try {
-			String columns[] = { "Nom de l'équipe" , "Jeu" , " " , "  " };
+			String columns[] = { "Nom de l'équipe" , "Jeu" , " " };
 			ResultSet count = FonctionsSQL.select(NomTablesBDD.SAEEQUIPE, "count(*)", "Nom_2 = '" + controleur.getNomEcurie() + "'");
 			count.next();
 			String data[][] = new String[count.getInt(1)][4];
@@ -177,8 +177,6 @@ public class Ecurie_Equipes extends JPanel {
 			JTable returnTable = new JTable(model);
 			returnTable.getColumn(" ").setCellRenderer(new MyRendererAndEditor(returnTable, "Acceder", null, controleur, null));
 			returnTable.getColumn(" ").setCellEditor(new MyRendererAndEditor(returnTable, "Acceder", null, controleur, null));
-			returnTable.getColumn("  ").setCellRenderer(new MyRendererAndEditor(returnTable, "Modifier", null, controleur, null));
-			returnTable.getColumn("  ").setCellEditor(new MyRendererAndEditor(returnTable, "Modifier", null, controleur, null));
 			return returnTable;
 		} catch (SQLException e) {
 			e.printStackTrace();
