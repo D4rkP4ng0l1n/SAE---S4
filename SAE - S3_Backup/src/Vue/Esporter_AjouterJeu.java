@@ -156,7 +156,7 @@ public class Esporter_AjouterJeu extends JPanel {
 		return textField.getText();
 	}
 
-	public static boolean nomJeuEstVide() {
+	public static boolean isNomJeuEstVide() {
 		return textField.getText().equals("");
 	}
 

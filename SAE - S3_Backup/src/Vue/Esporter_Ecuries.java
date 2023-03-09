@@ -138,11 +138,6 @@ public class Esporter_Ecuries extends JPanel {
 			return null;
 		}
 	}
-	
-	
-	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		return columnIndex == 3;
-	}
 
 	public static JTable getTable() {
 		return tableEcurie;

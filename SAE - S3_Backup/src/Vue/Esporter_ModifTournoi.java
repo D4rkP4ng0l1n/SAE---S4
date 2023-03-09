@@ -172,7 +172,7 @@ public class Esporter_ModifTournoi extends JPanel{
 
 		this.setUpCombo= FonctionsSQL.select("SAEJeu", "nom", "");
 		Jeu = new JComboBox<Object>();
-		Jeu.setModel(new DefaultComboBoxModel<Object>(listJeu(setUpCombo)));
+		Jeu.setModel(new DefaultComboBoxModel<Object>(listJeu()));
 		panel_14.add(Jeu);
 
 		JButton btnAjouterJeu = new JButton("Ajouter le jeu");
@@ -315,7 +315,7 @@ public class Esporter_ModifTournoi extends JPanel{
 		DLM.removeAllElements();
 	}
 
-	private String[] listJeu(ResultSet rs) {
+	private String[] listJeu() {
 		try {
 			ResultSet selectCountJeu = FonctionsSQL.select(NomTablesBDD.SAEJEU, "count(nom)", "");
 			selectCountJeu.next();
@@ -323,8 +323,8 @@ public class Esporter_ModifTournoi extends JPanel{
 			String[]listJeu= new String[count+1];
 			int i = 1;
 			listJeu[0]="Choisir un Jeu";
-			while (rs.next()) {
-				listJeu[i]=rs.getString(1);
+			while (this.setUpCombo.next()) {
+				listJeu[i]=this.setUpCombo.getString(1);
 				i++;
 			}
 			return listJeu;

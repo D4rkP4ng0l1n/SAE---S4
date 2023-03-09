@@ -14,30 +14,36 @@ public class Jeu {
         this.nbJoueursParEquipe = nbJoueursParEquipe;
     }
 
-    public boolean estNouveau() throws SQLException { // Vérifie que le jeu n'existe pas dans la bas de données
+    // Vérifie que le jeu n'existe pas dans la bas de données
+    public boolean estNouveau() throws SQLException { 
         ResultSet selectNomJeu = FonctionsSQL.select(NomTablesBDD.SAEJEU, "*", "nom = '" + this.nom + "'");
         return !selectNomJeu.next();
     }
 
-    public String getNom() { // Récupère le nom du jeu
+    // Récupère le nom du jeu
+    public String getNom() {
         return this.nom;
     }
 
-    public String getNbJoueursParEquipe() { // Récupère le nombre de joueur par équipe pour ce jeu
+    // Récupère le nombre de joueur par équipe pour ce jeu
+    public String getNbJoueursParEquipe() {
         return this.nbJoueursParEquipe;
     }
 
-    public static ResultSet getTousLesJeux() throws SQLException { // Récupère tout les jeux
+    // Récupère tout les jeux
+    public static ResultSet getTousLesJeux() throws SQLException {
         return FonctionsSQL.select("saejeu", "*", "");
     }
 
-    public void ajouterJeu() throws SQLException { // Ajoute le jeu dans la base de données
+    // Ajoute le jeu dans la base de données
+    public void ajouterJeu() throws SQLException {
         String[] req = new String[1];
         req[0] =  "'" + this.getNom() + "', '" + this.getNbJoueursParEquipe() + "'";
         FonctionsSQL.insert(NomTablesBDD.SAEJEU, req);
     }
 
-    public void supprimerJeu() throws SQLException { // Supprime le jeu
+    // Supprime le jeu
+    public void supprimerJeu() throws SQLException { 
         FonctionsSQL.delete(NomTablesBDD.SAEJEU, "nom = '" + this.getNom() + "'");
     }
 }

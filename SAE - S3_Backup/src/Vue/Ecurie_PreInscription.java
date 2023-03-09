@@ -127,7 +127,7 @@ public class Ecurie_PreInscription extends JPanel {
         JButton btnNewButton_4 = new JButton("S'inscrire");
         btnNewButton_4.addActionListener(controleur);
         panel_11.add(btnNewButton_4);
-        if(getNbEquipesInscrites() >= ApplicationEsporter.NB_MAX_EQUIPE_PAR_TOURNOI || dejaInscrit() || getNbEquipesInscrites() >= ApplicationEsporter.NB_MAX_EQUIPE_PAR_TOURNOI) {
+        if(getNbEquipesInscrites() >= ApplicationEsporter.NB_MAX_EQUIPE_PAR_TOURNOI || isDejaInscrit() || getNbEquipesInscrites() >= ApplicationEsporter.NB_MAX_EQUIPE_PAR_TOURNOI) {
         	btnNewButton_4.setEnabled(false);
         } else {
         	btnNewButton_4.setEnabled(true);
@@ -173,7 +173,7 @@ public class Ecurie_PreInscription extends JPanel {
 		}
 	}
 	
-	private boolean dejaInscrit() {
+	private boolean isDejaInscrit() {
 		try {
 			ResultSet res = FonctionsSQL.select("saeparticiper, CRJ3957A.saeequipe", "CRJ3957A.saeequipe.NOM_2", "CRJ3957A.saeparticiper.IDTOURNOI = " + getIdTournoiSelected() + " AND CRJ3957A.saeparticiper.NOM = CRJ3957A.saeequipe.NOM");
 			res.next();

@@ -113,8 +113,7 @@ public class ControleurArbitre implements ActionListener {
 			ResultSet selectIdPhaseFinale = FonctionsSQL.select(NomTablesBDD.SAETOURNOI, "IDPhaseFinale", "IDTournoi = " + ApplicationEsporter.idTournoi);
 			selectIdPhaseFinale.next();
 			if (compterFinalistes() >= 4) {
-				ResultSet finalistes = trouverFinalistes();
-				qualifierEquipesPourPhaseFinale(finalistes, selectIdPhaseFinale.getInt(1));
+				qualifierEquipesPourPhaseFinale(selectIdPhaseFinale.getInt(1));
 			} else {
 				// Cas où il y a une égalité
 			}
@@ -135,14 +134,10 @@ public class ControleurArbitre implements ActionListener {
 		}
 	}
 
-	// Trouve les équipes finalistes
-	private static ResultSet trouverFinalistes() {
-		return FonctionsSQL.select(NomTablesBDD.SAECONCOURIR, "nom", "classementPoule >= 3");
-	}
-
 	// Ajoute les équipes finalistes dans la table "se qualifier"
-	private static void qualifierEquipesPourPhaseFinale(ResultSet finalistes, int idPhaseFinale) {
+	private static void qualifierEquipesPourPhaseFinale(int idPhaseFinale) {
 		try {
+			ResultSet finalistes = FonctionsSQL.select(NomTablesBDD.SAECONCOURIR, "nom", "classementPoule >= 3");
 			while(finalistes.next()) {
 				String[]equipeFinaliste = {"'" + finalistes.getString(1) + "'", "" + idPhaseFinale, "0" };
 				FonctionsSQL.insert(NomTablesBDD.SAESEQUALIFIER, equipeFinaliste);
